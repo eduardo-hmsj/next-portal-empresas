@@ -1,6 +1,6 @@
 'use client'
 import { Box, FormControl, Grid2 as Grid, InputLabel, MenuItem, Select, Typography } from "@mui/material";
-import Logo from "@/img/logoheader.webp"
+import Logo from "@/img/logo.png"
 import Image from "next/image";
 import { UserContext } from "@/context/UserContext";
 import { useContext, useEffect, useState } from "react";

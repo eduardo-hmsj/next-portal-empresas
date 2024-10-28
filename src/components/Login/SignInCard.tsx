@@ -7,7 +7,7 @@ import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import Logo from "@/img/logoheader.webp"
+import Logo from "@/img/logo.png"
 
 import { styled } from '@mui/material/styles';
 

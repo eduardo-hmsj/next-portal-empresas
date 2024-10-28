@@ -14,7 +14,7 @@ import AddressForm from '@/components/Calculadora/AddressForm';
 import Info from '@/components/Layout/Info';
 import PaymentForm from '@/components/Calculadora/PaymentForm';
 import Review from '@/components/Calculadora/Review';
-import Logo from "@/img/logoheader.webp"
+import Logo from "@/img/logo.png"
 import Image from 'next/image';
 
 const steps = [
