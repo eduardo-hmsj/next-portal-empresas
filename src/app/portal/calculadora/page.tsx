@@ -21,7 +21,7 @@ export default function Calculadora() {
     const [result, setResult] = React.useState(false)
 
     const situacaoFamiliar = [
-        { "name": "situacaoFamiliarInstavel", "label": "Situação Familiar Instável", "type": "boolean" },
+        { "name": "situacaoFamiliar", "label": "Situação Familiar Instável", "type": "boolean" },
         { "name": "aceitacaoGravidez", "label": "Aceitação da Gravidez", "type": "boolean" },
         { "name": "sabeLer", "label": "Sabe Ler", "type": "boolean" },
         { "name": "fumante", "label": "Fumante", "type": "boolean" },
