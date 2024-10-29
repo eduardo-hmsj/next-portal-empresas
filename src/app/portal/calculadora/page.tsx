@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Info from '@/components/Layout/Info';
 import Logo from "@/img/logo.png"
 import Image from 'next/image';
-import { Button, FormControl, FormControlLabel, FormLabel, InputAdornment, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField } from '@mui/material';
+import { Button, FormControl, FormControlLabel, FormLabel, InputAdornment, Radio, RadioGroup, TextField } from '@mui/material';
 import { UserContext } from '@/context/UserContext';
 import InputMask from 'react-input-mask';
 import { DatePicker } from '@mui/x-date-pickers';
