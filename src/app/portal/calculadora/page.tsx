@@ -21,6 +21,8 @@ export default function Calculadora() {
     const [result, setResult] = React.useState(false)
 
     const situacaoFamiliar = [
+        { "name": "situacaoFamiliarInstavel", "label": "Situação Familiar Instável", "type": "boolean" },
+        { "name": "aceitacaoGravidez", "label": "Aceitação da Gravidez", "type": "boolean" },
         { "name": "sabeLer", "label": "Sabe Ler", "type": "boolean" },
         { "name": "fumante", "label": "Fumante", "type": "boolean" },
         { "name": "dependenteDrogas", "label": "Dependente de Drogas", "type": "boolean" },
@@ -322,20 +324,6 @@ export default function Calculadora() {
                 <div style={{ width: "100%" }}>
                     <Typography sx={{ mb: 2 }} variant='h4'>Situação Familiar e Social</Typography>
                     <Grid container spacing={2} size={12}>
-                        <Grid size={12}>
-                            <FormControl fullWidth>
-                                <InputLabel id="situacao-familiar-label">Situação Familiar</InputLabel>
-                                <Select
-                                    labelId="situacao-familiar-label"
-                                    name="situacaoFamiliar"
-                                    label="Situação Familiar"
-                                >
-                                    <MenuItem value="S">Solteira</MenuItem>
-                                    <MenuItem value="C">Casada</MenuItem>
-                                    <MenuItem value="D">Divorciada</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
                         {situacaoFamiliar.map((v, i) => <Grid size={6} key={i}>
                             <FormControl fullWidth>
                                 <FormLabel>{v.label}</FormLabel>
