@@ -4,7 +4,9 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { Box, createTheme, CssBaseline, PaletteMode, ThemeProvider } from '@mui/material';
 import UserProvider from '@/context/UserContext';
 import TopBar from './topbar';
-
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import 'moment/locale/pt-br';
+import { LocalizationProvider } from "@mui/x-date-pickers";
 
 
 export default function Layout(props: { children: React.ReactNode, topBar: boolean }) {
@@ -33,13 +35,15 @@ export default function Layout(props: { children: React.ReactNode, topBar: boole
       <body>
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={defaultTheme}>
-            <UserProvider>
-              <CssBaseline enableColorScheme />
-              <Box sx={{ height: '100dvh', display: 'flex', flexDirection: 'column' }}>
-                {props.topBar && <TopBar mode={mode} toggleColorMode={toggleColorMode}/>}
-                <Box sx={{ flex: '1 1', overflow: 'auto' }}>{props.children}</Box>
-              </Box>
-            </UserProvider>
+            <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="pt-br">
+              <UserProvider>
+                <CssBaseline enableColorScheme />
+                <Box sx={{ height: '100dvh', display: 'flex', flexDirection: 'column' }}>
+                  {props.topBar && <TopBar mode={mode} toggleColorMode={toggleColorMode} />}
+                  <Box sx={{ flex: '1 1', overflow: 'auto' }}>{props.children}</Box>
+                </Box>
+              </UserProvider>
+            </LocalizationProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

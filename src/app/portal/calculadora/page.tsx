@@ -1,53 +1,87 @@
 'use client';
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
-import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import AddressForm from '@/components/Calculadora/AddressForm';
 import Info from '@/components/Layout/Info';
-import PaymentForm from '@/components/Calculadora/PaymentForm';
-import Review from '@/components/Calculadora/Review';
 import Logo from "@/img/logo.png"
 import Image from 'next/image';
+import { Button, FormControl, FormControlLabel, FormLabel, InputAdornment, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField } from '@mui/material';
+import { UserContext } from '@/context/UserContext';
+import InputMask from 'react-input-mask';
+import { DatePicker } from '@mui/x-date-pickers';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import SportsScoreIcon from '@mui/icons-material/SportsScore';
+import AccessibilityIcon from '@mui/icons-material/Accessibility';
+import GppMaybeIcon from '@mui/icons-material/GppMaybe';
 
-const steps = [
-    'Escala de risco',
-    'Antecedentes obstétricos',
-    'Fatores de risco atuais - Obstétricos',
-    'Condições Clínicas Pré-existentes',
-    'Intercorrências Clínicas'
-];
 
-function getStepContent(step: number) {
-    switch (step) {
-        case 0:
-            return <AddressForm />;
-        case 1:
-            return <PaymentForm />;
-        case 2:
-            return <Review />;
-        default:
-            throw new Error('Unknown step');
-    }
-}
 export default function Calculadora() {
-    const [activeStep, setActiveStep] = React.useState(0);
+    const { user, empresa } = React.useContext(UserContext)
+    const [result, setResult] = React.useState(false)
 
-    const handleNext = () => {
-        setActiveStep(activeStep + 1);
-    };
-    const handleBack = () => {
-        setActiveStep(activeStep - 1);
-    };
+    const situacaoFamiliar = [
+        { "name": "sabeLer", "label": "Sabe Ler", "type": "boolean" },
+        { "name": "fumante", "label": "Fumante", "type": "boolean" },
+        { "name": "dependenteDrogas", "label": "Dependente de Drogas", "type": "boolean" },
+        { "name": "expostaRiscoOcupacional", "label": "Exposta a Risco Ocupacional", "type": "boolean" },
+        { "name": "expostaCondAmbientais", "label": "Exposta a Condições Ambientais", "type": "boolean" }
+    ]
 
-    return (<Grid container sx={{ height: { xs: '100%', sm: '100dvh'}}}>
+    const historicoObst = [
+        { "name": "ate2Abortos", "label": "Até 2 Abortos", "type": "boolean" },
+        { "name": "maisde2Abortos", "label": "Mais de 2 Abortos", "type": "boolean" },
+        { "name": "natimortoFetal", "label": "Natimorto Fetal", "type": "boolean" },
+        { "name": "partoPrematuro", "label": "Parto Prematuro", "type": "boolean" },
+        { "name": "histRnCrescimento", "label": "Histórico de RN com Crescimento", "type": "boolean" },
+        { "name": "intervaloInterpartal", "label": "Intervalo Interpartal", "type": "boolean" },
+        { "name": "eclampsia", "label": "Eclampsia", "type": "boolean" },
+        { "name": "preEclampsia", "label": "Pré-eclampsia", "type": "boolean" },
+        { "name": "placentaPrevia", "label": "Placenta Prévia", "type": "boolean" },
+        { "name": "insuficienciaIstmoCervical", "label": "Insuficiência de Istmo Cervical", "type": "boolean" },
+        { "name": "cesarea12", "label": "Cesariana (1-2)", "type": "boolean" },
+        { "name": "cesarea3Mais", "label": "Cesariana (3 ou mais)", "type": "boolean" },
+        { "name": "ultimoPartoMenos12", "label": "Último Parto Menos de 12 meses", "type": "boolean" },
+        { "name": "diabetesGestacional", "label": "Diabetes Gestacional", "type": "boolean" },
+        { "name": "nuliparidadeMultiparidade", "label": "Nuliparidade / Multiparidade", "type": "boolean" },
+        { "name": "placentaPreviaAtual", "label": "Placenta Prévia Atual", "type": "boolean" },
+        { "name": "acrestismoPlacentario", "label": "Acrestismo Placentário", "type": "boolean" },
+        { "name": "aloimunizacao", "label": "Aloimunização", "type": "boolean" },
+        { "name": "esterilidadeTratada", "label": "Esterilidade Tratada", "type": "boolean" },
+        { "name": "malformacoesCongenitas", "label": "Malformações Congênitas", "type": "boolean" },
+        { "name": "ciur", "label": "CIUR", "type": "boolean" },
+        { "name": "polidramnioOligodramnio", "label": "Polidrâmnio / Oligodrâmnio", "type": "boolean" },
+        { "name": "citologiaCervicalAnormal", "label": "Citologia Cervical Anormal", "type": "boolean" },
+        { "name": "diabetesGestacionalTrat", "label": "Diabetes Gestacional Tratada", "type": "boolean" },
+        { "name": "diabetesGestacionalInsul", "label": "Diabetes Gestacional Insulino", "type": "boolean" },
+        { "name": "gestacaoDicorionica", "label": "Gestação Dicoriónica", "type": "boolean" },
+        { "name": "gestacaoMonocorionica", "label": "Gestação Monocoriónica", "type": "boolean" },
+        { "name": "insufIstmoCervicalAtual", "label": "Insuficiência de Istmo Cervical Atual", "type": "boolean" },
+        { "name": "trabalhoPartoPrematuro", "label": "Trabalho de Parto Prematuro", "type": "boolean" }
+    ]
+
+    const condicoesMedicas = [
+        { "name": "tromboembolismoGestacao", "label": "Tromboembolismo na Gestação", "type": "boolean" },
+        { "name": "preEclampsiaAtual", "label": "Pré-eclampsia Atual", "type": "boolean" },
+        { "name": "aneurisma", "label": "Aneurisma", "type": "boolean" },
+        { "name": "aterosclerose", "label": "Aterosclerose", "type": "boolean" },
+        { "name": "alteracoesOsteo", "label": "Alterações Ósteas", "type": "boolean" },
+        { "name": "varizesAcentuadas", "label": "Varizes Acentuadas", "type": "boolean" },
+        { "name": "cardiopatias", "label": "Cardiopatias", "type": "boolean" },
+        { "name": "cirurgiaUterina", "label": "Cirurgia Uterina", "type": "boolean" },
+        { "name": "diabetesInsulino", "label": "Diabetes Insulino", "type": "boolean" },
+        { "name": "diabetesMellitus", "label": "Diabetes Mellitus", "type": "boolean" },
+        { "name": "doencasAutoImunesFora", "label": "Doenças Autoimunes (Fora)", "type": "boolean" },
+        { "name": "doencasAutoImunesTrat", "label": "Doenças Autoimunes (Tratadas)", "type": "boolean" },
+        { "name": "tireoidopatias", "label": "Tireoidopatias", "type": "boolean" },
+        { "name": "endometriose", "label": "Endometriose", "type": "boolean" },
+        { "name": "epilepsiaNeurologica", "label": "Epilepsia Neurológica", "type": "boolean" },
+        { "name": "ginecopatias", "label": "Ginecopatias", "type": "boolean" }
+    ]
+
+
+
+    return (<Grid container sx={{ height: { xs: '100%', sm: '100dvh' } }}>
         <Grid
             size={{ xs: 12, sm: 5, lg: 4 }}
             sx={{
@@ -58,11 +92,11 @@ export default function Calculadora() {
                 borderColor: { sm: 'none', md: 'divider' },
                 alignItems: 'start',
                 pt: 16,
-                px: { xs: 2, md: 10},
+                px: { xs: 2, md: 10 },
                 gap: 4,
             }}
         >
-            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios'/>
+            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' />
             <Box
                 sx={{
                     display: 'flex',
@@ -72,7 +106,7 @@ export default function Calculadora() {
                     maxWidth: 500,
                 }}
             >
-                <Info 
+                <Info
                     subtitle='Preencha os campos abaixo para obter uma análise personalizada do seu risco. Essa calculadora foi desenvolvida para fornecer uma estimativa rápida e confiável, ajudando você a tomar decisões informadas. Basta inserir as informações solicitadas e visualizar o resultado imediatamente.'
                     title='Calcule o Seu Nível de Risco com Facilidade'
                 />
@@ -84,152 +118,274 @@ export default function Calculadora() {
                 display: 'flex',
                 flexDirection: 'column',
                 maxWidth: '100%',
-                width: '100%',
+                maxHeight: "100vh",
                 backgroundColor: { xs: 'transparent', sm: 'background.default' },
                 alignItems: 'start',
+                overflowY: 'auto',
                 pt: { xs: 6, sm: 16 },
+                pb: { xs: 6, sm: 16 },
                 px: { xs: 2, sm: 10 },
                 gap: { xs: 4, md: 8 },
             }}
         >
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: { sm: 'space-between', md: 'flex-end' },
-                    alignItems: 'center',
-                    width: '100%',
-                    maxWidth: { sm: '100%', md: 600 },
-                }}
-            >
-                <Box
-                    sx={{
-                        display: { xs: 'none', md: 'flex' },
-                        flexDirection: 'column',
-                        justifyContent: 'space-between',
-                        alignItems: 'flex-end',
-                        flexGrow: 1,
-                    }}
-                >
-                    <Stepper
-                        id="desktop-stepper"
-                        activeStep={activeStep}
-                        sx={{ width: '100%', height: 80 }}
-                        alternativeLabel
-                    >
-                        {steps.map((label) => (
-                            <Step
-                                sx={{ ':first-child': { pl: 0 }, ':last-child': { pr: 0 } }}
-                                key={label}
+            {result ?<>
+                <Typography variant='h4'>Resultado do cálculo:</Typography>
+
+                <div style={{ width: "100%" }}>
+                    <Grid container sx={{alignItems: "center", mb: 2}}><CheckCircleIcon sx={{mr: 2}}/><Typography variant='body1'>Cálculo gerado com sucesso.</Typography></Grid>
+                    <Grid container sx={{alignItems: "center", mb: 2}}><SportsScoreIcon sx={{mr: 2}}/><Typography variant='body1'><strong>Pontos: </strong>217</Typography></Grid>
+                    <Grid container sx={{alignItems: "center", mb: 2}}><AccessibilityIcon sx={{mr: 2}}/><Typography variant='body1'><strong>IMC: </strong>19.59</Typography></Grid>
+                    <Grid container sx={{alignItems: "center", mb: 2}}><GppMaybeIcon sx={{mr: 2}}/><Typography variant='body1'><strong>Risco: </strong>RISCO MUITO ALTO</Typography></Grid>
+                </div>
+            </> 
+            :<>
+                <div style={{ width: "100%" }}>
+                    <Typography sx={{ mb: 2 }} variant='h4'>Dados Pessoais</Typography>
+                    <input name='idUsuario' value={user?.idUsuario} hidden />
+                    <input name='idEmpresa' value={empresa?.idEmpresa} hidden />
+                    <Grid container spacing={2} size={12}>
+                        <Grid size={12}>
+                            <TextField
+                                id="nomeCompleto"
+                                name='nomeCompleto'
+                                label="Nome Completo"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid size={6}>
+                            <TextField
+                                id="abrevNome"
+                                name='abrevNome'
+                                label="Nome Abreviado"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid size={6}>
+                            <TextField
+                                id="email"
+                                name='email'
+                                label="E-mail"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid size={4}>
+                            <InputMask
+                                mask="999.999.999-99"
                             >
-                                <StepLabel >{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                </Box>
-            </Box>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flexGrow: 1,
-                    width: '100%',
-                    maxWidth: { sm: '100%', md: 600 },
-                    maxHeight: '720px',
-                    gap: { xs: 5, md: 'none' },
-                }}
-            >
-                <Stepper
-                    id="mobile-stepper"
-                    activeStep={activeStep}
-                    alternativeLabel
-                    sx={{ display: { sm: 'flex', md: 'none' } }}
-                >
-                    {steps.map((label) => (
-                        <Step
-                            sx={{
-                                ':first-child': { pl: 0 },
-                                ':last-child': { pr: 0 },
-                                '& .MuiStepConnector-root': { top: { xs: 6, sm: 12 } },
-                            }}
-                            key={label}
-                        >
-                            <StepLabel
-                                sx={{ '.MuiStepLabel-labelContainer': { maxWidth: '70px' } }}
+                                {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
+                                {(
+                                    inputProps: React.InputHTMLAttributes<HTMLInputElement>
+                                ) => (
+                                    <TextField
+                                        id="cpf"
+                                        type="text"
+                                        name="cpf"
+                                        label="CPF"
+                                        fullWidth
+
+                                        inputProps={{
+                                            ...inputProps,
+                                            'aria-label': 'cpf',
+                                        }}
+                                    />
+                                )}
+                            </InputMask>
+                        </Grid>
+                        <Grid size={4}>
+                            <DatePicker
+                                sx={{ width: "100%" }}
+                                label="Data de Nascimento"
+                                name='dataNascimento'
+                            />
+                        </Grid>
+                        <Grid size={4}>
+                            <InputMask
+                                mask="(99) 99999-9999"
                             >
-                                {label}
-                            </StepLabel>
-                        </Step>
-                    ))}
-                </Stepper>
-                {activeStep === steps.length ? (
-                    <Stack spacing={2} useFlexGap>
-                        <Typography variant="h1">📦</Typography>
-                        <Typography variant="h5">Thank you for your order!</Typography>
-                        <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                            Your order number is
-                            <strong>&nbsp;#140396</strong>. We have emailed your order
-                            confirmation and will update you once its shipped.
-                        </Typography>
-                        <Button
-                            variant="contained"
-                            sx={{ alignSelf: 'start', width: { xs: '100%', sm: 'auto' } }}
-                        >
-                            Go to my orders
-                        </Button>
-                    </Stack>
-                ) : (
-                    <React.Fragment>
-                        {getStepContent(activeStep)}
-                        <Box
-                            sx={[
-                                {
-                                    display: 'flex',
-                                    flexDirection: { xs: 'column-reverse', sm: 'row' },
-                                    alignItems: 'end',
-                                    flexGrow: 1,
-                                    gap: 1,
-                                    pb: { xs: 12, sm: 0 },
-                                    mt: { xs: 2, sm: 0 },
-                                    mb: '60px',
-                                },
-                                activeStep !== 0
-                                    ? { justifyContent: 'space-between' }
-                                    : { justifyContent: 'flex-end' },
-                            ]}
-                        >
-                            {activeStep !== 0 && (
-                                <Button
-                                    startIcon={<ChevronLeftRoundedIcon />}
-                                    onClick={handleBack}
-                                    variant="text"
-                                    sx={{ display: { xs: 'none', sm: 'flex' } }}
+                                {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
+                                {(
+                                    inputProps: React.InputHTMLAttributes<HTMLInputElement>
+                                ) => (
+                                    <TextField
+                                        id="telefone"
+                                        type="text"
+                                        name="telefone"
+                                        label="Telefone"
+                                        fullWidth
+
+                                        inputProps={{
+                                            ...inputProps,
+                                            'aria-label': 'telefone',
+                                        }}
+                                    />
+                                )}
+                            </InputMask>
+                        </Grid>
+                    </Grid>
+                </div>
+                <div style={{ width: "100%" }}>
+                    <Typography sx={{ mb: 2 }} variant='h4'>Dados da Gestante</Typography>
+                    <input name='idGestante' value={1} hidden />
+                    <Grid container spacing={2} size={12}>
+                        <Grid size={4}>
+                            <TextField
+                                label="Idade Gestante"
+                                id="idadeGestante"
+                                name='idadeGestante'
+                                type='number'
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid size={4}>
+                            <TextField
+                                label="Altura Gestante"
+                                id="alturaGestante"
+                                name='alturaGestante'
+                                slotProps={{
+                                    input: {
+                                        startAdornment: <InputAdornment position="start">cm</InputAdornment>,
+                                    },
+                                }}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid size={4}>
+                            <TextField
+                                label="Altura Nutricional"
+                                id="alturaNutr"
+                                name='alturaNutr'
+                                slotProps={{
+                                    input: {
+                                        startAdornment: <InputAdornment position="start">cm</InputAdornment>,
+                                    },
+                                }}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid size={4}>
+                            <TextField
+                                label="Peso"
+                                id="pesoKg"
+                                name='pesoKg'
+                                slotProps={{
+                                    input: {
+                                        startAdornment: <InputAdornment position="start">kg</InputAdornment>,
+                                    },
+                                }}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid size={4}>
+                            <TextField
+                                label="IMC"
+                                id="imc"
+                                name='imc'
+                                type='number'
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid size={4}>
+                            <DatePicker
+                                sx={{ width: "100%" }}
+                                label="Data de Cálculo"
+                                name='dtcálculo'
+                            />
+                        </Grid>
+                        <Grid size={6}>
+                            <TextField
+                                label="Idade Gestacional"
+                                id="IdadeGestacionalSemanas"
+                                name='IdadeGestacionalSemanas'
+                                slotProps={{
+                                    input: {
+                                        startAdornment: <InputAdornment position="start">semanas</InputAdornment>,
+                                    },
+                                }}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid size={6}>
+                            <TextField
+                                label="Idade Gestacional"
+                                id="IdadeGestacionalDias"
+                                name='IdadeGestacionalDias'
+                                slotProps={{
+                                    input: {
+                                        startAdornment: <InputAdornment position="start">dias</InputAdornment>,
+                                    },
+                                }}
+                                fullWidth
+                            />
+                        </Grid>
+                    </Grid>
+                </div>
+                <div style={{ width: "100%" }}>
+                    <Typography sx={{ mb: 2 }} variant='h4'>Situação Familiar e Social</Typography>
+                    <Grid container spacing={2} size={12}>
+                        <Grid size={12}>
+                            <FormControl fullWidth>
+                                <InputLabel id="situacao-familiar-label">Situação Familiar</InputLabel>
+                                <Select
+                                    labelId="situacao-familiar-label"
+                                    name="situacaoFamiliar"
+                                    label="Situação Familiar"
                                 >
-                                    Previous
-                                </Button>
-                            )}
-                            {activeStep !== 0 && (
-                                <Button
-                                    startIcon={<ChevronLeftRoundedIcon />}
-                                    onClick={handleBack}
-                                    variant="outlined"
-                                    fullWidth
-                                    sx={{ display: { xs: 'flex', sm: 'none' } }}
+                                    <MenuItem value="S">Solteira</MenuItem>
+                                    <MenuItem value="C">Casada</MenuItem>
+                                    <MenuItem value="D">Divorciada</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        {situacaoFamiliar.map((v, i) => <Grid size={6} key={i}>
+                            <FormControl fullWidth>
+                                <FormLabel>{v.label}</FormLabel>
+                                <RadioGroup
+                                    row
+                                    name={v.name}
                                 >
-                                    Previous
-                                </Button>
-                            )}
-                            <Button
-                                variant="contained"
-                                endIcon={<ChevronRightRoundedIcon />}
-                                onClick={handleNext}
-                                sx={{ width: { xs: '100%', sm: 'fit-content' } }}
-                            >
-                                {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
-                            </Button>
-                        </Box>
-                    </React.Fragment>
-                )}
-            </Box>
+                                    <FormControlLabel value="S" control={<Radio />} label="Sim" />
+                                    <FormControlLabel value="N" control={<Radio />} label="Não" />
+                                </RadioGroup>
+                            </FormControl>
+                        </Grid>)}
+                    </Grid>
+                </div>
+                <div style={{ width: "100%" }}>
+                    <Typography sx={{ mb: 2 }} variant='h4'>Histórico Obstétrico</Typography>
+                    <Grid container spacing={2} size={12}>
+                        {historicoObst.map((v, i) => <Grid size={6} key={i}>
+                            <FormControl fullWidth>
+                                <FormLabel>{v.label}</FormLabel>
+                                <RadioGroup
+                                    row
+                                    name={v.name}
+                                >
+                                    <FormControlLabel value="S" control={<Radio />} label="Sim" />
+                                    <FormControlLabel value="N" control={<Radio />} label="Não" />
+                                </RadioGroup>
+                            </FormControl>
+                        </Grid>)}
+                    </Grid>
+                </div>
+                <div style={{ width: "100%" }}>
+                    <Typography sx={{ mb: 2 }} variant='h4'>Condições Médicas</Typography>
+                    <Grid container spacing={2} size={12}>
+                        {condicoesMedicas.map((v, i) => <Grid size={6} key={i}>
+                            <FormControl fullWidth>
+                                <FormLabel>{v.label}</FormLabel>
+                                <RadioGroup
+                                    row
+                                    name={v.name}
+                                >
+                                    <FormControlLabel value="S" control={<Radio />} label="Sim" />
+                                    <FormControlLabel value="N" control={<Radio />} label="Não" />
+                                </RadioGroup>
+                            </FormControl>
+                        </Grid>)}
+                    </Grid>
+                </div>
+            </>}
+            <Button onClick={() => setResult(!result)} variant="contained">{result ? "Gerar novo cálculo" : "Gerar cálculo"}</Button>
         </Grid>
     </Grid>);
 }

@@ -3,7 +3,6 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import { Accordion, AccordionDetails, AccordionSummary, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import PersonIcon from '@mui/icons-material/Person';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -29,14 +28,6 @@ export default function Info(props: InfoProps) {
         <AccordionDetails>
           <nav aria-label="main mailbox folders">
             <List>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <PersonIcon/>
-                  </ListItemIcon>
-                  <ListItemText primary="Minha Conta" />
-                </ListItemButton>
-              </ListItem>
               <ListItem disablePadding>
                 <ListItemButton selected={true}>
                   <ListItemIcon>
