@@ -3,6 +3,7 @@
 import { UserProps } from "@/context/UserContext/types"
 import api from "@/services/api"
 import { cookies } from 'next/headers'
+import { redirect } from "next/navigation"
 
 export default async function Login(prev: string, formData: FormData) {
     const cookieStore = await cookies()
@@ -17,8 +18,11 @@ export default async function Login(prev: string, formData: FormData) {
         if (dados !== undefined && dados.length > 0) {
             cookieStore.set('usuario', JSON.stringify(response.data.User))
             if (dados.length === 1) cookieStore.set('empresa', JSON.stringify(dados[0]))
+                console.log("cheguei")
+            redirect("/portal/calculadora")
             return "true"
         }
+        console.log("cheguei 1")
         return "false"
     } catch (error) {
         console.log(error)

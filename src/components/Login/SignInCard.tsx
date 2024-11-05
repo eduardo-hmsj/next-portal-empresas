@@ -16,7 +16,7 @@ import Login from './actions';
 import InputMask from 'react-input-mask';
 import { useFormState } from 'react-dom';
 import { useRouter } from 'next/navigation';
-import { Alert, Skeleton } from '@mui/material';
+import { Alert, Link, Skeleton } from '@mui/material';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -37,17 +37,143 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 export default function SignInCard() {
+  const [mode, setMode] = React.useState("login")
+  const [singed, setSinged] = React.useState("")
   const [loged, SignIn] = useFormState(Login, "")
   const [loading, setLoading] = React.useState(false)
   const route = useRouter()
 
   React.useEffect(() => {
-    if(loged) {
+    if (loged) {
       route.push('/portal/calculadora')
       setLoading(false)
     }
-    if(loged === "false") setLoading(false)
-  },[loged, route])
+    if (loged === "false") setLoading(false)
+  }, [loged, route])
+
+  function LoginForm() {
+    return <Box
+      component="form"
+      action={SignIn}
+      onSubmit={() => setLoading(true)}
+      noValidate
+      sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2 }}
+    >
+      <FormControl>
+        <FormLabel htmlFor="cpf">CPF</FormLabel>
+        <InputMask
+          mask="999.999.999-99"
+        >
+          {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
+          {(
+            inputProps: React.InputHTMLAttributes<HTMLInputElement>
+          ) => (
+            <TextField
+              id="cpf"
+              type="text"
+              name="cpf"
+              placeholder="xxx.xxx.xxx-xx"
+              fullWidth
+              variant="outlined"
+              autoFocus
+              color="primary"
+              inputProps={{
+                ...inputProps,
+                'aria-label': 'cpf',
+              }}
+            />
+          )}
+        </InputMask>
+      </FormControl>
+      <FormControl>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <FormLabel htmlFor="senha">Senha</FormLabel>
+          <Link
+            component="button"
+            type="button"
+            onClick={e => {
+              e.preventDefault()
+              setMode("signUp")
+            }}
+            variant="body2"
+            sx={{ alignSelf: 'baseline' }}
+          >
+            Esqueci minha senha
+          </Link>
+        </Box>
+        <TextField
+          name="senha"
+          placeholder="••••••"
+          type="password"
+          id="senha"
+          required
+          fullWidth
+          variant="outlined"
+          color={'primary'}
+        />
+      </FormControl>
+      <Button type="submit" fullWidth variant="contained">
+        Entrar
+      </Button>
+    </Box>
+  }
+
+  function SignUp() {
+    return <Box
+      component="form"
+      onSubmit={() => setLoading(true)}
+      noValidate
+      sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2 }}
+    >
+      <FormControl>
+        <FormLabel htmlFor="cpf">CPF</FormLabel>
+        <InputMask
+          mask="999.999.999-99"
+        >
+          {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
+          {(
+            inputProps: React.InputHTMLAttributes<HTMLInputElement>
+          ) => (
+            <TextField
+              id="cpf"
+              type="text"
+              name="cpf"
+              placeholder="xxx.xxx.xxx-xx"
+              fullWidth
+              variant="outlined"
+              color="primary"
+              inputProps={{
+                ...inputProps,
+                'aria-label': 'cpf',
+              }}
+            />
+          )}
+        </InputMask>
+      </FormControl>
+      <Button type="submit" fullWidth variant="contained"
+        onClick={e => {
+          e.preventDefault()
+          setSinged("true")
+        }}>
+        Recuperar Senha
+      </Button>
+      <Link
+        component="button"
+        type="button"
+        onClick={e => {
+          e.preventDefault()
+          setMode("login")
+        }}
+        variant="body2"
+        sx={{ alignSelf: 'baseline' }}
+      >
+        Voltar para Login
+      </Link>
+      {singed === "false" && <Alert severity="error">Erro ao realizar login. Revise os campos de CPF e senha e tente novamente.</Alert>}
+      {singed === "true" && <Alert severity="success">Foi enviado um email para o endereço renan****@*****.com.br com as instruções de redefinição da senha.</Alert>}
+    </Box>
+  }
+
   return (
     <Card variant="outlined">
       <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
@@ -68,59 +194,12 @@ export default function SignInCard() {
         <Skeleton animation='wave' />
         <Skeleton animation='wave' />
       </>
-      :<Box
-        component="form"
-        action={SignIn}
-        onSubmit={() => setLoading(true)}
-        noValidate
-        sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2 }}
-      >
-        <FormControl>
-          <FormLabel htmlFor="cpf">CPF</FormLabel>
-          <InputMask
-            mask="999.999.999-99"
-          >
-            {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
-            {(
-              inputProps: React.InputHTMLAttributes<HTMLInputElement>
-            ) => (
-              <TextField
-                id="cpf"
-                type="text"
-                name="cpf"
-                placeholder="xxx.xxx.xxx-xx"
-                fullWidth
-                variant="outlined"
-                autoFocus
-                color="primary"
-                inputProps={{
-                  ...inputProps,
-                  'aria-label': 'cpf',
-                }}
-              />
-            )}
-          </InputMask>
-        </FormControl>
-        <FormControl>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <FormLabel htmlFor="senha">Senha</FormLabel>
-          </Box>
-          <TextField
-            name="senha"
-            placeholder="••••••"
-            type="password"
-            id="senha"
-            required
-            fullWidth
-            variant="outlined"
-            color={'primary'}
-          />
-        </FormControl>
-        <Button type="submit" fullWidth variant="contained">
-          Entrar
-        </Button>
-        {loged === "false" && <Alert severity="error">Erro ao realizar login. Revise os campos de CPF e senha e tente novamente.</Alert>}
-      </Box>}
+        :
+        <>
+          {mode === "login" && <LoginForm />}
+          {mode === "signUp" && <SignUp />}
+        </>
+      }
     </Card>
   );
 }
