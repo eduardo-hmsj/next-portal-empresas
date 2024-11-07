@@ -28,6 +28,8 @@ export default function Calculadora() {
                 pt: 16,
                 px: { xs: 2, md: 10 },
                 gap: 4,
+                maxHeight: "100vh",
+                overflowY: 'auto',
             }}
         >
             <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' />
@@ -67,7 +69,7 @@ export default function Calculadora() {
             </> 
             :<>
                 <div style={{ width: "100%" }}>
-                    <Typography sx={{ mb: 2 }} variant='h4'>Dados Pessoais</Typography>
+                    <Typography sx={{ mb: 2 }} variant='h4'>Dados da Empresa</Typography>
                     <input name='idUsuarioCadastro' value={user?.idUsuario} hidden />
                     <input name='idEmpresa' value={empresa?.idEmpresa} hidden />
                     <Grid container spacing={2} size={12}>

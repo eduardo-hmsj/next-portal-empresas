@@ -27,6 +27,8 @@ export default function Calculadora() {
                 pt: 16,
                 px: { xs: 2, md: 10 },
                 gap: 4,
+                maxHeight: "100vh",
+                overflowY: 'auto',
             }}
         >
             <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' />

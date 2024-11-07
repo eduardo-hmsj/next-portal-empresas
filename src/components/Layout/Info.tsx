@@ -10,6 +10,8 @@ import { UserContext } from '@/context/UserContext';
 import AccessibilityIcon from '@mui/icons-material/Accessibility';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import { usePathname, useRouter } from 'next/navigation';
+import HelpIcon from '@mui/icons-material/Help';
+import PersonIcon from '@mui/icons-material/Person';
 
 export interface InfoProps {
   title: string,
@@ -33,6 +35,8 @@ export default function Info(props: InfoProps) {
             {pathname === "/portal/calculadora" && "Calculadora"}
             {pathname === "/portal/pacientes" && "Pacientes"}
             {pathname === "/portal/empresas" && "Empresas"}
+            {pathname === "/portal/usuarios" && "Usuários"}
+            {pathname === "/portal/ajuda" && "Ajuda"}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -60,6 +64,22 @@ export default function Info(props: InfoProps) {
                     <AddBusinessIcon />
                   </ListItemIcon>
                   <ListItemText primary="Empresas" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton selected={pathname === "/portal/usuarios"} onClick={() => router.push("/portal/usuarios")}>
+                  <ListItemIcon>
+                    <PersonIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Usuários" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton selected={pathname === "/portal/ajuda"} onClick={() => router.push("/portal/ajuda")}>
+                  <ListItemIcon>
+                    <HelpIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Ajuda" />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
