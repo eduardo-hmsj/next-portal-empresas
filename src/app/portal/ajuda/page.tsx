@@ -8,7 +8,6 @@ import Logo from "@/img/logo.png"
 import Image from 'next/image';
 import { Button, TextField } from '@mui/material';
 import { UserContext } from '@/context/UserContext';
-import InputMask from 'react-input-mask';
 
 
 export default function Calculadora() {

@@ -7,12 +7,10 @@ import Info from '@/components/Layout/Info';
 import Logo from "@/img/logo.png"
 import Image from 'next/image';
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { UserContext } from '@/context/UserContext';
 import InputMask from 'react-input-mask';
 
 
 export default function Calculadora() {
-    const { user, empresa } = React.useContext(UserContext)
     const [result, setResult] = React.useState(false)
 
     return (<Grid container sx={{ height: { xs: '100%', sm: '100dvh' } }}>

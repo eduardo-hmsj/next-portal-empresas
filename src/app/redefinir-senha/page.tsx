@@ -12,7 +12,7 @@ export default function Login() {
 
   React.useEffect(() => {
     if(!token) router.push("/")
-  }, [])
+  }, [router, token])
 
   return (
     <Stack

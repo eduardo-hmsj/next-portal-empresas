@@ -13,10 +13,9 @@ import { styled } from '@mui/material/styles';
 
 import Image from 'next/image';
 import Login from './actions';
-import InputMask from 'react-input-mask';
 import { useFormState } from 'react-dom';
 import { useRouter } from 'next/navigation';
-import { Alert, Link, Skeleton } from '@mui/material';
+import { Skeleton } from '@mui/material';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -37,8 +36,6 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 export default function SignInCard() {
-  const [mode, setMode] = React.useState("login")
-  const [singed, setSinged] = React.useState("")
   const [loged, SignIn] = useFormState(Login, "")
   const [loading, setLoading] = React.useState(false)
   const route = useRouter()
