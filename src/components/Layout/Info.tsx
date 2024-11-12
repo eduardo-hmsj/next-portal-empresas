@@ -19,7 +19,7 @@ export interface InfoProps {
 }
 
 export default function Info(props: InfoProps) {
-  const {logout} = React.useContext(UserContext)
+  const {logout, empresa} = React.useContext(UserContext)
   const router = useRouter()
   const pathname = usePathname()
   
@@ -66,14 +66,14 @@ export default function Info(props: InfoProps) {
                   <ListItemText primary="Empresas" />
                 </ListItemButton>
               </ListItem>
-              <ListItem disablePadding>
+              {(empresa?.tpUsuario === "MASTER" || empresa?.tpUsuario === "ADMINISTRATIVO") && <ListItem disablePadding>
                 <ListItemButton selected={pathname === "/portal/usuarios"} onClick={() => router.push("/portal/usuarios")}>
                   <ListItemIcon>
                     <PersonIcon />
                   </ListItemIcon>
                   <ListItemText primary="Usuários" />
                 </ListItemButton>
-              </ListItem>
+              </ListItem>}
               <ListItem disablePadding>
                 <ListItemButton selected={pathname === "/portal/ajuda"} onClick={() => router.push("/portal/ajuda")}>
                   <ListItemIcon>

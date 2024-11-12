@@ -47,7 +47,7 @@ export default function TopBar(props: {mode: PaletteMode, toggleColorMode: () =>
       <Box sx={{ display: 'flex', gap: 1, width: "100%", alignItems: 'center' }}>
         <Typography variant='h5' sx={{ display: 'flex', flex: 1, alignItems: 'center' }} color='textDisabled'>
           <PersonIcon sx={{ mr: 2 }} />
-          {user?.nome}
+          {user?.nome}<strong style={{fontSize: "12px", marginLeft: "10px"}}> {empresa?.tpUsuario && `(${empresa.tpUsuario})`}</strong>
         </Typography>
         <FormControl sx={{ minWidth: 180 }}>
           <InputLabel id="demo-simple-select-label">Empresa</InputLabel>

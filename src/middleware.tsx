@@ -24,6 +24,14 @@ export default async function GetLoginData(request: NextRequest) {
         url.pathname = '/portal/calculadora'
         return NextResponse.redirect(url)
     }
-    
+
+    if (url.pathname === "/portal/usuarios") {
+        const em = JSON.parse(empresa?.value || "")
+        if (!(em.tpUsuario === "MASTER" || em.tpUsuario === "ADMINISTRATIVO")) {
+            url.pathname = '/portal/calculadora'
+            return NextResponse.redirect(url)
+        }
+    }
+
     return NextResponse.next()
 }
