@@ -82,7 +82,7 @@ export default function Usuarios() {
             idEmpresa: empresa?.idEmpresa || ""
         })
 
-    }, [empresa, user, route, form])
+    }, [empresa, user])
 
     return (<Grid container sx={{ height: { xs: '100%', sm: '100dvh' } }}>
         <Grid
