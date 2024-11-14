@@ -1,5 +1,3 @@
-import { GridColDef } from "@mui/x-data-grid"
-
 export interface getUsuariosProps {
     nomeCompleto?: string,
     cpf?: string,
@@ -27,6 +25,7 @@ export interface usuarioPayload {
     idUsuarioCadastro: string
     tipoUsuario: string
     conselho: string
+    idUsuario?: string
 }
 
 export const usuarioInitial = {
@@ -40,26 +39,3 @@ export const usuarioInitial = {
     conselho: "",
 }
 
-export const columns: GridColDef<(getUsuarioReturn[])[number]>[] = [
-    { field: 'idUsuario', headerName: 'ID', width: 50 },
-    {
-        field: 'nomeCompleto',
-        headerName: 'Nome Completo',
-        width: 170,
-    },
-    {
-        field: 'cpf',
-        headerName: 'CPF',
-        width: 80,
-    },
-    {
-        field: 'email',
-        headerName: 'E-mail',
-        width: 250,
-    },
-    {
-        field: 'tipoUsuario',
-        headerName: 'Permissão',
-        width: 220,
-    },
-];

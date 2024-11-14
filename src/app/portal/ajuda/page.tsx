@@ -31,7 +31,7 @@ export default function Calculadora() {
                 overflowY: 'auto',
             }}
         >
-            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' />
+            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{width: "100%", height: "auto"}}/>
             <Box
                 sx={{
                     display: 'flex',

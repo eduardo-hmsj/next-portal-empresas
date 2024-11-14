@@ -6,14 +6,18 @@ import Typography from '@mui/material/Typography';
 import Info from '@/components/Layout/Info';
 import Logo from "@/img/logo.png"
 import Image from 'next/image';
-import { Button } from '@mui/material';
-import { getUsuarios, postUsuario } from './actions';
+import { Button, Skeleton } from '@mui/material';
+import { activateUsuario, getUsuarios, intativaUsuario, updateUsuario } from './actions';
 import { UserContext } from '@/context/UserContext';
-import { DataGrid } from '@mui/x-data-grid';
-import { columns, getUsuarioReturn, usuarioInitial, usuarioPayload } from './types';
+import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import { getUsuarioReturn, usuarioInitial, usuarioPayload } from './types';
 import { isValidEmail } from '@/utils/functions';
 import CreateUsuario from '@/components/Usuarios/CreateUsuario';
 import { useRouter } from 'next/navigation';
+import CreateIcon from '@mui/icons-material/Create';
+import PersonOffIcon from '@mui/icons-material/PersonOff';
+import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
+import EditUsuario from '@/components/Usuarios/EditUsuario';
 
 
 export default function Usuarios() {
@@ -24,19 +28,70 @@ export default function Usuarios() {
     const [warnings, setWarnings] = React.useState<string[]>([])
     const [error, setError] = React.useState("")
     const [success, setSuccess] = React.useState("")
-    const [formOpen, setFormOpen] = React.useState(false)
+    const [formOpen, setFormOpen] = React.useState("")
+    const [loading, setLoading] = React.useState(false)
     const route = useRouter()
 
-    async function getUsers() {
-        const u = await getUsuarios({ idEmpresa: empresa?.idEmpresa })
-        setUsers(u)
-    }
-
-    async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
-        evt.preventDefault()
+    function cleanAdvises() {
         setWarnings([])
         setError("")
         setSuccess("")
+    }
+
+    async function inative(id: string){
+        setLoading(true)
+        const response = await intativaUsuario({
+            idEmpresa: empresa?.idEmpresa || "",
+            idUsuario: id,
+            idUsuarioCadastro: user?.idUsuario || ""
+        })
+        if (response.Codigo === "OK") {
+            getUsers()
+        }
+        setLoading(false)
+    }
+
+    async function active(id: string){
+        setLoading(true)
+        const response = await activateUsuario({
+            idEmpresa: empresa?.idEmpresa || "",
+            idUsuario: id,
+            idUsuarioCadastro: user?.idUsuario || ""
+        })
+        if (response.Codigo === "OK") {
+            getUsers()
+        }
+        setLoading(false)
+    }
+
+    function editUser(uid: string) {
+        cleanAdvises()
+        const u = [...users].find(v => v.idUsuario === uid)
+        if (u) {
+            setFormOpen("edit")
+            setForm({
+                ...form,
+                conselho: u.nrConselho,
+                cpf: u.cpf,
+                email: u.email,
+                nomeCompleto: u.nomeCompleto,
+                tipoUsuario: u.tipoUsuario,
+                idUsuario: u.idUsuario
+            })
+        }
+    }
+
+    async function getUsers() {
+        setLoading(true)
+        const u = await getUsuarios({ idEmpresa: empresa?.idEmpresa })
+        setUsers(u)
+        setLoading(false)
+    }
+
+    async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
+        setLoading(true)
+        evt.preventDefault()
+        cleanAdvises()
         const e: string[] = []
         if (form.nomeCompleto === usuarioInitial.nomeCompleto) e.push('Nome necessita estar preenchido!')
         if (form.senha === usuarioInitial.senha) e.push('Senha necessita estar preenchida!')
@@ -49,22 +104,16 @@ export default function Usuarios() {
         if (e.length > 0) {
             setWarnings(e)
         } else {
-            const response = await postUsuario(form)
+            const response = await updateUsuario(form)
             if (response.Codigo === "OK") {
                 getUsers()
-                setForm({
-                    ...usuarioInitial,
-                    idUsuarioCadastro: user?.idUsuario || "",
-                    idEmpresa: empresa?.idEmpresa || ""
-                })
-                setConfirmPassword("")
                 setSuccess(response.Mensagem)
             } else {
                 setError(response.Mensagem)
             }
-
-            console.log(response)
         }
+
+        setLoading(false)
     }
 
     React.useEffect(() => {
@@ -84,6 +133,68 @@ export default function Usuarios() {
 
     }, [empresa, user])
 
+    const columns: GridColDef<(getUsuarioReturn[])[number]>[] = [
+        { field: 'idUsuario', headerName: 'ID', width: 50 },
+        {
+            field: 'nomeCompleto',
+            headerName: 'Nome Completo',
+            width: 170,
+        },
+        {
+            field: 'cpf',
+            headerName: 'CPF',
+            width: 80,
+        },
+        {
+            field: 'email',
+            headerName: 'E-mail',
+            width: 250,
+        },
+        {
+            field: 'tipoUsuario',
+            headerName: 'Permissão',
+            width: 150,
+        },
+        {
+            field: 'status',
+            headerName: 'Status',
+            width: 100,
+            renderCell(params) {
+                return params.row.status === "A" ? "Ativo" : "Inativo"
+            },
+        },
+        {
+            field: 'actions',
+            type: 'actions',
+            width: 160,
+            getActions: (params) => [
+                <>
+                    {params.row.status === "A" ?
+                        <GridActionsCellItem
+                            icon={<PersonOffIcon />}
+                            color="error"
+                            label="Inativar"
+                            onClick={() => inative(params.id.toString())}
+                        />
+                        :
+                        <GridActionsCellItem
+                            icon={<RecordVoiceOverIcon />}
+                            color="success"
+                            label="Ativar"
+                            onClick={() => active(params.id.toString())}
+                        />}
+                </>,
+                <GridActionsCellItem
+                    key={"edit"}
+                    icon={<CreateIcon />}
+                    label="Edit"
+                    onClick={() => editUser(params.id.toString())}
+                />,
+            ],
+        },
+    ];
+
+
     return (<Grid container sx={{ height: { xs: '100%', sm: '100dvh' } }}>
         <Grid
             size={{ xs: 12, sm: 5, lg: 4 }}
@@ -101,7 +212,7 @@ export default function Usuarios() {
                 overflowY: 'auto',
             }}
         >
-            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' />
+            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{ width: "100%", height: "auto" }} />
             <Box
                 sx={{
                     display: 'flex',
@@ -133,37 +244,53 @@ export default function Usuarios() {
                 gap: { xs: 4, md: 8 },
             }}
         >
-            {formOpen && <CreateUsuario
-                confirmPassword={confirmPassword}
-                error={error}
-                warnings={warnings}
-                form={form}
-                setForm={setForm}
-                setConfirmPassword={setConfirmPassword}
-                success={success}
-                validateForm={validateForm}
-            />}
-            <Box sx={{ width: "100%", mb: 3 }}>
-                <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-                    <Typography variant='h4'>Usuários Cadastrados</Typography>
-                    <Button type='button' color='info' variant="contained" onClick={() => setFormOpen(!formOpen)}>
-                        {formOpen ? "Fechar Formulário" : "Cadastrar Usuário"}
-                    </Button>
-                </Grid>
-                <DataGrid
-                    rows={users}
-                    columns={columns}
-                    getRowId={(row) => row.idUsuario}
-                    initialState={{
-                        pagination: {
-                            paginationModel: {
-                                pageSize: 5,
+            {!loading ? <>
+                {formOpen === "create" && <CreateUsuario
+                    setLoading={setLoading}
+                    getUsers={getUsers}
+                    error={error}
+                    setError={setError}
+                    setSuccess={setSuccess}
+                    setWarnings={setWarnings}
+                    success={success}
+                    warnings={warnings}
+                />}
+                {formOpen === "edit" && <EditUsuario
+                    confirmPassword={confirmPassword}
+                    error={error}
+                    form={form}
+                    setConfirmPassword={setConfirmPassword}
+                    setForm={setForm}
+                    success={success}
+                    validateForm={validateForm}
+                    warnings={warnings}
+                />}
+                <Box sx={{ width: "100%", mb: 3 }}>
+                    <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+                        <Typography variant='h4'>Usuários Cadastrados</Typography>
+                        <Button type='button' color='info' variant="contained" onClick={() => {
+                            cleanAdvises()
+                            setFormOpen(formOpen === "" ? "create" : "")
+                        }}>
+                            {formOpen ? "Fechar Formulário" : "Cadastrar Usuário"}
+                        </Button>
+                    </Grid>
+                    <DataGrid
+                        rows={users}
+                        columns={columns}
+                        getRowId={(row) => row.idUsuario}
+                        initialState={{
+                            pagination: {
+                                paginationModel: {
+                                    pageSize: 10,
+                                },
                             },
-                        },
-                    }}
-                    pageSizeOptions={[5, 10, 25]}
-                />
-            </Box>
+                        }}
+                        pageSizeOptions={[5, 10, 25]}
+                    />
+                </Box>
+            </>
+                : <Skeleton animation='wave' sx={{ height: "100vh", width: "100%" }} />}
         </Grid>
     </Grid>);
 }

@@ -5,75 +5,25 @@ import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import { Alert, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import InputMask from 'react-input-mask';
-import { usuarioInitial, usuarioPayload } from '@/app/portal/usuarios/types';
+import { usuarioPayload } from '@/app/portal/usuarios/types';
 import { UserContext } from '@/context/UserContext';
-import { isValidEmail } from '@/utils/functions';
-import { postUsuario } from '@/app/portal/usuarios/actions';
 
-export default function CreateUsuario(props: {
-    getUsers: () => void,
-    setLoading: (b: boolean) => void,
+export default function EditUsuario(props: {
+    validateForm: (e: React.FormEvent<HTMLFormElement>) => void
+    form: usuarioPayload,
+    setForm: (f: usuarioPayload) => void,
+    confirmPassword: string,
+    setConfirmPassword: (e: string) => void,
     warnings: string[],
     success: string,
-    error: string,
-    setWarnings: (sa: string[]) => void,
-    setError: (sa: string) => void,
-    setSuccess: (sa: string) => void,
+    error: string
 }) {
-    const {empresa, user} = React.useContext(UserContext)
-    const [form, setForm] = React.useState<usuarioPayload>(usuarioInitial)
-    const [confirmPassword, setConfirmPassword] = React.useState("")
+    const {empresa} = React.useContext(UserContext)
 
-    async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
-        props.setLoading(true)
-        evt.preventDefault()
-        props.setWarnings([])
-        props.setError("")
-        props.setSuccess("")
-        const e: string[] = []
-        if (form.nomeCompleto === usuarioInitial.nomeCompleto) e.push('Nome necessita estar preenchido!')
-        if (form.senha === usuarioInitial.senha) e.push('Senha necessita estar preenchida!')
-        if (form.cpf === usuarioInitial.cpf) e.push('CPF necessita estar preenchido!')
-        if (!isValidEmail(form.email)) e.push('E-mail inválido!')
-        if (form.tipoUsuario === usuarioInitial.tipoUsuario) e.push('Tipo do usuário necessita estar preenchido!')
-        if (form.email === usuarioInitial.email) e.push('E-mail necessita estar preenchido!')
-        if (form.senha !== confirmPassword) e.push('Senhas não conferem!')
-
-        if (e.length > 0) {
-            props.setWarnings(e)
-        } else {
-            const response = await postUsuario(form)
-            if (response.Codigo === "OK") {
-                props.getUsers()
-                setForm({
-                    ...usuarioInitial,
-                    idUsuarioCadastro: user?.idUsuario || "",
-                    idEmpresa: empresa?.idEmpresa || ""
-                })
-                setConfirmPassword("")
-                props.setSuccess(response.Mensagem)
-            } else {
-                props.setError(response.Mensagem)
-            }
-
-            console.log(response)
-        }
-
-        props.setLoading(false)
-    }
-
-    React.useEffect(() => {
-        setForm({
-            ...form,
-            idUsuarioCadastro: user?.idUsuario || "",
-            idEmpresa: empresa?.idEmpresa || ""
-        })
-    }, [empresa, user])
-
-    return <Box sx={{ width: "100%" }} component={"form"} onSubmit={validateForm}>
-        <input name='idUsuarioCadastro' value={form.idUsuarioCadastro} hidden readOnly />
-        <input name='idEmpresa' value={form.idEmpresa} hidden readOnly />
-        <Typography sx={{ mb: 2 }} variant='h4'>Cadastrar Usuário</Typography>
+    return <Box sx={{ width: "100%" }} component={"form"} onSubmit={props.validateForm}>
+        <input name='idUsuarioCadastro' value={props.form.idUsuarioCadastro} hidden readOnly />
+        <input name='idEmpresa' value={props.form.idEmpresa} hidden readOnly />
+        <Typography sx={{ mb: 2 }} variant='h4'>Editar Usuário</Typography>
         <Grid container spacing={2} size={12}>
             <Grid size={6}>
                 <TextField
@@ -81,8 +31,8 @@ export default function CreateUsuario(props: {
                     name='nomeCompleto'
                     label="Nome Completo"
                     fullWidth
-                    value={form.nomeCompleto}
-                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                    value={props.form.nomeCompleto}
+                    onChange={e => props.setForm({ ...props.form, [e.target.name]: e.target.value })}
                 />
             </Grid>
             <Grid size={6}>
@@ -91,16 +41,16 @@ export default function CreateUsuario(props: {
                     name='email'
                     label="E-mail"
                     fullWidth
-                    value={form.email}
-                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                    value={props.form.email}
+                    onChange={e => props.setForm({ ...props.form, [e.target.name]: e.target.value })}
                 />
             </Grid>
             <Grid size={4}>
                 <InputMask
                     mask="999.999.999-99"
                     name="cpf"
-                    value={form.cpf}
-                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                    value={props.form.cpf}
+                    onChange={e => props.setForm({ ...props.form, [e.target.name]: e.target.value })}
                 >
                     {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
                     {(
@@ -125,8 +75,8 @@ export default function CreateUsuario(props: {
                     id="conselho"
                     name='conselho'
                     label="Conselho"
-                    value={form.conselho}
-                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                    value={props.form.conselho}
+                    onChange={e => props.setForm({ ...props.form, [e.target.name]: e.target.value })}
                     fullWidth
                 />
             </Grid>
@@ -137,9 +87,9 @@ export default function CreateUsuario(props: {
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         label="Tipo de Usuário"
-                        value={form.tipoUsuario}
+                        value={props.form.tipoUsuario}
                         name="tipoUsuario"
-                        onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                        onChange={e => props.setForm({ ...props.form, [e.target.name]: e.target.value })}
                     >
                         <MenuItem value="">Selecione uma opção</MenuItem>
                         <MenuItem value={"MEDICO"}>Médico</MenuItem>
@@ -156,8 +106,8 @@ export default function CreateUsuario(props: {
                     label="Senha"
                     type='password'
                     fullWidth
-                    value={form.senha}
-                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                    value={props.form.senha}
+                    onChange={e => props.setForm({ ...props.form, [e.target.name]: e.target.value })}
                 />
             </Grid>
             <Grid size={6}>
@@ -167,8 +117,8 @@ export default function CreateUsuario(props: {
                     label="Confirmar Senha"
                     fullWidth
                     type='password'
-                    onChange={e => setConfirmPassword(e.target.value)}
-                    value={confirmPassword}
+                    onChange={e => props.setConfirmPassword(e.target.value)}
+                    value={props.confirmPassword}
                 />
             </Grid>
             <Button type='submit' variant="contained">Salvar</Button>

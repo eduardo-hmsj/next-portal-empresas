@@ -32,7 +32,7 @@ export default function Calculadora() {
                 overflowY: 'auto',
             }}
         >
-            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' />
+            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{ width: "100%", height: "auto" }} />
             <Box
                 sx={{
                     display: 'flex',
@@ -64,88 +64,88 @@ export default function Calculadora() {
                 gap: { xs: 4, md: 8 },
             }}
         >
-            {result ?<>
+            {result ? <>
                 <Typography variant='h4'>Empresa cadastrada com sucesso</Typography>
-            </> 
-            :<>
-                <div style={{ width: "100%" }}>
-                    <Typography sx={{ mb: 2 }} variant='h4'>Dados da Empresa</Typography>
-                    <input name='idUsuarioCadastro' value={user?.idUsuario} hidden />
-                    <input name='idEmpresa' value={empresa?.idEmpresa} hidden />
-                    <Grid container spacing={2} size={12}>
-                        <Grid size={8}>
-                            <TextField
-                                id="nomeEmpresa"
-                                name='nomeEmpresa'
-                                label="Nome da empresa"
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid size={4}>
-                            <InputMask
-                                mask="99.999.999/9999-99"
-                            >
-                                {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
-                                {(
-                                    inputProps: React.InputHTMLAttributes<HTMLInputElement>
-                                ) => (
-                                    <TextField
-                                        id="cnpj"
-                                        type="text"
-                                        name="cnpj"
-                                        label="Cnpj"
-                                        fullWidth
+            </>
+                : <>
+                    <div style={{ width: "100%" }}>
+                        <Typography sx={{ mb: 2 }} variant='h4'>Dados da Empresa</Typography>
+                        <input name='idUsuarioCadastro' value={user?.idUsuario} hidden />
+                        <input name='idEmpresa' value={empresa?.idEmpresa} hidden />
+                        <Grid container spacing={2} size={12}>
+                            <Grid size={8}>
+                                <TextField
+                                    id="nomeEmpresa"
+                                    name='nomeEmpresa'
+                                    label="Nome da empresa"
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid size={4}>
+                                <InputMask
+                                    mask="99.999.999/9999-99"
+                                >
+                                    {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
+                                    {(
+                                        inputProps: React.InputHTMLAttributes<HTMLInputElement>
+                                    ) => (
+                                        <TextField
+                                            id="cnpj"
+                                            type="text"
+                                            name="cnpj"
+                                            label="Cnpj"
+                                            fullWidth
 
-                                        inputProps={{
-                                            ...inputProps,
-                                            'aria-label': 'cnpj',
-                                        }}
-                                    />
-                                )}
-                            </InputMask>
-                        </Grid>
-                        <Grid size={6}>
-                            <InputMask
-                                mask="(99) 99999-9999"
-                            >
-                                {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
-                                {(
-                                    inputProps: React.InputHTMLAttributes<HTMLInputElement>
-                                ) => (
-                                    <TextField
-                                        id="telefone"
-                                        type="text"
-                                        name="telefone"
-                                        label="Telefone"
-                                        fullWidth
+                                            inputProps={{
+                                                ...inputProps,
+                                                'aria-label': 'cnpj',
+                                            }}
+                                        />
+                                    )}
+                                </InputMask>
+                            </Grid>
+                            <Grid size={6}>
+                                <InputMask
+                                    mask="(99) 99999-9999"
+                                >
+                                    {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
+                                    {(
+                                        inputProps: React.InputHTMLAttributes<HTMLInputElement>
+                                    ) => (
+                                        <TextField
+                                            id="telefone"
+                                            type="text"
+                                            name="telefone"
+                                            label="Telefone"
+                                            fullWidth
 
-                                        inputProps={{
-                                            ...inputProps,
-                                            'aria-label': 'telefone',
-                                        }}
-                                    />
-                                )}
-                            </InputMask>
+                                            inputProps={{
+                                                ...inputProps,
+                                                'aria-label': 'telefone',
+                                            }}
+                                        />
+                                    )}
+                                </InputMask>
+                            </Grid>
+                            <Grid size={6}>
+                                <TextField
+                                    id="nomeContato"
+                                    name='nomeContato'
+                                    label="Nome do contato"
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid size={12}>
+                                <TextField
+                                    id="endereco"
+                                    name='endereco'
+                                    label="Endereço"
+                                    fullWidth
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid size={6}>
-                            <TextField
-                                id="nomeContato"
-                                name='nomeContato'
-                                label="Nome do contato"
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid size={12}>
-                            <TextField
-                                id="endereco"
-                                name='endereco'
-                                label="Endereço"
-                                fullWidth
-                            />
-                        </Grid>
-                    </Grid>
-                </div>
-            </>}
+                    </div>
+                </>}
             <Button onClick={() => setResult(!result)} variant="contained">{result ? "Cadastrar nova empresa" : "Cadastrar Empresa"}</Button>
         </Grid>
     </Grid>);
