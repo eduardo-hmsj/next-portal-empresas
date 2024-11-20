@@ -6,13 +6,57 @@ import Typography from '@mui/material/Typography';
 import Info from '@/components/Layout/Info';
 import Logo from "@/img/logo.png"
 import Image from 'next/image';
-import { Button, TextField } from '@mui/material';
+import { Alert, Button, Skeleton, TextField } from '@mui/material';
 import { UserContext } from '@/context/UserContext';
+import { AjudaInitial, AjudaPayload } from './types';
+import { postAjuda } from './actions';
 
 
-export default function Calculadora() {
+export default function Ajuda() {
     const { user, empresa } = React.useContext(UserContext)
-    const [result, setResult] = React.useState(false)
+    const [form, setForm] = React.useState<AjudaPayload>(AjudaInitial)
+    const [loading, setLoading] = React.useState(false)
+    const [warnings, setWarnings] = React.useState<string[]>([])
+    const [error, setError] = React.useState("")
+    const [success, setSuccess] = React.useState("")
+
+    function cleanAdvises() {
+        setWarnings([])
+        setError("")
+        setSuccess("")
+    }
+
+    async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
+        cleanAdvises()
+        setLoading(true)
+        evt.preventDefault()
+        const e: string[] = []
+
+        if (e.length > 0) {
+            setWarnings(e)
+        } else {
+            console.log(form)
+            const response = await postAjuda(form)
+            if (response.Codigo === "OK") {
+                setForm(AjudaInitial)
+                setSuccess(response.Mensagem)
+            } else {
+                setError(response.Mensagem || "Houve um erro ao realizar seu cadastro. Em instantes, tente novamente.")
+            }
+
+            console.log(response)
+        }
+
+        setLoading(false)
+    }
+
+    React.useEffect(() => {
+        setForm({
+            ...form,
+            idUsuario: user?.idUsuario || "",
+            idEmpresa: empresa?.idEmpresa || "",
+        })
+    }, [empresa, user])
 
     return (<Grid container sx={{ height: { xs: '100%', sm: '100dvh' } }}>
         <Grid
@@ -31,7 +75,7 @@ export default function Calculadora() {
                 overflowY: 'auto',
             }}
         >
-            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{width: "100%", height: "auto"}}/>
+            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{ width: "100%", height: "auto" }} />
             <Box
                 sx={{
                     display: 'flex',
@@ -62,37 +106,45 @@ export default function Calculadora() {
                 px: { xs: 2, sm: 10 },
                 gap: { xs: 4, md: 8 },
             }}
-        >
-            {result ? <>
-                <Typography variant='h4'>Solicitação cadastrada com sucesso</Typography>
-            </>
-                : <>
-                    <div style={{ width: "100%" }}>
-                        <Typography sx={{ mb: 2 }} variant='h4'>Criar solicitação</Typography>
-                        <input name='idUsuarioCadastro' value={user?.idUsuario} hidden />
-                        <input name='idEmpresa' value={empresa?.idEmpresa} hidden />
+        >{!loading ? <>
+            <Box component={"form"} onSubmit={validateForm}>
+                <Typography sx={{ mb: 2 }} variant='h4'>Criar solicitação</Typography>
+                <input name='idUsuarioCadastro' value={form.idUsuario} hidden />
+                <input name='idEmpresa' value={form.idEmpresa} hidden />
 
-                        <Grid container spacing={2} size={12}>
-                            <Grid size={12}>
-                                <TextField
-                                    id="assunto"
-                                    name='assunto'
-                                    label="Assunto"
-                                    fullWidth
-                                />
-                            </Grid>
-                            <Grid size={12}>
-                                <TextField
-                                    label="Mensagem"
-                                    multiline
-                                    rows={5}
-                                    fullWidth
-                                />
-                            </Grid>
-                        </Grid>
-                    </div>
-                </>}
-            <Button onClick={() => setResult(!result)} variant="contained">{result ? "Cadastrar nova Solicitação" : "Criar Solicitação"}</Button>
+                <Grid container spacing={2} size={12}>
+                    <Grid size={12}>
+                        <TextField
+                            id="assunto"
+                            name='assunto'
+                            label="Assunto"
+                            fullWidth
+                            value={form.assunto}
+                            onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                        />
+                    </Grid>
+                    <Grid size={12}>
+                        <TextField
+                            name='mensagem'
+                            label="Mensagem"
+                            multiline
+                            rows={5}
+                            fullWidth
+                            value={form.mensagem}
+                            onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                        />
+                    </Grid>
+
+                    <Button variant="contained" type='submit'>Criar Solicitação</Button>
+                </Grid>
+            </Box>
+            <Box sx={{ width: "100%" }}>
+                {warnings.map((v, i) => <Alert key={i} severity="warning" sx={{ width: "100%", mt: 1 }}>{v}</Alert>)}
+                {!!error && <Alert severity="error" sx={{ width: "100%", mt: 1 }}>{error}</Alert>}
+                {!!success && <Alert severity="success" sx={{ width: "100%", mt: 1 }}>{success}</Alert>}
+            </Box>
+        </>
+            : <Skeleton animation='wave' sx={{ height: "100vh", width: "100%" }} />}
         </Grid>
     </Grid>);
 }

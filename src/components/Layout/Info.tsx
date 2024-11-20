@@ -19,10 +19,10 @@ export interface InfoProps {
 }
 
 export default function Info(props: InfoProps) {
-  const {logout, empresa} = React.useContext(UserContext)
+  const { logout, empresa } = React.useContext(UserContext)
   const router = useRouter()
   const pathname = usePathname()
-  
+
   return (
     <React.Fragment>
       <Accordion>
@@ -58,22 +58,25 @@ export default function Info(props: InfoProps) {
                   <ListItemText primary="Pacientes" />
                 </ListItemButton>
               </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton selected={pathname === "/portal/empresas"} onClick={() => router.push("/portal/empresas")}>
-                  <ListItemIcon>
-                    <AddBusinessIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Empresas" />
-                </ListItemButton>
-              </ListItem>
-              {(empresa?.tpUsuario === "MASTER" || empresa?.tpUsuario === "ADMINISTRATIVO") && <ListItem disablePadding>
-                <ListItemButton selected={pathname === "/portal/usuarios"} onClick={() => router.push("/portal/usuarios")}>
-                  <ListItemIcon>
-                    <PersonIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Usuários" />
-                </ListItemButton>
-              </ListItem>}
+              {(empresa?.tpUsuario === "MASTER" || empresa?.tpUsuario === "ADMINISTRATIVO") &&
+                <>
+                  <ListItem disablePadding>
+                    <ListItemButton selected={pathname === "/portal/empresas"} onClick={() => router.push("/portal/empresas")}>
+                      <ListItemIcon>
+                        <AddBusinessIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Empresas" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton selected={pathname === "/portal/usuarios"} onClick={() => router.push("/portal/usuarios")}>
+                      <ListItemIcon>
+                        <PersonIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Usuários" />
+                    </ListItemButton>
+                  </ListItem>
+                </>}
               <ListItem disablePadding>
                 <ListItemButton selected={pathname === "/portal/ajuda"} onClick={() => router.push("/portal/ajuda")}>
                   <ListItemIcon>
@@ -85,7 +88,7 @@ export default function Info(props: InfoProps) {
               <ListItem disablePadding>
                 <ListItemButton onClick={logout}>
                   <ListItemIcon>
-                    <LogoutIcon/>
+                    <LogoutIcon />
                   </ListItemIcon>
                   <ListItemText primary="Sair" />
                 </ListItemButton>
@@ -94,8 +97,8 @@ export default function Info(props: InfoProps) {
           </nav>
         </AccordionDetails>
       </Accordion>
-      <Typography variant='h5' sx={{mt: 3}}>{props.title}</Typography>
-      <Typography variant='body1' sx={{mt: 2}}>{props.subtitle}</Typography>
+      <Typography variant='h5' sx={{ mt: 3 }}>{props.title}</Typography>
+      <Typography variant='body1' sx={{ mt: 2 }}>{props.subtitle}</Typography>
     </React.Fragment>
   );
 }

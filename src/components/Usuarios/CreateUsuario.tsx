@@ -13,9 +13,6 @@ import { postUsuario } from '@/app/portal/usuarios/actions';
 export default function CreateUsuario(props: {
     getUsers: () => void,
     setLoading: (b: boolean) => void,
-    warnings: string[],
-    success: string,
-    error: string,
     setWarnings: (sa: string[]) => void,
     setError: (sa: string) => void,
     setSuccess: (sa: string) => void,
@@ -172,9 +169,6 @@ export default function CreateUsuario(props: {
                 />
             </Grid>
             <Button type='submit' variant="contained">Salvar</Button>
-            {props.warnings.map((v, i) => <Alert key={i} severity="warning" sx={{ width: "100%", mt: 1 }}>{v}</Alert>)}
-            {!!props.error && <Alert severity="error" sx={{ width: "100%", mt: 1 }}>{props.error}</Alert>}
-            {!!props.success && <Alert severity="success" sx={{ width: "100%", mt: 1 }}>{props.success}</Alert>}
         </Grid>
     </Box>
 }

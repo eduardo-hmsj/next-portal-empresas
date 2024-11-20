@@ -13,10 +13,7 @@ export default function EditUsuario(props: {
     form: usuarioPayload,
     setForm: (f: usuarioPayload) => void,
     confirmPassword: string,
-    setConfirmPassword: (e: string) => void,
-    warnings: string[],
-    success: string,
-    error: string
+    setConfirmPassword: (e: string) => void
 }) {
     const {empresa} = React.useContext(UserContext)
 
@@ -122,9 +119,6 @@ export default function EditUsuario(props: {
                 />
             </Grid>
             <Button type='submit' variant="contained">Salvar</Button>
-            {props.warnings.map((v, i) => <Alert key={i} severity="warning" sx={{ width: "100%", mt: 1 }}>{v}</Alert>)}
-            {!!props.error && <Alert severity="error" sx={{ width: "100%", mt: 1 }}>{props.error}</Alert>}
-            {!!props.success && <Alert severity="success" sx={{ width: "100%", mt: 1 }}>{props.success}</Alert>}
         </Grid>
     </Box>
 }

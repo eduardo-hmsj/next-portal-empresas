@@ -25,7 +25,10 @@ export default async function GetLoginData(request: NextRequest) {
         return NextResponse.redirect(url)
     }
 
-    if (url.pathname === "/portal/usuarios") {
+    if (
+        url.pathname === "/portal/usuarios" ||
+        url.pathname === "/portal/empresas"
+    ) {
         const em = JSON.parse(empresa?.value || "")
         if (!(em.tpUsuario === "MASTER" || em.tpUsuario === "ADMINISTRATIVO")) {
             url.pathname = '/portal/calculadora'

@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Info from '@/components/Layout/Info';
 import Logo from "@/img/logo.png"
 import Image from 'next/image';
-import { Button, Skeleton } from '@mui/material';
+import { Alert, Button, Skeleton } from '@mui/material';
 import { activateUsuario, getUsuarios, intativaUsuario, updateUsuario } from './actions';
 import { UserContext } from '@/context/UserContext';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
@@ -38,7 +38,8 @@ export default function Usuarios() {
         setSuccess("")
     }
 
-    async function inative(id: string){
+    async function inative(id: string) {
+        cleanAdvises()
         setLoading(true)
         const response = await intativaUsuario({
             idEmpresa: empresa?.idEmpresa || "",
@@ -47,11 +48,15 @@ export default function Usuarios() {
         })
         if (response.Codigo === "OK") {
             getUsers()
+            setSuccess("Usuário inativado com sucesso.")
+        }else{
+            setError("Falha ao inaativar usuário.")
         }
         setLoading(false)
     }
 
-    async function active(id: string){
+    async function active(id: string) {
+        cleanAdvises()
         setLoading(true)
         const response = await activateUsuario({
             idEmpresa: empresa?.idEmpresa || "",
@@ -60,6 +65,9 @@ export default function Usuarios() {
         })
         if (response.Codigo === "OK") {
             getUsers()
+            setSuccess("Usuário ativado com sucesso.")
+        }else{
+            setError("Falha ao ativar usuário.")
         }
         setLoading(false)
     }
@@ -195,7 +203,7 @@ export default function Usuarios() {
     ];
 
 
-    return (<Grid container sx={{ height: { xs: '100%', sm: '100dvh' } }}>
+    return (<Grid container sx={{ height: { xs: '100%', sm: '100%' } }}>
         <Grid
             size={{ xs: 12, sm: 5, lg: 4 }}
             sx={{
@@ -238,33 +246,32 @@ export default function Usuarios() {
                 backgroundColor: { xs: 'transparent', sm: 'background.default' },
                 alignItems: 'start',
                 overflowY: 'auto',
-                pt: { xs: 6, sm: 16 },
+                pt: { xs: 6, sm: 10 },
                 pb: { xs: 6, sm: 16 },
                 px: { xs: 2, sm: 10 },
-                gap: { xs: 4, md: 8 },
+                gap: { xs: 4, md: 4 },
             }}
         >
             {!loading ? <>
                 {formOpen === "create" && <CreateUsuario
                     setLoading={setLoading}
                     getUsers={getUsers}
-                    error={error}
                     setError={setError}
                     setSuccess={setSuccess}
                     setWarnings={setWarnings}
-                    success={success}
-                    warnings={warnings}
                 />}
                 {formOpen === "edit" && <EditUsuario
                     confirmPassword={confirmPassword}
-                    error={error}
                     form={form}
                     setConfirmPassword={setConfirmPassword}
                     setForm={setForm}
-                    success={success}
                     validateForm={validateForm}
-                    warnings={warnings}
                 />}
+                <Box sx={{ width: "100%"}}>
+                {warnings.map((v, i) => <Alert key={i} severity="warning" sx={{ width: "100%", mt: 1 }}>{v}</Alert>)}
+                {!!error && <Alert severity="error" sx={{ width: "100%", mt: 1 }}>{error}</Alert>}
+                {!!success && <Alert severity="success" sx={{ width: "100%", mt: 1 }}>{success}</Alert>}
+                </Box>
                 <Box sx={{ width: "100%", mb: 3 }}>
                     <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
                         <Typography variant='h4'>Usuários Cadastrados</Typography>
