@@ -35,7 +35,6 @@ export default function Ajuda() {
         if (e.length > 0) {
             setWarnings(e)
         } else {
-            console.log(form)
             const response = await postAjuda(form)
             if (response.Codigo === "OK") {
                 setForm(AjudaInitial)
@@ -44,18 +43,17 @@ export default function Ajuda() {
                 setError(response.Mensagem || "Houve um erro ao realizar seu cadastro. Em instantes, tente novamente.")
             }
 
-            console.log(response)
         }
 
         setLoading(false)
     }
 
     React.useEffect(() => {
-        setForm({
-            ...form,
+        setForm((prevForm) => ({
+            ...prevForm,
             idUsuario: user?.idUsuario || "",
             idEmpresa: empresa?.idEmpresa || "",
-        })
+        }));
     }, [empresa, user])
 
     return (<Grid container sx={{ height: { xs: '100%', sm: '100dvh' } }}>
@@ -75,7 +73,7 @@ export default function Ajuda() {
                 overflowY: 'auto',
             }}
         >
-            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{ width: "100%", height: "auto" }} />
+            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{ width: "100%", height: "auto" }} priority/>
             <Box
                 sx={{
                     display: 'flex',
@@ -109,8 +107,8 @@ export default function Ajuda() {
         >{!loading ? <>
             <Box component={"form"} onSubmit={validateForm}>
                 <Typography sx={{ mb: 2 }} variant='h4'>Criar solicitação</Typography>
-                <input name='idUsuarioCadastro' value={form.idUsuario} hidden />
-                <input name='idEmpresa' value={form.idEmpresa} hidden />
+                <input name='idUsuarioCadastro' value={form.idUsuario} hidden readOnly/>
+                <input name='idEmpresa' value={form.idEmpresa} hidden readOnly/>
 
                 <Grid container spacing={2} size={12}>
                     <Grid size={12}>

@@ -7,8 +7,8 @@ import Info from '@/components/Layout/Info';
 import Logo from "@/img/logo.png"
 import Image from 'next/image';
 import { Button, TextField } from '@mui/material';
-import InputMask from 'react-input-mask';
 import { DatePicker } from '@mui/x-date-pickers';
+import { CPFMask, TelefoneMask } from '@/utils/functions';
 
 
 export default function Calculadora() {
@@ -31,7 +31,7 @@ export default function Calculadora() {
                 overflowY: 'auto',
             }}
         >
-            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{width: "100%", height: "auto"}}/>
+            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{ width: "100%", height: "auto" }} />
             <Box
                 sx={{
                     display: 'flex',
@@ -63,87 +63,63 @@ export default function Calculadora() {
                 gap: { xs: 4, md: 8 },
             }}
         >
-            {result ?<>
+            {result ? <>
                 <Typography variant='h4'>Paciente cadastrado com sucesso</Typography>
-            </> 
-            :<>
-                <div style={{ width: "100%" }}>
-                    <Typography sx={{ mb: 2 }} variant='h4'>Dados Pessoais</Typography>
-                    <input name='idUsuarioCadastro'  hidden />
-                    <input name='idEmpresa'  hidden />
-                    <Grid container spacing={2} size={12}>
-                        <Grid size={6}>
-                            <TextField
-                                id="nomeCompleto"
-                                name='nomeCompleto'
-                                label="Nome Completo"
-                                fullWidth
-                            />
+            </>
+                : <>
+                    <div style={{ width: "100%" }}>
+                        <Typography sx={{ mb: 2 }} variant='h4'>Dados Pessoais</Typography>
+                        <input name='idUsuarioCadastro' hidden />
+                        <input name='idEmpresa' hidden />
+                        <Grid container spacing={2} size={12}>
+                            <Grid size={6}>
+                                <TextField
+                                    id="nomeCompleto"
+                                    name='nomeCompleto'
+                                    label="Nome Completo"
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid size={6}>
+                                <TextField
+                                    id="email"
+                                    name='email'
+                                    label="E-mail"
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid size={4}>
+                                <TextField
+                                    id="cpf"
+                                    name='cpf'
+                                    label="CPF"
+                                    fullWidth
+                                    InputProps={{
+                                        inputComponent: CPFMask,
+                                    }}
+                                />
+                            </Grid>
+                            <Grid size={4}>
+                                <DatePicker
+                                    sx={{ width: "100%" }}
+                                    label="Data de Nascimento"
+                                    name='dataNascimento'
+                                />
+                            </Grid>
+                            <Grid size={4}>
+                                <TextField
+                                    id="telefone"
+                                    name='telefone'
+                                    label="Telefone"
+                                    fullWidth
+                                    InputProps={{
+                                        inputComponent: TelefoneMask,
+                                    }}
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid size={6}>
-                            <TextField
-                                id="email"
-                                name='email'
-                                label="E-mail"
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid size={4}>
-                            <InputMask
-                                mask="999.999.999-99"
-                            >
-                                {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
-                                {(
-                                    inputProps: React.InputHTMLAttributes<HTMLInputElement>
-                                ) => (
-                                    <TextField
-                                        id="cpf"
-                                        type="text"
-                                        name="cpf"
-                                        label="CPF"
-                                        fullWidth
-
-                                        inputProps={{
-                                            ...inputProps,
-                                            'aria-label': 'cpf',
-                                        }}
-                                    />
-                                )}
-                            </InputMask>
-                        </Grid>
-                        <Grid size={4}>
-                            <DatePicker
-                                sx={{ width: "100%" }}
-                                label="Data de Nascimento"
-                                name='dataNascimento'
-                            />
-                        </Grid>
-                        <Grid size={4}>
-                            <InputMask
-                                mask="(99) 99999-9999"
-                            >
-                                {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
-                                {(
-                                    inputProps: React.InputHTMLAttributes<HTMLInputElement>
-                                ) => (
-                                    <TextField
-                                        id="telefone"
-                                        type="text"
-                                        name="telefone"
-                                        label="Telefone"
-                                        fullWidth
-
-                                        inputProps={{
-                                            ...inputProps,
-                                            'aria-label': 'telefone',
-                                        }}
-                                    />
-                                )}
-                            </InputMask>
-                        </Grid>
-                    </Grid>
-                </div>
-            </>}
+                    </div>
+                </>}
             <Button onClick={() => setResult(!result)} variant="contained">{result ? "Cadastrar novo paciente" : "Cadastrar Paciente"}</Button>
         </Grid>
     </Grid>);

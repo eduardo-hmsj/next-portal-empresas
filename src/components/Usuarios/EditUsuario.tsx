@@ -3,10 +3,10 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
-import { Alert, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import InputMask from 'react-input-mask';
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { usuarioPayload } from '@/app/portal/usuarios/types';
 import { UserContext } from '@/context/UserContext';
+import { CPFMask } from '@/utils/functions';
 
 export default function EditUsuario(props: {
     validateForm: (e: React.FormEvent<HTMLFormElement>) => void
@@ -43,29 +43,20 @@ export default function EditUsuario(props: {
                 />
             </Grid>
             <Grid size={4}>
-                <InputMask
-                    mask="999.999.999-99"
+                <TextField
+                    id="cpf"
+                    type="text"
                     name="cpf"
+                    placeholder="xxx.xxx.xxx-xx"
+                    fullWidth
+                    variant="outlined"
+                    color="primary"
                     value={props.form.cpf}
                     onChange={e => props.setForm({ ...props.form, [e.target.name]: e.target.value })}
-                >
-                    {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
-                    {(
-                        inputProps: React.InputHTMLAttributes<HTMLInputElement>
-                    ) => (
-                        <TextField
-                            id="cpf"
-                            type="text"
-                            label="CPF"
-                            fullWidth
-
-                            inputProps={{
-                                ...inputProps,
-                                'aria-label': 'cpf',
-                            }}
-                        />
-                    )}
-                </InputMask>
+                    InputProps={{
+                        inputComponent: CPFMask,
+                    }}
+                />
             </Grid>
             <Grid size={4}>
                 <TextField

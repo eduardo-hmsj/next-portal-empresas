@@ -11,12 +11,12 @@ import { activateEmpresa, intativaEmpresa, updateEmpresa } from './actions';
 import { UserContext } from '@/context/UserContext';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { getEmpresaReturn, EmpresaInitial, EmpresaPayload } from './types';
-import { isValidEmail } from '@/utils/functions';
+import { aplicarMascaraCpfCnpj, aplicarMascaraTelefone } from '@/utils/functions';
 import { useRouter } from 'next/navigation';
 import CreateIcon from '@mui/icons-material/Create';
 import CreateEmpresa from '@/components/Empresas/CreateEmpresa';
 import EditEmpresa from '@/components/Empresas/EditEmpresa';
-import { getEmpresas } from './actions';
+import { getEmpresas as getEmpresasApi } from './actions';
 import CorporateFareIcon from '@mui/icons-material/CorporateFare';
 import DomainDisabledIcon from '@mui/icons-material/DomainDisabled';
 
@@ -47,9 +47,9 @@ export default function Empresas() {
             idUsuarioCadastro: user?.idUsuario || ""
         })
         if (response.Codigo === "OK") {
-            getUsers()
+            getEmpresas()
             setSuccess("Empresa inativada com sucesso.")
-        }else{
+        } else {
             setError("Falha ao inativar empresa.")
         }
         setLoading(false)
@@ -63,58 +63,57 @@ export default function Empresas() {
             idUsuarioCadastro: user?.idUsuario || ""
         })
         if (response.Codigo === "OK") {
-            getUsers()
+            getEmpresas()
             setSuccess("Empresa ativada com sucesso.")
-        }else{
+        } else {
             setError("Falha ao ativar empresa.")
         }
         setLoading(false)
     }
 
-    function editUser(uid: string) {
+    function editEmpresa(uid: string) {
         cleanAdvises()
         const u = [...users].find(v => v.idEmpresa === uid)
         if (u) {
             setFormOpen("edit")
             setForm({
                 ...form,
-                cnpj: u.cnpj,
+                cnpj: aplicarMascaraCpfCnpj(u.cnpj),
                 emailSuporte: u.emailSuporte,
                 endereco: u.endereco,
                 nomeContato: u.nomeContato,
                 nomeEmpresa: u.nomeEmpresa,
-                telefone: u.telefone,
+                telefone: aplicarMascaraTelefone(u.telefone),
                 idEmpresa: u.idEmpresa
             })
         }
     }
 
-    async function getUsers() {
-        setLoading(true)
-        const u = await getEmpresas({idEmpresa: empresa?.idEmpresa})
-        setUsers(u)
-        setLoading(false)
-    }
+    const getEmpresas = React.useCallback(async () => {
+        setLoading(true);
+        const u = await getEmpresasApi({ idEmpresa: empresa?.idEmpresa });
+        setUsers(u);
+        setLoading(false);
+    }, [empresa?.idEmpresa]);
 
     async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
         setLoading(true)
         evt.preventDefault()
         cleanAdvises()
         const e: string[] = []
-        // if (form.nomeCompleto === EmpresaInitial.nomeCompleto) e.push('Nome necessita estar preenchido!')
-        // if (form.senha === EmpresaInitial.senha) e.push('Senha necessita estar preenchida!')
-        // if (form.cpf === EmpresaInitial.cpf) e.push('CPF necessita estar preenchido!')
-        // if (!isValidEmail(form.email)) e.push('E-mail inválido!')
-        // if (form.tipoEmpresa === EmpresaInitial.tipoEmpresa) e.push('Tipo do usuário necessita estar preenchido!')
-        // if (form.email === EmpresaInitial.email) e.push('E-mail necessita estar preenchido!')
-        // if (form.senha !== confirmPassword) e.push('Senhas não conferem!')
+        if (form.nomeEmpresa === EmpresaInitial.nomeEmpresa) e.push('Nome da empresa necessita estar preenchido!')
+        if (form.cnpj === EmpresaInitial.cnpj) e.push('CNPJ necessita estar preenchido!')
+        if (form.telefone === EmpresaInitial.telefone) e.push('Telefone necessita estar preenchido!')
+        if (form.nomeContato === EmpresaInitial.nomeContato) e.push('Nome do contato necessita estar preenchido!')
+        if (form.endereco === EmpresaInitial.endereco) e.push('Endereço necessita estar preenchido!')
+        if (form.emailSuporte === EmpresaInitial.emailSuporte) e.push('E-mail do suporte necessita estar preenchido!')
 
         if (e.length > 0) {
             setWarnings(e)
         } else {
             const response = await updateEmpresa(form)
             if (response.Codigo === "OK") {
-                getUsers()
+                getEmpresas()
                 setSuccess(response.Mensagem)
             } else {
                 setError(response.Mensagem)
@@ -126,23 +125,23 @@ export default function Empresas() {
 
     React.useEffect(() => {
         if (!!empresa?.idEmpresa) {
-            getUsers()
+            getEmpresas()
         }
 
         if (!!user?.idUsuario && !(empresa?.tpUsuario === "MASTER" || empresa?.tpUsuario === "ADMINISTRATIVO")) {
             route.push("/portal/calculadora")
         }
 
-        setForm({
-            ...form,
+        setForm((prevForm) => ({
+            ...prevForm,
             idUsuarioCadastro: user?.idUsuario || "",
-            idEmpresaPai: empresa?.idEmpresa || ""
-        })
+            idEmpresaPai: empresa?.idEmpresa || "",
+        }));
 
-    }, [empresa, user])
+    }, [empresa, user, route, getEmpresas])
 
     const columns: GridColDef<(getEmpresaReturn[])[number]>[] = [
-        { field: 'idEmpresa', headerName: 'ID', width: 50 },
+        { field: 'idEmpresa', headerName: 'ID', width: 50, sortComparator: (v1, v2) => Number(v1) - Number(v2) },
         {
             field: 'nomeEmpresa',
             headerName: 'Nome da Empresa',
@@ -152,6 +151,8 @@ export default function Empresas() {
             field: 'cnpj',
             headerName: 'CNPJ',
             width: 210,
+            valueGetter: (value, row) => `${aplicarMascaraCpfCnpj(row.cnpj)}`,
+
         },
         {
             field: 'emailSuporte',
@@ -193,7 +194,7 @@ export default function Empresas() {
                     key={"edit"}
                     icon={<CreateIcon />}
                     label="Edit"
-                    onClick={() => editUser(params.id.toString())}
+                    onClick={() => editEmpresa(params.id.toString())}
                 />,
             ],
         },
@@ -217,7 +218,7 @@ export default function Empresas() {
                 overflowY: 'auto',
             }}
         >
-            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{ width: "100%", height: "auto" }} />
+            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{ width: "100%", height: "auto" }} priority />
             <Box
                 sx={{
                     display: 'flex',
@@ -252,7 +253,7 @@ export default function Empresas() {
             {!loading ? <>
                 {formOpen === "create" && <CreateEmpresa
                     setLoading={setLoading}
-                    getUsers={getUsers}
+                    getEmpresas={getEmpresas}
                     setError={setError}
                     setSuccess={setSuccess}
                     setWarnings={setWarnings}
@@ -264,10 +265,10 @@ export default function Empresas() {
                     setForm={setForm}
                     validateForm={validateForm}
                 />}
-                <Box sx={{ width: "100%"}}>
-                {warnings.map((v, i) => <Alert key={i} severity="warning" sx={{ width: "100%", mt: 1 }}>{v}</Alert>)}
-                {!!error && <Alert severity="error" sx={{ width: "100%", mt: 1 }}>{error}</Alert>}
-                {!!success && <Alert severity="success" sx={{ width: "100%", mt: 1 }}>{success}</Alert>}
+                <Box sx={{ width: "100%" }}>
+                    {warnings.map((v, i) => <Alert key={i} severity="warning" sx={{ width: "100%", mt: 1 }}>{v}</Alert>)}
+                    {!!error && <Alert severity="error" sx={{ width: "100%", mt: 1 }}>{error}</Alert>}
+                    {!!success && <Alert severity="success" sx={{ width: "100%", mt: 1 }}>{success}</Alert>}
                 </Box>
                 <Box sx={{ width: "100%", mb: 3 }}>
                     <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
@@ -284,6 +285,9 @@ export default function Empresas() {
                         columns={columns}
                         getRowId={(row) => row.idEmpresa}
                         initialState={{
+                            sorting: {
+                                sortModel: [{ field: 'nomeEmpresa', sort: 'asc' }]
+                            },
                             pagination: {
                                 paginationModel: {
                                     pageSize: 10,

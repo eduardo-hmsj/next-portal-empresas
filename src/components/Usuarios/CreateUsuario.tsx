@@ -3,11 +3,10 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
-import { Alert, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import InputMask from 'react-input-mask';
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { usuarioInitial, usuarioPayload } from '@/app/portal/usuarios/types';
 import { UserContext } from '@/context/UserContext';
-import { isValidEmail } from '@/utils/functions';
+import { CPFMask, isValidEmail } from '@/utils/functions';
 import { postUsuario } from '@/app/portal/usuarios/actions';
 
 export default function CreateUsuario(props: {
@@ -17,7 +16,7 @@ export default function CreateUsuario(props: {
     setError: (sa: string) => void,
     setSuccess: (sa: string) => void,
 }) {
-    const {empresa, user} = React.useContext(UserContext)
+    const { empresa, user } = React.useContext(UserContext)
     const [form, setForm] = React.useState<usuarioPayload>(usuarioInitial)
     const [confirmPassword, setConfirmPassword] = React.useState("")
 
@@ -52,19 +51,17 @@ export default function CreateUsuario(props: {
             } else {
                 props.setError(response.Mensagem)
             }
-
-            console.log(response)
         }
 
         props.setLoading(false)
     }
 
     React.useEffect(() => {
-        setForm({
-            ...form,
+        setForm((prevForm) => ({
+            ...prevForm,
             idUsuarioCadastro: user?.idUsuario || "",
             idEmpresa: empresa?.idEmpresa || ""
-        })
+        }))
     }, [empresa, user])
 
     return <Box sx={{ width: "100%" }} component={"form"} onSubmit={validateForm}>
@@ -93,29 +90,20 @@ export default function CreateUsuario(props: {
                 />
             </Grid>
             <Grid size={4}>
-                <InputMask
-                    mask="999.999.999-99"
+                <TextField
+                    id="cpf"
+                    type="text"
                     name="cpf"
+                    placeholder="xxx.xxx.xxx-xx"
+                    fullWidth
+                    variant="outlined"
+                    color="primary"
                     value={form.cpf}
                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
-                >
-                    {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
-                    {(
-                        inputProps: React.InputHTMLAttributes<HTMLInputElement>
-                    ) => (
-                        <TextField
-                            id="cpf"
-                            type="text"
-                            label="CPF"
-                            fullWidth
-
-                            inputProps={{
-                                ...inputProps,
-                                'aria-label': 'cpf',
-                            }}
-                        />
-                    )}
-                </InputMask>
+                    InputProps={{
+                        inputComponent: CPFMask,
+                    }}
+                />
             </Grid>
             <Grid size={4}>
                 <TextField

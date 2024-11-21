@@ -726,6 +726,18 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
+"@react-input/core@^1.0.19":
+  version "1.0.19"
+  resolved "https://registry.yarnpkg.com/@react-input/core/-/core-1.0.19.tgz#bd7267c1ef8fcf8f697cc17e1e310eb832c1722d"
+  integrity sha512-mMbPwOwIsjyXiTm5WuKSIfjLHMfdtIo2BKYIcrtoFm+w1weJcj44nZcIs1UGLMZWMtmXvFiN5vNQuAGuCI0Gag==
+
+"@react-input/mask@^1.2.15":
+  version "1.2.15"
+  resolved "https://registry.yarnpkg.com/@react-input/mask/-/mask-1.2.15.tgz#721e1329d5b4b88d1de8ded3ebd96baecf4ce843"
+  integrity sha512-GjvknLuaNw10/HLMQ5/naz6wd3qHPAAVelW2H5LrWAQD1jjUmJtmN9iMwx0HLK/0tpj66X9zfq8TM4ygFaQtGA==
+  dependencies:
+    "@react-input/core" "^1.0.19"
+
 "@rtsao/scc@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@rtsao/scc/-/scc-1.1.0.tgz#927dd2fae9bc3361403ac2c7a00c32ddce9ad7e8"

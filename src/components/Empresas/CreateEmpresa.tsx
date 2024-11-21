@@ -4,14 +4,13 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import { Button, TextField } from '@mui/material';
-import InputMask from 'react-input-mask';
-import { EmpresaInitial, EmpresaPayload} from '@/app/portal/empresas/types';
+import { EmpresaInitial, EmpresaPayload } from '@/app/portal/empresas/types';
 import { UserContext } from '@/context/UserContext';
-import { isValidEmail } from '@/utils/functions';
+import { CNPJMask, TelefoneMask } from '@/utils/functions';
 import { postEmpresa } from '@/app/portal/empresas/actions';
 
 export default function CreateEmpresa(props: {
-    getUsers: () => void,
+    getEmpresas: () => void,
     setLoading: (b: boolean) => void,
     setWarnings: (sa: string[]) => void,
     setError: (sa: string) => void,
@@ -28,13 +27,20 @@ export default function CreateEmpresa(props: {
         props.setSuccess("")
         const e: string[] = []
 
+
+        if (form.nomeEmpresa === EmpresaInitial.nomeEmpresa) e.push('Nome da empresa necessita estar preenchido!')
+        if (form.cnpj === EmpresaInitial.cnpj) e.push('CNPJ necessita estar preenchido!')
+        if (form.telefone === EmpresaInitial.telefone) e.push('Telefone necessita estar preenchido!')
+        if (form.nomeContato === EmpresaInitial.nomeContato) e.push('Nome do contato necessita estar preenchido!')
+        if (form.endereco === EmpresaInitial.endereco) e.push('Endereço necessita estar preenchido!')
+        if (form.emailSuporte === EmpresaInitial.emailSuporte) e.push('E-mail do suporte necessita estar preenchido!')
+
         if (e.length > 0) {
             props.setWarnings(e)
         } else {
-            console.log(form)
             const response = await postEmpresa(form)
             if (response.Codigo === "OK") {
-                props.getUsers()
+                props.getEmpresas()
                 setForm({
                     ...EmpresaInitial,
                     idUsuarioCadastro: user?.idUsuario || "",
@@ -43,19 +49,17 @@ export default function CreateEmpresa(props: {
             } else {
                 props.setError(response.Mensagem || "Houve um erro ao realizar seu cadastro. Em instantes, tente novamente.")
             }
-
-            console.log(response)
         }
 
         props.setLoading(false)
     }
 
     React.useEffect(() => {
-        setForm({
-            ...form,
+        setForm((prevForm) => ({
+            ...prevForm,
             idUsuarioCadastro: user?.idUsuario || "",
             idEmpresaPai: empresa?.idEmpresa || "",
-        })
+        }))
     }, [empresa, user])
 
     return <Box sx={{ width: "100%" }} component={"form"} onSubmit={validateForm}>
@@ -76,52 +80,38 @@ export default function CreateEmpresa(props: {
                     />
                 </Grid>
                 <Grid size={4}>
-                    <InputMask
-                        mask="99.999.999/9999-99"
+                    <TextField
+                        id="cnpj"
+                        type="text"
                         name="cnpj"
+                        label="Cnpj"
+                        fullWidth
+                        variant="outlined"
+                        color="primary"
                         value={form.cnpj}
                         onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
-                    >
-                        {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
-                        {(
-                            inputProps: React.InputHTMLAttributes<HTMLInputElement>
-                        ) => (
-                            <TextField
-                                id="cnpj"
-                                type="text"
-                                label="Cnpj"
-                                fullWidth
-                                inputProps={{
-                                    ...inputProps,
-                                    'aria-label': 'cnpj',
-                                }}
-                            />
-                        )}
-                    </InputMask>
+                        InputProps={{
+                            inputComponent: CNPJMask,
+                        }}
+                    />
                 </Grid>
                 <Grid size={6}>
-                    <InputMask
-                        mask="(99) 99999-9999"
-                        name="telefone"
-                        onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
-                        value={form.telefone}
-                    >
-                        {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
-                        {(
-                            inputProps: React.InputHTMLAttributes<HTMLInputElement>
-                        ) => (
-                            <TextField
-                                id="telefone"
-                                type="text"
-                                label="Telefone"
-                                fullWidth
-                                inputProps={{
-                                    ...inputProps,
-                                    'aria-label': 'telefone',
-                                }}
-                            />
-                        )}
-                    </InputMask>
+                    <Grid size={4}>
+                        <TextField
+                            id="telefone"
+                            type="text"
+                            label="Telefone"
+                            fullWidth
+                            variant="outlined"
+                            name="telefone"
+                            color="primary"
+                            value={form.telefone}
+                            onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                            InputProps={{
+                                inputComponent: TelefoneMask,
+                            }}
+                        />
+                    </Grid>
                 </Grid>
                 <Grid size={6}>
                     <TextField

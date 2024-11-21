@@ -4,8 +4,8 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import { Button, TextField } from '@mui/material';
-import InputMask from 'react-input-mask';
 import { EmpresaPayload } from '@/app/portal/empresas/types';
+import { CNPJMask, TelefoneMask } from '@/utils/functions';
 
 export default function EditEmpresa(props: {
     validateForm: (e: React.FormEvent<HTMLFormElement>) => void
@@ -14,8 +14,6 @@ export default function EditEmpresa(props: {
     confirmPassword: string,
     setConfirmPassword: (e: string) => void
 }) {
-
-    console.log(props.form)
     return <Box sx={{ width: "100%" }} component={"form"} onSubmit={props.validateForm}>
         <input name='idUsuarioCadastro' value={props.form.idUsuarioCadastro} hidden readOnly />
         <input name='idEmpresa' value={props.form.idEmpresa} hidden readOnly />
@@ -34,53 +32,40 @@ export default function EditEmpresa(props: {
                     />
                 </Grid>
                 <Grid size={4}>
-                    <InputMask
-                        mask="99.999.999/9999-99"
-                        name="cnpj"
-                        value={props.form.cnpj}
-                        onChange={e => props.setForm({ ...props.form, [e.target.name]: e.target.value })}
-                    >
-                        {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
-                        {(
-                            inputProps: React.InputHTMLAttributes<HTMLInputElement>
-                        ) => (
-                            <TextField
-                                id="cnpj"
-                                type="text"
-                                label="Cnpj"
-                                fullWidth
-                                inputProps={{
-                                    ...inputProps,
-                                    'aria-label': 'cnpj',
-                                }}
-                            />
-                        )}
-                    </InputMask>
+                    <Grid size={4}>
+                        <TextField
+                            id="cnpj"
+                            type="text"
+                            name="cnpj"
+                            label="Cnpj"
+                            fullWidth
+                            variant="outlined"
+                            color="primary"
+                            value={props.form.cnpj}
+                            onChange={e => props.setForm({ ...props.form, [e.target.name]: e.target.value })}
+                            InputProps={{
+                                inputComponent: CNPJMask,
+                            }}
+                        />
+                    </Grid>
                 </Grid>
                 <Grid size={6}>
-                    <InputMask
-                        mask="(99) 99999-9999"
-                        name="telefone"
-                        value={props.form.telefone}
-                        onChange={e => props.setForm({ ...props.form, [e.target.name]: e.target.value })}
-                    >
-                        {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
-                        {(
-                            inputProps: React.InputHTMLAttributes<HTMLInputElement>
-                        ) => (
-                            <TextField
-                                id="telefone"
-                                type="text"
-                                label="Telefone"
-                                fullWidth
-
-                                inputProps={{
-                                    ...inputProps,
-                                    'aria-label': 'telefone',
-                                }}
-                            />
-                        )}
-                    </InputMask>
+                    <Grid size={4}>
+                        <TextField
+                            id="telefone"
+                            type="text"
+                            label="Telefone"
+                            fullWidth
+                            variant="outlined"
+                            name="telefone"
+                            color="primary"
+                            value={props.form.telefone}
+                            onChange={e => props.setForm({ ...props.form, [e.target.name]: e.target.value })}
+                            InputProps={{
+                                inputComponent: TelefoneMask,
+                            }}
+                        />
+                    </Grid>
                 </Grid>
                 <Grid size={6}>
                     <TextField

@@ -13,10 +13,10 @@ import { styled } from '@mui/material/styles';
 
 import Image from 'next/image';
 import Login from './actions';
-import InputMask from 'react-input-mask';
 import { useFormState } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { Alert, Link, Skeleton } from '@mui/material';
+import { CPFMask } from '@/utils/functions';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -61,29 +61,18 @@ export default function SignInCard() {
     >
       <FormControl>
         <FormLabel htmlFor="cpf">CPF</FormLabel>
-        <InputMask
-          mask="999.999.999-99"
-        >
-          {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
-          {(
-            inputProps: React.InputHTMLAttributes<HTMLInputElement>
-          ) => (
-            <TextField
-              id="cpf"
-              type="text"
-              name="cpf"
-              placeholder="xxx.xxx.xxx-xx"
-              fullWidth
-              variant="outlined"
-              autoFocus
-              color="primary"
-              inputProps={{
-                ...inputProps,
-                'aria-label': 'cpf',
-              }}
-            />
-          )}
-        </InputMask>
+        <TextField
+          id="cpf"
+          type="text"
+          name="cpf"
+          placeholder="xxx.xxx.xxx-xx"
+          fullWidth
+          variant="outlined"
+          color="primary"
+          InputProps={{
+            inputComponent: CPFMask,
+          }}
+        />
       </FormControl>
       <FormControl>
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -127,28 +116,18 @@ export default function SignInCard() {
     >
       <FormControl>
         <FormLabel htmlFor="cpf">CPF</FormLabel>
-        <InputMask
-          mask="999.999.999-99"
-        >
-          {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
-          {(
-            inputProps: React.InputHTMLAttributes<HTMLInputElement>
-          ) => (
-            <TextField
-              id="cpf"
-              type="text"
-              name="cpf"
-              placeholder="xxx.xxx.xxx-xx"
-              fullWidth
-              variant="outlined"
-              color="primary"
-              inputProps={{
-                ...inputProps,
-                'aria-label': 'cpf',
-              }}
-            />
-          )}
-        </InputMask>
+        <TextField
+          id="cpf"
+          type="text"
+          name="cpf"
+          placeholder="xxx.xxx.xxx-xx"
+          fullWidth
+          variant="outlined"
+          color="primary"
+          InputProps={{
+            inputComponent: CPFMask,
+          }}
+        />
       </FormControl>
       <Button type="submit" fullWidth variant="contained"
         onClick={e => {

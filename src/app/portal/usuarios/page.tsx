@@ -11,7 +11,7 @@ import { activateUsuario, getUsuarios, intativaUsuario, updateUsuario } from './
 import { UserContext } from '@/context/UserContext';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { getUsuarioReturn, usuarioInitial, usuarioPayload } from './types';
-import { isValidEmail } from '@/utils/functions';
+import { aplicarMascaraCpfCnpj, isValidEmail } from '@/utils/functions';
 import CreateUsuario from '@/components/Usuarios/CreateUsuario';
 import { useRouter } from 'next/navigation';
 import CreateIcon from '@mui/icons-material/Create';
@@ -80,7 +80,7 @@ export default function Usuarios() {
             setForm({
                 ...form,
                 conselho: u.nrConselho,
-                cpf: u.cpf,
+                cpf: aplicarMascaraCpfCnpj(u.cpf),
                 email: u.email,
                 nomeCompleto: u.nomeCompleto,
                 tipoUsuario: u.tipoUsuario,
@@ -89,12 +89,12 @@ export default function Usuarios() {
         }
     }
 
-    async function getUsers() {
+    const getUsers = React.useCallback(async () => {
         setLoading(true)
         const u = await getUsuarios({ idEmpresa: empresa?.idEmpresa })
         setUsers(u)
         setLoading(false)
-    }
+    }, [empresa?.idEmpresa]);
 
     async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
         setLoading(true)
@@ -133,16 +133,16 @@ export default function Usuarios() {
             route.push("/portal/calculadora")
         }
 
-        setForm({
-            ...form,
+        setForm((prevForm) => ({
+            ...prevForm,
             idUsuarioCadastro: user?.idUsuario || "",
             idEmpresa: empresa?.idEmpresa || ""
-        })
+        }))
 
-    }, [empresa, user])
+    }, [empresa, user, getUsers, route])
 
     const columns: GridColDef<(getUsuarioReturn[])[number]>[] = [
-        { field: 'idUsuario', headerName: 'ID', width: 50 },
+        { field: 'idUsuario', headerName: 'ID', width: 50, sortComparator: (v1, v2) => Number(v1) - Number(v2) },
         {
             field: 'nomeCompleto',
             headerName: 'Nome Completo',
@@ -152,6 +152,7 @@ export default function Usuarios() {
             field: 'cpf',
             headerName: 'CPF',
             width: 80,
+            valueGetter: (value, row) => `${aplicarMascaraCpfCnpj(row.cpf)}`,
         },
         {
             field: 'email',
@@ -220,7 +221,7 @@ export default function Usuarios() {
                 overflowY: 'auto',
             }}
         >
-            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{ width: "100%", height: "auto" }} />
+            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{ width: "100%", height: "auto" }} priority/>
             <Box
                 sx={{
                     display: 'flex',
@@ -287,6 +288,9 @@ export default function Usuarios() {
                         columns={columns}
                         getRowId={(row) => row.idUsuario}
                         initialState={{
+                            sorting: {
+                                sortModel: [{ field: 'nomeCompleto', sort: 'asc' }],
+                            },
                             pagination: {
                                 paginationModel: {
                                     pageSize: 10,

@@ -21,7 +21,7 @@ export default function EscolheEmpresa() {
 
     return (<Grid container sx={{ height: { xs: '100%', sm: '100dvh' }, display: "flex", flexDirection: "column", alignContent: "center", justifyContent: "center", textAlign: "center", p: 5, gap: 3 }}>
         <Box>
-            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' />
+            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' priority/>
         </Box>
         <Typography variant="h6">Bem vindo, {user?.nome}! Antes de começar, escolha uma empresa:</Typography>
         <FormControl sx={{ minWidth: 180 }}>
