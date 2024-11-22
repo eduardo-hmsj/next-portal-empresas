@@ -1,0 +1,90 @@
+import { getEmpresas as getEmpresasApi } from "@/app/portal/empresas/actions";
+import { getEmpresaReturn } from "@/app/portal/empresas/types";
+import { getUsuarioReturn } from "@/app/portal/usuarios/types";
+import { UserContext } from "@/context/UserContext";
+import { Box, Button, FormControl, Grid2 as Grid, InputLabel, MenuItem, Modal, Select, Skeleton, Typography } from "@mui/material";
+import { useCallback, useContext, useEffect, useState } from "react";
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: "60%",
+    bgcolor: 'background.paper',
+    border: '1px solid #c3c3c3',
+    boxShadow: 24,
+    p: 4,
+};
+
+
+export default function ChangeCompanyModal(props: { user: getUsuarioReturn, close: () => void }) {
+    const [loading, setLoading] = useState(false)
+    const [empresasFilter, setEmpresasFilter] = useState<getEmpresaReturn[]>([])
+    const [form, setForm] = useState({
+        idEmpresa: "",
+        tpUsuario: ""
+    })
+    const { empresa } = useContext(UserContext)
+
+    const getEmpresas = useCallback(async () => {
+        setLoading(true);
+        const u = await getEmpresasApi({ idEmpresa: empresa?.idEmpresa });
+        setEmpresasFilter(u);
+        setLoading(false);
+    }, [empresa?.idEmpresa]);
+
+    useEffect(() => {
+        if (!!empresa?.idEmpresa) {
+            getEmpresas()
+        }
+    }, [empresa, getEmpresas])
+
+    return <Modal
+        open={true}
+        onClose={props.close}
+        aria-labelledby="change-company-modal-title"
+        aria-describedby="change-company-modal-description"
+    >
+        <Box sx={style}>
+            {!loading ? <>
+                <Typography id="change-company-title" variant="h6" component="h2" mb={3}>
+                    Empresas de {props.user.nomeCompleto}
+                </Typography>
+                <Grid container spacing={2} size={12}>
+                    <FormControl sx={{ flex: 1 }}>
+                        <InputLabel id="demo-simple-select-label">Nova Empresa</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Nova Empresa"
+                            value={form.idEmpresa}
+                            name="idEmpresa"
+                            onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                        >
+                            {empresasFilter.map((v, i) => <MenuItem value={v.idEmpresa} key={i}>{v.nomeEmpresa}</MenuItem>)}
+                        </Select>
+                    </FormControl>˝
+                    <FormControl sx={{ flex: 1 }}>
+                        <InputLabel id="demo-simple-select-label">Tipo de Usuário</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Tipo de Usuário"
+                            value={form.tpUsuario}
+                            name="tpUsuario"
+                            onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                        >
+                            <MenuItem value={"MEDICO"}>Médico</MenuItem>
+                            <MenuItem value={"ADMINISTRATIVO"}>Administrativo</MenuItem>
+                            <MenuItem value={"ENFERMEIRO"}>Enfermeiro</MenuItem>
+                            {empresa?.tpUsuario === "MASTER" && <MenuItem value={"MASTER"}>Master</MenuItem>}
+                        </Select>
+                    </FormControl>˝
+                    <Button variant="contained" size="large">Adicionar</Button>
+                </Grid>
+            </>
+                : <Skeleton animation='wave' sx={{ height: "500px", width: "100%" }} />}
+        </Box>
+    </Modal>
+}

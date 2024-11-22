@@ -94,6 +94,7 @@ export default function CreateUsuario(props: {
                     id="cpf"
                     type="text"
                     name="cpf"
+                    label="CPF"
                     placeholder="xxx.xxx.xxx-xx"
                     fullWidth
                     variant="outlined"

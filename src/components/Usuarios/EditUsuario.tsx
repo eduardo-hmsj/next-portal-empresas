@@ -47,6 +47,7 @@ export default function EditUsuario(props: {
                     id="cpf"
                     type="text"
                     name="cpf"
+                    label="CPF"
                     placeholder="xxx.xxx.xxx-xx"
                     fullWidth
                     variant="outlined"

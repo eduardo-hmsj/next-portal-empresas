@@ -18,6 +18,8 @@ import CreateIcon from '@mui/icons-material/Create';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import EditUsuario from '@/components/Usuarios/EditUsuario';
+import CorporateFareIcon from '@mui/icons-material/CorporateFare';
+import ChangeCompanyModal from '@/components/Usuarios/ChangeCompanyModal';
 
 
 export default function Usuarios() {
@@ -31,6 +33,7 @@ export default function Usuarios() {
     const [formOpen, setFormOpen] = React.useState("")
     const [loading, setLoading] = React.useState(false)
     const route = useRouter()
+    const [changeCompanyModal, setChangeCompanyModal] = React.useState<null | getUsuarioReturn>(null)
 
     function cleanAdvises() {
         setWarnings([])
@@ -194,6 +197,13 @@ export default function Usuarios() {
                         />}
                 </>,
                 <GridActionsCellItem
+                    key={"changeCompany"}
+                    icon={<CorporateFareIcon />}
+                    label="changeCompany"
+                    color={'warning'}
+                    onClick={() => setChangeCompanyModal(params.row)}
+                />,
+                <GridActionsCellItem
                     key={"edit"}
                     icon={<CreateIcon />}
                     label="Edit"
@@ -203,6 +213,7 @@ export default function Usuarios() {
         },
     ];
 
+    console.log(changeCompanyModal)
 
     return (<Grid container sx={{ height: { xs: '100%', sm: '100%' } }}>
         <Grid
@@ -303,5 +314,6 @@ export default function Usuarios() {
             </>
                 : <Skeleton animation='wave' sx={{ height: "100vh", width: "100%" }} />}
         </Grid>
+        {!!changeCompanyModal && <ChangeCompanyModal user={changeCompanyModal} close={() => setChangeCompanyModal(null)}/>}
     </Grid>);
 }
