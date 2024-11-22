@@ -7,7 +7,7 @@ import Info from '@/components/Layout/Info';
 import Logo from "@/img/logo.png"
 import Image from 'next/image';
 import { Alert, Button, Skeleton } from '@mui/material';
-// import { activatePaciente, getPacientes, intativaPaciente, updatePaciente } from './actions';
+import { activatePaciente, getPacientes as getPacientesApi, intativaPaciente, updatePaciente } from './actions';
 import { UserContext } from '@/context/UserContext';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { getPacienteReturn, PacienteInitial, PacientePayload } from './types';
@@ -42,34 +42,32 @@ export default function Pacientes() {
     async function inative(id: string) {
         cleanAdvises()
         setLoading(true)
-        // const response = await intativaPaciente({
-        //     idEmpresa: empresa?.idEmpresa || "",
-        //     idPaciente: id,
-        //     idPacienteCadastro: user?.idPaciente || ""
-        // })
-        // if (response.Codigo === "OK") {
-        //     getpacientes()
-        //     setSuccess("Usuário inativado com sucesso.")
-        // }else{
-        //     setError("Falha ao inaativar usuário.")
-        // }
+        const response = await intativaPaciente({
+            idPaciente: id,
+            idUsuarioCadastro: user?.idUsuario || ""
+        })
+        if (response.Codigo === "OK") {
+            getPacientes()
+            setSuccess("Paciente inativado com sucesso.")
+        }else{
+            setError("Falha ao inaativar paciente.")
+        }
         setLoading(false)
     }
 
     async function active(id: string) {
         cleanAdvises()
         setLoading(true)
-        // const response = await activatePaciente({
-        //     idEmpresa: empresa?.idEmpresa || "",
-        //     idPaciente: id,
-        //     idPacienteCadastro: user?.idPaciente || ""
-        // })
-        // if (response.Codigo === "OK") {
-        //     getpacientes()
-        //     setSuccess("Usuário ativado com sucesso.")
-        // }else{
-        //     setError("Falha ao ativar usuário.")
-        // }
+        const response = await activatePaciente({
+            idPaciente: id,
+            idUsuarioCadastro: user?.idUsuario || ""
+        })
+        if (response.Codigo === "OK") {
+            getPacientes()
+            setSuccess("Paciente ativado com sucesso.")
+        }else{
+            setError("Falha ao ativar paciente.")
+        }
         setLoading(false)
     }
 
@@ -82,15 +80,19 @@ export default function Pacientes() {
                 ...form,
                 idPaciente: u.idPaciente,
                 cpf: u.cpf,
-                dataNascimento: moment(new Date(u.dataNascimento)).format("DD/MM/YYYY")
+                dataNascimento: moment(new Date(u.dataNascimento)).format("DD/MM/YYYY"),
+                email: u.cpf,
+                nomeCompleto: u.nomeCompleto,
+                telefone: u.telefone
             })
         }
     }
 
     const getPacientes = React.useCallback(async () => {
         setLoading(true)
-        // const u = await getPacientesApi({ idEmpresa: empresa?.idEmpresa })
-        // setPacientes(u)
+        const u = await getPacientesApi({ idEmpresa: empresa?.idEmpresa })
+        console.log(u)
+        setPacientes(u)
         setLoading(false)
     }, [empresa?.idEmpresa]);
 
@@ -108,13 +110,13 @@ export default function Pacientes() {
         if (e.length > 0) {
             setWarnings(e)
         } else {
-            // const response = await updatePaciente(form)
-            // if (response.Codigo === "OK") {
-            //     getpacientes()
-            //     setSuccess(response.Mensagem)
-            // } else {
-            //     setError(response.Mensagem)
-            // }
+            const response = await updatePaciente(form)
+            if (response.Codigo === "OK") {
+                getPacientes()
+                setSuccess(response.Mensagem)
+            } else {
+                setError(response.Mensagem)
+            }
         }
 
         setLoading(false)

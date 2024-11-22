@@ -17,6 +17,11 @@ export interface getPacienteReturn {
     email: string
     dataNascimento: string
     status: string
+    idEmpresa: string,
+    telefone: string
+}
+
+export interface getPacientesProps {
     idEmpresa: string
 }
 

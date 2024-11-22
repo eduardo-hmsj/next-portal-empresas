@@ -26,7 +26,7 @@ export default function EditUsuario(props: {
     return <Box sx={{ width: "100%" }} component={"form"} onSubmit={props.validateForm}>
         <input name='idUsuarioCadastro' value={props.form.idUsuarioCadastro} hidden readOnly />
         <input name='idEmpresa' value={props.form.idEmpresa} hidden readOnly />
-        <Typography sx={{ mb: 2 }} variant='h4'>Editar Usuário</Typography>
+        <Typography sx={{ mb: 2 }} variant='h4'>Editar Paciente</Typography>
         <Grid container spacing={2} size={12}>
             <Grid size={6}>
                 <TextField

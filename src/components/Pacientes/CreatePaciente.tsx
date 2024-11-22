@@ -10,6 +10,7 @@ import { CPFMask, TelefoneMask } from '@/utils/functions';
 // import { postPaciente } from '@/app/portal/pacientes/actions';
 import { DatePicker } from '@mui/x-date-pickers';
 import moment, { Moment } from 'moment';
+import { postPaciente } from '@/app/portal/pacientes/actions';
 
 export default function CreatePaciente(props: {
     getPacientes: () => void,
@@ -44,23 +45,22 @@ export default function CreatePaciente(props: {
         if (form.email === PacienteInitial.email) e.push('E-mail necessita estar preenchido!')
         if (form.telefone === PacienteInitial.telefone) e.push('Telefone necessita estar preenchido!')
 
-        // if (e.length > 0) {
-        //     props.setWarnings(e)
-        // } else {
-        //     console.log(form)
-        //     const response = await postPaciente(form)
-        //     if (response.Codigo === "OK") {
-        //         props.getPacientes()
-        //         setForm({
-        //             ...PacienteInitial,
-        //             idUsuarioCadastro: user?.idUsuario || "",
-        //             idEmpresa: empresa?.idEmpresa || ""
-        //         })
-        //         props.setSuccess(response.Mensagem)
-        //     } else {
-        //         props.setError(response.Mensagem)
-        //     }
-        // }
+        if (e.length > 0) {
+            props.setWarnings(e)
+        } else {
+            const response = await postPaciente(form)
+            if (response.Codigo === "OK") {
+                props.getPacientes()
+                setForm({
+                    ...PacienteInitial,
+                    idUsuarioCadastro: user?.idUsuario || "",
+                    idEmpresa: empresa?.idEmpresa || ""
+                })
+                props.setSuccess(response.Mensagem)
+            } else {
+                props.setError(response.Mensagem)
+            }
+        }
 
         props.setLoading(false)
     }
