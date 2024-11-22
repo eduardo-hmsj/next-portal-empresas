@@ -12,11 +12,12 @@ import Logo from "@/img/logo.png"
 import { styled } from '@mui/material/styles';
 
 import Image from 'next/image';
-import Login from './actions';
 import { useFormState } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { Alert, Link, Skeleton } from '@mui/material';
 import { CPFMask } from '@/utils/functions';
+import { LoginInitial, LoginPayload } from '@/app/(login)/types';
+import Login from '@/app/(login)/actions';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -38,24 +39,50 @@ const Card = styled(MuiCard)(({ theme }) => ({
 
 export default function SignInCard() {
   const [mode, setMode] = React.useState("login")
-  const [singed, setSinged] = React.useState("")
-  const [loged, SignIn] = useFormState(Login, "")
   const [loading, setLoading] = React.useState(false)
+  const [warnings, setWarnings] = React.useState<string[]>([])
+  const [error, setError] = React.useState("")
+  const [success, setSuccess] = React.useState("")
   const route = useRouter()
 
-  React.useEffect(() => {
-    if (loged) {
-      route.push('/portal/calculadora')
-      setLoading(false)
-    }
-    if (loged === "false") setLoading(false)
-  }, [loged, route])
+  function cleanAdvises() {
+    setWarnings([])
+    setError("")
+    setSuccess("")
+  }
+
 
   function LoginForm() {
+    const [form, setForm] = React.useState(LoginInitial)
+
+    async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
+      evt.preventDefault()
+      cleanAdvises()
+      setLoading(true)
+      const e: string[] = []
+
+      if (form.cpf === LoginInitial.cpf) e.push('CPF necessita estar preenchido!')
+      if (form.senha === LoginInitial.senha) e.push('Senha necessita estar preenchido!')
+
+      if (e.length > 0) {
+        setWarnings(e)
+      } else {
+        const response = await Login(form)
+        console.log(response)
+        if (response.Codigo === "OK") {
+
+          route.push('/portal/calculadora')
+          setSuccess(response.Mensagem)
+        } else {
+          setError(response.Mensagem || "Houve um erro ao realizar seu login. Em instantes, tente novamente.")
+        }
+      }
+      setLoading(false)
+    }
+
     return <Box
       component="form"
-      action={SignIn}
-      onSubmit={() => setLoading(true)}
+      onSubmit={validateForm}
       noValidate
       sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2 }}
     >
@@ -72,6 +99,8 @@ export default function SignInCard() {
           InputProps={{
             inputComponent: CPFMask,
           }}
+          value={form.cpf}
+          onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
         />
       </FormControl>
       <FormControl>
@@ -99,6 +128,8 @@ export default function SignInCard() {
           fullWidth
           variant="outlined"
           color={'primary'}
+          value={form.senha}
+          onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
         />
       </FormControl>
       <Button type="submit" fullWidth variant="contained">
@@ -132,7 +163,6 @@ export default function SignInCard() {
       <Button type="submit" fullWidth variant="contained"
         onClick={e => {
           e.preventDefault()
-          setSinged("true")
         }}>
         Recuperar Senha
       </Button>
@@ -148,8 +178,6 @@ export default function SignInCard() {
       >
         Voltar para Login
       </Link>
-      {singed === "false" && <Alert severity="error">Erro ao realizar login. Revise os campos de CPF e senha e tente novamente.</Alert>}
-      {singed === "true" && <Alert severity="success">Foi enviado um email para o endereço renan****@*****.com.br com as instruções de redefinição da senha.</Alert>}
     </Box>
   }
 
@@ -177,6 +205,9 @@ export default function SignInCard() {
         <>
           {mode === "login" && <LoginForm />}
           {mode === "signUp" && <SignUp />}
+          {warnings.map((v, i) => <Alert key={i} severity="warning" sx={{ width: "100%", mt: 1 }}>{v}</Alert>)}
+          {!!error && <Alert severity="error" sx={{ width: "100%", mt: 1 }}>{error}</Alert>}
+          {!!success && <Alert severity="success" sx={{ width: "100%", mt: 1 }}>{success}</Alert>}
         </>
       }
     </Card>

@@ -105,7 +105,7 @@ export default function Ajuda() {
                 gap: { xs: 4, md: 8 },
             }}
         >{!loading ? <>
-            <Box component={"form"} onSubmit={validateForm}>
+            <Box sx={{ width: "100%" }} component={"form"} onSubmit={validateForm}>
                 <Typography sx={{ mb: 2 }} variant='h4'>Criar solicitação</Typography>
                 <input name='idUsuarioCadastro' value={form.idUsuario} hidden readOnly/>
                 <input name='idEmpresa' value={form.idEmpresa} hidden readOnly/>

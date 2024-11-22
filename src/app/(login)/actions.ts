@@ -4,28 +4,23 @@ import { UserProps } from "@/context/UserContext/types"
 import api from "@/services/api"
 import { cookies } from 'next/headers'
 import { redirect } from "next/navigation"
+import { LoginPayload } from "./types"
+import { removeCpfMask } from "@/utils/functions"
 
-export default async function Login(prev: string, formData: FormData) {
+export default async function Login(props: LoginPayload) {
     const cookieStore = await cookies()
     try {
-        const response = await api.post('/LoginPE', {
-            cpf: formData.get("cpf")?.toString().replace(/\D/g, ''),
-            senha: formData.get("senha")
-        })
+        const response = await api.post('/LoginPE', {...props, cpf: removeCpfMask(props.cpf)})
 
-        const dados: UserProps[] | undefined = response.data.User.empresas
+        const dados: UserProps[] | undefined = response.data.User?.empresas
 
         if (dados !== undefined && dados.length > 0) {
             cookieStore.set('usuario', JSON.stringify(response.data.User))
             if (dados.length === 1) cookieStore.set('empresa', JSON.stringify(dados[0]))
-                console.log("cheguei")
-            redirect("/portal/calculadora")
-            return "true"
         }
-        console.log("cheguei 1")
-        return "false"
+        return response.data
     } catch (error) {
         console.log(error)
-        return "false"
+        return { Codigo: 'NOK', Mensagem: 'Houve um erro a responder requisição.' }
     }
 }

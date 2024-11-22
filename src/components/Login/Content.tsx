@@ -11,15 +11,15 @@ import Image from 'next/image';
 const items = [
   {
     icon: <BusinessIcon sx={{ color: 'text.secondary' }} />,
-    title: 'Grupo Santa Joana para Empresas',
+    title: 'Calculadora de Risco Gestacional do Grupo Santa Joana',
     description:
-      '“Conte com as soluções de quem mais entende da saúde da mulher e gestante, para sua empresa.”',
+      'Por meio de análise precisa de dados clínicos e histórico da gestante, a calculadora identifica os riscos associados à gestação, permitindo intervenções mais assertivas e personalizadas.',
   },
   {
     icon: <SearchIcon sx={{ color: 'text.secondary' }} />,
-    title: 'Identifique fatores de risco na gestação das suas colaboradoras',
+    title: '',
     description:
-      'A Calculadora de Saúde Gestacional do Grupo Santa Joana permite que gestores e médicos identifiquem fatores de risco durante a gestação das colaboradoras, facilitando a tomada de decisões preventivas. Utilizando indicadores personalizados como histórico médico, IMC e condições pré-existentes, o sistema oferece uma análise detalhada do risco gestacional (baixo, médio ou alto), permitindo acompanhamento contínuo e seguro.',
+      'Caso necessário, o profissional médico poderá solicitar uma interconsulta com nossos especialistas e juntos construir metas terapêuticas para a gestante ou até mesmo encaminhar a paciente para nossos especialistas em alto risco gestacional.',
   }
 ];
 
