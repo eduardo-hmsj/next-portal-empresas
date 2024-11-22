@@ -12,7 +12,9 @@ export interface getEmpresaReturn {
     nomeContato: string,
     emailSuporte: string
     idUsuarioCadastro: string
-    status: string
+    status: string,
+    tpUsuario?: string,
+    idUsuario?: string,
 }
 
 export interface EmpresaPayload {

@@ -17,11 +17,6 @@ export async function getEmpresas(props: getEmpresasProps): Promise<getEmpresaRe
 
 export async function postEmpresa(props: EmpresaPayload) {
     try {
-        console.log(props)
-        console.log({
-            ...props,
-            cnpj: removeCpfMask(props.cnpj)
-        })
         const { data } = await api.post("/CadastroEmpresaPE", {
             ...props,
             cnpj: removeCpfMask(props.cnpj)
@@ -36,10 +31,6 @@ export async function postEmpresa(props: EmpresaPayload) {
 
 export async function updateEmpresa(props: EmpresaPayload) {
     try {
-        console.log({
-            ...props,
-            cnpj: removeCpfMask(props.cnpj)
-        })
         const { data } = await api.post("/AlterarEmpresaPE", {
             ...props,
             cnpj: removeCpfMask(props.cnpj)
@@ -57,7 +48,6 @@ export async function intativaEmpresa(props: {
     idUsuarioCadastro: string
 }) {
     try {
-        console.log(props)
         const { data } = await api.post("/InativarEmpresaPE", props)
         return data
     } catch (error) {

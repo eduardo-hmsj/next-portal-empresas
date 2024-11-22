@@ -20,12 +20,10 @@ import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import EditPaciente from '@/components/Pacientes/EditPaciente';
 import moment from 'moment';
 
-
 export default function Pacientes() {
     const { empresa, user } = React.useContext(UserContext)
     const [pacientes, setPacientes] = React.useState<getPacienteReturn[]>([])
     const [form, setForm] = React.useState<PacientePayload>(PacienteInitial)
-    const [confirmPassword, setConfirmPassword] = React.useState("")
     const [warnings, setWarnings] = React.useState<string[]>([])
     const [error, setError] = React.useState("")
     const [success, setSuccess] = React.useState("")
@@ -49,7 +47,7 @@ export default function Pacientes() {
         if (response.Codigo === "OK") {
             getPacientes()
             setSuccess("Paciente inativado com sucesso.")
-        }else{
+        } else {
             setError("Falha ao inaativar paciente.")
         }
         setLoading(false)
@@ -65,7 +63,7 @@ export default function Pacientes() {
         if (response.Codigo === "OK") {
             getPacientes()
             setSuccess("Paciente ativado com sucesso.")
-        }else{
+        } else {
             setError("Falha ao ativar paciente.")
         }
         setLoading(false)
@@ -91,7 +89,6 @@ export default function Pacientes() {
     const getPacientes = React.useCallback(async () => {
         setLoading(true)
         const u = await getPacientesApi({ idEmpresa: empresa?.idEmpresa })
-        console.log(u)
         setPacientes(u)
         setLoading(false)
     }, [empresa?.idEmpresa]);
@@ -106,6 +103,7 @@ export default function Pacientes() {
         if (form.dataNascimento === PacienteInitial.dataNascimento) e.push('Data de Nascimento necessita estar preenchido!')
         if (form.email === PacienteInitial.email) e.push('E-mail necessita estar preenchido!')
         if (form.telefone === PacienteInitial.telefone) e.push('Telefone necessita estar preenchido!')
+        if (!isValidEmail(form.email)) e.push('E-mail inválido!')
 
         if (e.length > 0) {
             setWarnings(e)

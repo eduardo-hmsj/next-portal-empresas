@@ -3,7 +3,6 @@
 import { UserProps } from "@/context/UserContext/types"
 import api from "@/services/api"
 import { cookies } from 'next/headers'
-import { redirect } from "next/navigation"
 import { LoginPayload } from "./types"
 import { removeCpfMask } from "@/utils/functions"
 

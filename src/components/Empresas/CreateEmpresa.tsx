@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { Button, TextField } from '@mui/material';
 import { EmpresaInitial, EmpresaPayload } from '@/app/portal/empresas/types';
 import { UserContext } from '@/context/UserContext';
-import { CNPJMask, TelefoneMask } from '@/utils/functions';
+import { CNPJMask, isValidEmail, TelefoneMask } from '@/utils/functions';
 import { postEmpresa } from '@/app/portal/empresas/actions';
 
 export default function CreateEmpresa(props: {
@@ -34,6 +34,7 @@ export default function CreateEmpresa(props: {
         if (form.nomeContato === EmpresaInitial.nomeContato) e.push('Nome do contato necessita estar preenchido!')
         if (form.endereco === EmpresaInitial.endereco) e.push('Endereço necessita estar preenchido!')
         if (form.emailSuporte === EmpresaInitial.emailSuporte) e.push('E-mail do suporte necessita estar preenchido!')
+        if (!isValidEmail(form.emailSuporte)) e.push('E-mail inválido!')
 
         if (e.length > 0) {
             props.setWarnings(e)

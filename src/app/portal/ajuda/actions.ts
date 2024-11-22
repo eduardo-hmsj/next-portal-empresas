@@ -3,7 +3,6 @@ import api from "@/services/api"
 import { AjudaPayload } from "./types"
 
 export async function postAjuda(props: AjudaPayload) {
-    console.log(props)
     try {
         const { data } = await api.post("/CadastroAjudaPE", props)
         return data

@@ -3,6 +3,7 @@
 import api from "@/services/api";
 import { getUsuarioReturn, getUsuariosProps, usuarioPayload } from "./types";
 import { removeCpfMask } from "@/utils/functions";
+import { getEmpresaReturn } from "../empresas/types";
 
 export async function getUsuarios(props: getUsuariosProps): Promise<getUsuarioReturn[]> {
     try {
@@ -71,4 +72,14 @@ export async function activateUsuario(props: {
     }
 
     return { Codigo: 'NOK', Mensagem: 'Houve um erro a responder requisição.' }
+}
+
+export async function getEmpresasUsuario(props: {idUsuario: string}): Promise<getEmpresaReturn[]> {
+    try {
+        const { data, status } = await api.post("/ConsultaEmpresaUsuarioPE", props)
+        if (status === 200 && Array.isArray(data.Dados)) return data.Dados
+    } catch (error) {
+        console.log(error)
+    }
+    return []
 }

@@ -19,8 +19,7 @@ import PersonOffIcon from '@mui/icons-material/PersonOff';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import EditUsuario from '@/components/Usuarios/EditUsuario';
 import CorporateFareIcon from '@mui/icons-material/CorporateFare';
-import ChangeCompanyModal from '@/components/Usuarios/ChangeCompanyModal';
-
+import ChangeCompanyModal from '@/components/Usuarios/ChangeCompanyModal'; 
 
 export default function Usuarios() {
     const { empresa, user } = React.useContext(UserContext)
@@ -212,8 +211,6 @@ export default function Usuarios() {
             ],
         },
     ];
-
-    console.log(changeCompanyModal)
 
     return (<Grid container sx={{ height: { xs: '100%', sm: '100%' } }}>
         <Grid

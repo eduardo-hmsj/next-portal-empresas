@@ -17,10 +17,6 @@ export async function getPacientes(props: getUsuariosProps): Promise<getPaciente
 
 export async function postPaciente(props: PacientePayload) {
     try {
-        console.log({
-            ...props,
-            cpf: removeCpfMask(props.cpf)
-        })
         const { data } = await api.post("/CadastroPacientePE", {
             ...props,
             cpf: removeCpfMask(props.cpf)

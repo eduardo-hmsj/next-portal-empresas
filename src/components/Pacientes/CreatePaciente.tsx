@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { Button, TextField } from '@mui/material';
 import { PacienteInitial, PacientePayload } from '@/app/portal/pacientes/types';
 import { UserContext } from '@/context/UserContext';
-import { CPFMask, TelefoneMask } from '@/utils/functions';
+import { CPFMask, isValidEmail, TelefoneMask } from '@/utils/functions';
 // import { postPaciente } from '@/app/portal/pacientes/actions';
 import { DatePicker } from '@mui/x-date-pickers';
 import moment, { Moment } from 'moment';
@@ -44,6 +44,7 @@ export default function CreatePaciente(props: {
         if (form.dataNascimento === PacienteInitial.dataNascimento) e.push('Data de Nascimento necessita estar preenchido!')
         if (form.email === PacienteInitial.email) e.push('E-mail necessita estar preenchido!')
         if (form.telefone === PacienteInitial.telefone) e.push('Telefone necessita estar preenchido!')
+        if (!isValidEmail(form.email)) e.push('E-mail inválido!')
 
         if (e.length > 0) {
             props.setWarnings(e)

@@ -11,15 +11,14 @@ import { activateEmpresa, intativaEmpresa, updateEmpresa } from './actions';
 import { UserContext } from '@/context/UserContext';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { getEmpresaReturn, EmpresaInitial, EmpresaPayload } from './types';
-import { aplicarMascaraCpfCnpj, aplicarMascaraTelefone } from '@/utils/functions';
+import { aplicarMascaraCpfCnpj, aplicarMascaraTelefone, isValidEmail } from '@/utils/functions';
 import { useRouter } from 'next/navigation';
 import CreateIcon from '@mui/icons-material/Create';
 import CreateEmpresa from '@/components/Empresas/CreateEmpresa';
 import EditEmpresa from '@/components/Empresas/EditEmpresa';
 import { getEmpresas as getEmpresasApi } from './actions';
 import CorporateFareIcon from '@mui/icons-material/CorporateFare';
-import DomainDisabledIcon from '@mui/icons-material/DomainDisabled';
-
+import DomainDisabledIcon from '@mui/icons-material/DomainDisabled'; 
 
 export default function Empresas() {
     const { empresa, user } = React.useContext(UserContext)
@@ -107,6 +106,7 @@ export default function Empresas() {
         if (form.nomeContato === EmpresaInitial.nomeContato) e.push('Nome do contato necessita estar preenchido!')
         if (form.endereco === EmpresaInitial.endereco) e.push('Endereço necessita estar preenchido!')
         if (form.emailSuporte === EmpresaInitial.emailSuporte) e.push('E-mail do suporte necessita estar preenchido!')
+        if (!isValidEmail(form.emailSuporte)) e.push('E-mail inválido!')
 
         if (e.length > 0) {
             setWarnings(e)

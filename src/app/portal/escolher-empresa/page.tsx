@@ -5,7 +5,7 @@ import Image from "next/image";
 import { UserContext } from "@/context/UserContext";
 import { useContext, useEffect, useState } from "react";
 import { chooseEmpresa } from "./actions";
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'; 
 
 export default function EscolheEmpresa() {
     const { user } = useContext(UserContext)

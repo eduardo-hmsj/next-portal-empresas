@@ -9,8 +9,7 @@ import Image from 'next/image';
 import { Alert, Button, Skeleton, TextField } from '@mui/material';
 import { UserContext } from '@/context/UserContext';
 import { AjudaInitial, AjudaPayload } from './types';
-import { postAjuda } from './actions';
-
+import { postAjuda } from './actions'; 
 
 export default function Ajuda() {
     const { user, empresa } = React.useContext(UserContext)

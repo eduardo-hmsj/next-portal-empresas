@@ -12,11 +12,10 @@ import Logo from "@/img/logo.png"
 import { styled } from '@mui/material/styles';
 
 import Image from 'next/image';
-import { useFormState } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { Alert, Link, Skeleton } from '@mui/material';
 import { CPFMask } from '@/utils/functions';
-import { LoginInitial, LoginPayload } from '@/app/(login)/types';
+import { LoginInitial } from '@/app/(login)/types';
 import Login from '@/app/(login)/actions';
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -68,7 +67,7 @@ export default function SignInCard() {
         setWarnings(e)
       } else {
         const response = await Login(form)
-        console.log(response)
+        
         if (response.Codigo === "OK") {
 
           route.push('/portal/calculadora')
