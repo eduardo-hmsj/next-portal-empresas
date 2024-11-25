@@ -1,9 +1,9 @@
 import { getEmpresas as getEmpresasApi } from "@/app/portal/empresas/actions";
-import { getEmpresasUsuario as getEmpresasUsuarioApi } from "@/app/portal/usuarios/actions";
+import { activateUsuario, deleteEmpresasUsuario, getEmpresasUsuario as getEmpresasUsuarioApi, postEmpresasUsuario } from "@/app/portal/usuarios/actions";
 import { getEmpresaReturn } from "@/app/portal/empresas/types";
-import { getUsuarioReturn } from "@/app/portal/usuarios/types";
+import { ativarUsuarioEmpresaInitial, getUsuarioReturn } from "@/app/portal/usuarios/types";
 import { UserContext } from "@/context/UserContext";
-import { Box, Button, FormControl, Grid2 as Grid, InputLabel, MenuItem, Modal, Select, Skeleton, Typography } from "@mui/material";
+import { Alert, Box, Button, FormControl, Grid2 as Grid, InputLabel, MenuItem, Modal, Select, Skeleton, Typography } from "@mui/material";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import CloseIcon from '@mui/icons-material/Close';
@@ -24,12 +24,18 @@ const style = {
 export default function ChangeCompanyModal(props: { user: getUsuarioReturn, close: () => void }) {
     const [loading, setLoading] = useState(false)
     const [empresasFilter, setEmpresasFilter] = useState<getEmpresaReturn[]>([])
-    const [form, setForm] = useState({
-        idEmpresa: "",
-        tpUsuario: ""
-    })
-    const { empresa } = useContext(UserContext)
+    const [form, setForm] = useState(ativarUsuarioEmpresaInitial)
+    const { empresa, user } = useContext(UserContext)
     const [empresas, setEmpresas] = useState<getEmpresaReturn[]>([])
+    const [warnings, setWarnings] = useState<string[]>([])
+    const [error, setError] = useState("")
+    const [success, setSuccess] = useState("")
+
+    function cleanAdvises() {
+        setWarnings([])
+        setError("")
+        setSuccess("")
+    }
 
     const getEmpresas = useCallback(async () => {
         setLoading(true);
@@ -45,11 +51,66 @@ export default function ChangeCompanyModal(props: { user: getUsuarioReturn, clos
         setLoading(false);
     }, [props.user.idUsuario]);
 
+    async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
+        setLoading(true)
+        evt.preventDefault()
+        cleanAdvises()
+        const e: string[] = []
+        if (form.idEmpresa === ativarUsuarioEmpresaInitial.idEmpresa) e.push('Nova Empresa necessita estar preenchida!')
+        if (form.tpUsuario === ativarUsuarioEmpresaInitial.tpUsuario) e.push('Tipo de Usuário necessita estar preenchido!')
+
+
+        if (e.length > 0) {
+            setWarnings(e)
+        }
+        else {
+            const response = await postEmpresasUsuario(form)
+            if (response.Codigo === "OK") {
+                getEmpresasUsuario()
+                setForm({
+                    ...ativarUsuarioEmpresaInitial,
+                    idUsuarioCadastro: user?.idUsuario || "",
+                    idUsuario: props.user.idUsuario,
+                })
+                setSuccess(response.Mensagem)
+            } else {
+                setError(response.Mensagem)
+            }
+        }
+
+        setLoading(false)
+    }
+
+    async function inative(id: string) {
+        cleanAdvises()
+        setLoading(true)
+        const response = await deleteEmpresasUsuario({
+            idEmpresa: id,
+            idUsuario: props.user.idUsuario,
+            idUsuarioCadastro: user?.idUsuario || ""
+        })
+        if (response.Codigo === "OK") {
+            getEmpresasUsuario()
+            setSuccess(response.Mensagem)
+        }else{
+            setError(response.Mensagem)
+        }
+        setLoading(false)
+    }
+
+
     useEffect(() => {
+        cleanAdvises()
         if (!!empresa?.idEmpresa) {
             getEmpresas()
             getEmpresasUsuario()
         }
+
+        setForm((prevForm) => ({
+            ...prevForm,
+            idUsuarioCadastro: user?.idUsuario || "",
+            idUsuario: props.user.idUsuario,
+        }))
     }, [empresa, getEmpresas, getEmpresasUsuario])
 
     const columns: GridColDef<(getEmpresaReturn[])[number]>[] = [
@@ -68,13 +129,13 @@ export default function ChangeCompanyModal(props: { user: getUsuarioReturn, clos
             field: 'actions',
             type: 'actions',
             width: 100,
-            getActions: () => [
+            getActions: params => [
                 <GridActionsCellItem
                     key={"delete"}
                     color="error"
                     icon={<CloseIcon />}
                     label="Delete"
-                    onClick={() => { }}
+                    onClick={() => inative(params.row.idEmpresa)}
                 />,
             ],
         },
@@ -91,7 +152,7 @@ export default function ChangeCompanyModal(props: { user: getUsuarioReturn, clos
                 <Typography id="change-company-title" variant="h6" component="h2" mb={3}>
                     Empresas de {props.user.nomeCompleto}
                 </Typography>
-                <Grid container spacing={2} size={12} mb={5} component={"form"} onSubmit={e => e.preventDefault()}>
+                <Grid container spacing={2} size={12} mb={5} component={"form"} onSubmit={validateForm}>
                     <FormControl sx={{ flex: 1 }}>
                         <InputLabel id="demo-simple-select-label">Nova Empresa</InputLabel>
                         <Select
@@ -102,6 +163,7 @@ export default function ChangeCompanyModal(props: { user: getUsuarioReturn, clos
                             name="idEmpresa"
                             onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                         >
+                            <MenuItem value={""}></MenuItem>
                             {empresasFilter.map((v, i) => <MenuItem value={v.idEmpresa} key={i}>{v.nomeEmpresa}</MenuItem>)}
                         </Select>
                     </FormControl>
@@ -115,6 +177,7 @@ export default function ChangeCompanyModal(props: { user: getUsuarioReturn, clos
                             name="tpUsuario"
                             onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                         >
+                            <MenuItem value={""}></MenuItem>
                             <MenuItem value={"MEDICO"}>Médico</MenuItem>
                             <MenuItem value={"ADMINISTRATIVO"}>Administrativo</MenuItem>
                             <MenuItem value={"ENFERMEIRO"}>Enfermeiro</MenuItem>
@@ -139,6 +202,9 @@ export default function ChangeCompanyModal(props: { user: getUsuarioReturn, clos
                     }}
                     pageSizeOptions={[5, 10, 25]}
                 />
+                {warnings.map((v, i) => <Alert key={i} severity="warning" sx={{ width: "100%", mt: 1 }}>{v}</Alert>)}
+                {!!error && <Alert severity="error" sx={{ width: "100%", mt: 1 }}>{error}</Alert>}
+                {!!success && <Alert severity="success" sx={{ width: "100%", mt: 1 }}>{success}</Alert>}
             </>
                 : <Skeleton animation='wave' sx={{ height: "500px", width: "100%" }} />}
         </Box>

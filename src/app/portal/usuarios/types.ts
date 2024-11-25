@@ -28,6 +28,13 @@ export interface usuarioPayload {
     idUsuario?: string
 }
 
+export interface ativarUsuarioEmpresaPayload {
+    idUsuario: string
+    idEmpresa: string
+    idUsuarioCadastro: string
+    tpUsuario: string
+}
+
 export const usuarioInitial = {
     nomeCompleto: "",
     cpf: "",
@@ -39,3 +46,9 @@ export const usuarioInitial = {
     conselho: "",
 }
 
+export const ativarUsuarioEmpresaInitial = {
+    idUsuario: "",
+    idEmpresa: "",
+    idUsuarioCadastro: "",
+    tpUsuario: "",
+}

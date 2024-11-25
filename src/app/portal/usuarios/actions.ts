@@ -1,7 +1,7 @@
 "use server"
 
 import api from "@/services/api";
-import { getUsuarioReturn, getUsuariosProps, usuarioPayload } from "./types";
+import { ativarUsuarioEmpresaPayload, getUsuarioReturn, getUsuariosProps, usuarioPayload } from "./types";
 import { removeCpfMask } from "@/utils/functions";
 import { getEmpresaReturn } from "../empresas/types";
 
@@ -82,4 +82,29 @@ export async function getEmpresasUsuario(props: {idUsuario: string}): Promise<ge
         console.log(error)
     }
     return []
+}
+
+export async function postEmpresasUsuario(props: ativarUsuarioEmpresaPayload){
+    try {
+        const { data, status } = await api.post("/AtivarEmpresaUsuarioPE", props)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+    return []
+}
+
+export async function deleteEmpresasUsuario(props: {
+    idUsuario: string
+    idEmpresa: string
+    idUsuarioCadastro: string
+}) {
+    try {
+        const { data } = await api.post("/InativarEmpresaUsuarioPE", props)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+
+    return { Codigo: 'NOK', Mensagem: 'Houve um erro a responder requisição.' }
 }
