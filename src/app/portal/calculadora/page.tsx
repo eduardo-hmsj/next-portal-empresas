@@ -6,91 +6,30 @@ import Typography from '@mui/material/Typography';
 import Info from '@/components/Layout/Info';
 import Logo from "@/img/logo.png"
 import Image from 'next/image';
-import { Button, Checkbox, FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, InputLabel, OutlinedInput, Radio, RadioGroup, TextField } from '@mui/material';
+import { Alert, Button, Checkbox, FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, InputLabel, OutlinedInput, Radio, RadioGroup, Skeleton, TextField } from '@mui/material';
 import { UserContext } from '@/context/UserContext';
-import InputMask from 'react-input-mask';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import SportsScoreIcon from '@mui/icons-material/SportsScore';
-import AccessibilityIcon from '@mui/icons-material/Accessibility';
-import GppMaybeIcon from '@mui/icons-material/GppMaybe';
 import SearchIcon from '@mui/icons-material/Search';
-const situacaoFamiliar = [
-    { "name": "situacaoFamiliar", "label": "Situação Familiar Instável", "type": "boolean" },
-    { "name": "aceitacaoGravidez", "label": "Aceitação da Gravidez", "type": "boolean" },
-    { "name": "sabeLer", "label": "Sabe Ler", "type": "boolean" },
-    { "name": "fumante", "label": "Fumante", "type": "boolean" },
-    { "name": "dependenteDrogas", "label": "Dependente de Drogas", "type": "boolean" },
-    { "name": "expostaRiscoOcupacional", "label": "Exposta a Risco Ocupacional", "type": "boolean" },
-    { "name": "expostaCondAmbientais", "label": "Exposta a Condições Ambientais", "type": "boolean" }
-]
+import { aplicarMascaraCpfCnpj, CPFMask, isValidEmail, removeCpfMask, TelefoneMask } from '@/utils/functions';
+import { condicoesMedicas, historicoObst, initialCalculadoraValue, situacaoFamiliar } from './types';
+import moment, { Moment } from 'moment';
+import { getPacienteReturn } from '../pacientes/types';
+import { getPacientes } from '../pacientes/actions';
+import { postCalculadora } from './actions';
 
-const historicoObst = [
-    { "name": "ate2Abortos", "label": "Até 2 Abortos", "type": "boolean" },
-    { "name": "maisde2Abortos", "label": "Mais de 2 Abortos", "type": "boolean" },
-    { "name": "natimortoFetal", "label": "Natimorto Fetal", "type": "boolean" },
-    { "name": "partoPrematuro", "label": "Parto Prematuro", "type": "boolean" },
-    { "name": "histRnCrescimento", "label": "Histórico de RN com Crescimento", "type": "boolean" },
-    { "name": "intervaloInterpartal", "label": "Intervalo Interpartal", "type": "boolean" },
-    { "name": "eclampsia", "label": "Eclampsia", "type": "boolean" },
-    { "name": "preEclampsia", "label": "Pré-eclampsia", "type": "boolean" },
-    { "name": "placentaPrevia", "label": "Placenta Prévia", "type": "boolean" },
-    { "name": "insuficienciaIstmoCervical", "label": "Insuficiência de Istmo Cervical", "type": "boolean" },
-    { "name": "cesarea12", "label": "Cesariana (1-2)", "type": "boolean" },
-    { "name": "cesarea3Mais", "label": "Cesariana (3 ou mais)", "type": "boolean" },
-    { "name": "ultimoPartoMenos12", "label": "Último Parto Menos de 12 meses", "type": "boolean" },
-    { "name": "diabetesGestacional", "label": "Diabetes Gestacional", "type": "boolean" },
-    { "name": "nuliparidadeMultiparidade", "label": "Nuliparidade / Multiparidade", "type": "boolean" },
-    { "name": "placentaPreviaAtual", "label": "Placenta Prévia Atual", "type": "boolean" },
-    { "name": "acrestismoPlacentario", "label": "Acrestismo Placentário", "type": "boolean" },
-    { "name": "aloimunizacao", "label": "Aloimunização", "type": "boolean" },
-    { "name": "esterilidadeTratada", "label": "Esterilidade Tratada", "type": "boolean" },
-    { "name": "malformacoesCongenitas", "label": "Malformações Congênitas", "type": "boolean" },
-    { "name": "ciur", "label": "CIUR", "type": "boolean" },
-    { "name": "polidramnioOligodramnio", "label": "Polidrâmnio / Oligodrâmnio", "type": "boolean" },
-    { "name": "citologiaCervicalAnormal", "label": "Citologia Cervical Anormal", "type": "boolean" },
-    { "name": "diabetesGestacionalTrat", "label": "Diabetes Gestacional Tratada", "type": "boolean" },
-    { "name": "diabetesGestacionalInsul", "label": "Diabetes Gestacional Insulino", "type": "boolean" },
-    { "name": "gestacaoDicorionica", "label": "Gestação Dicoriónica", "type": "boolean" },
-    { "name": "gestacaoMonocorionica", "label": "Gestação Monocoriónica", "type": "boolean" },
-    { "name": "insufIstmoCervicalAtual", "label": "Insuficiência de Istmo Cervical Atual", "type": "boolean" },
-    { "name": "trabalhoPartoPrematuro", "label": "Trabalho de Parto Prematuro", "type": "boolean" }
-]
-
-const condicoesMedicas = [
-    { "name": "tromboembolismoGestacao", "label": "Tromboembolismo na Gestação", "type": "boolean" },
-    { "name": "preEclampsiaAtual", "label": "Pré-eclampsia Atual", "type": "boolean" },
-    { "name": "aneurisma", "label": "Aneurisma", "type": "boolean" },
-    { "name": "aterosclerose", "label": "Aterosclerose", "type": "boolean" },
-    { "name": "alteracoesOsteo", "label": "Alterações Ósteas", "type": "boolean" },
-    { "name": "varizesAcentuadas", "label": "Varizes Acentuadas", "type": "boolean" },
-    { "name": "cardiopatias", "label": "Cardiopatias", "type": "boolean" },
-    { "name": "cirurgiaUterina", "label": "Cirurgia Uterina", "type": "boolean" },
-    { "name": "diabetesInsulino", "label": "Diabetes Insulino", "type": "boolean" },
-    { "name": "diabetesMellitus", "label": "Diabetes Mellitus", "type": "boolean" },
-    { "name": "doencasAutoImunesFora", "label": "Doenças Autoimunes (Fora)", "type": "boolean" },
-    { "name": "doencasAutoImunesTrat", "label": "Doenças Autoimunes (Tratadas)", "type": "boolean" },
-    { "name": "tireoidopatias", "label": "Tireoidopatias", "type": "boolean" },
-    { "name": "endometriose", "label": "Endometriose", "type": "boolean" },
-    { "name": "epilepsiaNeurologica", "label": "Epilepsia Neurológica", "type": "boolean" },
-    { "name": "ginecopatias", "label": "Ginecopatias", "type": "boolean" }
-]
 
 export default function Calculadora() {
     const { user, empresa } = React.useContext(UserContext)
-    const [result, setResult] = React.useState(false)
-    const [altura, setAltura] = React.useState<number>()
-    const [peso, setPeso] = React.useState<number>()
-    const [formValues, setFormValues] = React.useState<Record<string, string>>(
-        {
-            ...situacaoFamiliar.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {}),
-            ...historicoObst.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {}),
-            ...condicoesMedicas.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {})
-        }
-    );
+    const [form, setForm] = React.useState<Record<string, string>>(initialCalculadoraValue);
     const [naoDignoDeNotaSF, setNaoDignoDeNotaSF] = React.useState(false);
     const [naoDignoDeNotaHO, setNaoDignoDeNotaHO] = React.useState(false);
     const [naoDignoDeNotaCM, setNaoDignoDeNotaCM] = React.useState(false);
+    const [paciente, setPaciente] = React.useState<null | getPacienteReturn>(null)
+    const [pacienteFetch, setPacienteFetch] = React.useState(false)
+    const [loading, setLoading] = React.useState(false)
+    const [warnings, setWarnings] = React.useState<string[]>([])
+    const [error, setError] = React.useState("")
+    const [success, setSuccess] = React.useState("")
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
         const checked = event.target.checked;
@@ -99,8 +38,8 @@ export default function Calculadora() {
             setNaoDignoDeNotaSF(checked);
 
             if (checked) {
-                setFormValues({
-                    ...formValues,
+                setForm({
+                    ...form,
                     ...situacaoFamiliar.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {})
                 });
             }
@@ -110,8 +49,11 @@ export default function Calculadora() {
             setNaoDignoDeNotaHO(checked);
 
             if (checked) {
-                setFormValues({
-                    ...formValues,
+                setForm({
+                    ...form,
+                    qtAborto: "0",
+                    qtNatimorto: "0",
+                    qtPartoPrematuro: "0",
                     ...historicoObst.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {})
                 });
             }
@@ -121,8 +63,8 @@ export default function Calculadora() {
             setNaoDignoDeNotaCM(checked);
 
             if (checked) {
-                setFormValues({
-                    ...formValues,
+                setForm({
+                    ...form,
                     ...condicoesMedicas.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {})
                 });
             }
@@ -131,7 +73,7 @@ export default function Calculadora() {
     };
 
     const handleRadioChange = (name: string, value: string) => {
-        setFormValues(prevValues => ({
+        setForm(prevValues => ({
             ...prevValues,
             [name]: value
         }));
@@ -140,6 +82,7 @@ export default function Calculadora() {
 
 
     function calcularIMC(alturaCm: number | undefined, pesoKg: number | undefined): number {
+
         if (!!pesoKg && !!alturaCm) {
             const alturaM = alturaCm / 100;
             const imc = pesoKg / (alturaM * alturaM);
@@ -147,6 +90,107 @@ export default function Calculadora() {
         }
         return 0
     }
+
+    const handleDateChange = (date: Moment | null, name: string) => {
+        if (date) {
+            const formattedDate = date.format("DD/MM/YYYY"); // Formatar como string
+            setForm({ ...form, [name]: formattedDate });
+        } else {
+            setForm({ ...form, [name]: "" });
+        }
+    };
+
+    const handleTimeChange = (date: Moment | null) => {
+        if (date) {
+            const formattedDate = date.format("HH:MM"); // Formatar como string
+            setForm({ ...form, "hrCalculo": formattedDate });
+        } else {
+            setForm({ ...form, "hrCalculo": "" });
+        }
+    };
+
+    async function getPaciente() {
+        setLoading(true)
+        const response = await getPacientes({ cpf: removeCpfMask(form.cpf) })
+        setPaciente(response.length > 0 ? response[0] : null)
+        setPacienteFetch(true)
+        setLoading(false)
+    }
+
+    async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
+        setLoading(true)
+        evt.preventDefault()
+        setWarnings([])
+        setError("")
+        setSuccess("")
+        const e: string[] = []
+        if (form.nomeCompleto === initialCalculadoraValue.nomeCompleto) e.push('Nome necessita estar preenchido!')
+        if (form.cpf === initialCalculadoraValue.cpf) e.push('CPF necessita estar preenchido!')
+        if (form.dataNascimento === initialCalculadoraValue.dataNascimento) e.push('Data de Nascimento necessita estar preenchido!')
+        if (form.email === initialCalculadoraValue.email) e.push('E-mail necessita estar preenchido!')
+        if (form.telefone === initialCalculadoraValue.telefone) e.push('Telefone necessita estar preenchido!')
+        if (!isValidEmail(form.email)) e.push('E-mail inválido!')
+
+        if (e.length > 0) {
+            setWarnings(e)
+        } else {
+            const response = await postCalculadora(form)
+            if (response.Codigo === "OK") {
+                setSuccess(response.Mensagem)
+            } else {
+                setError(response.Mensagem)
+            }
+        }
+
+        setLoading(false)
+    }
+
+    React.useEffect(() => {
+        setForm((prevForm) => ({
+            ...prevForm,
+            dtCalculo: moment().format("DD/MM/YYYY"),
+            idUsuario: user?.idUsuario || "",
+            idEmpresa: empresa?.idEmpresa || "",
+        }));
+    }, [empresa, user])
+
+
+    React.useEffect(() => {
+        if (pacienteFetch && paciente) {
+            if (removeCpfMask(form.cpf) !== removeCpfMask(paciente?.cpf || "")) {
+                setPacienteFetch(false)
+                setForm((prevForm) => ({
+                    ...prevForm,
+                    nomeCompleto: "",
+                    dataNascimento: "",
+                    telefone: "",
+                    email: "",
+                    idPaciente: "",
+                }));
+            }
+        }
+    }, [form.cpf, paciente, pacienteFetch])
+
+    React.useEffect(() => {
+        setForm((prevForm) => ({
+            ...prevForm,
+            imc: calcularIMC(Number(form.alturaGestante), Number(form.pesoKg)).toString()
+        }));
+    }, [form.alturaGestante, form.pesoKg])
+
+    React.useEffect(() => {
+        if (paciente) {
+            setForm((prevForm) => ({
+                ...prevForm,
+                nomeCompleto: paciente.nomeCompleto,
+                cpf: aplicarMascaraCpfCnpj(paciente.cpf),
+                dataNascimento: moment(new Date(paciente.dataNascimento)).format("DD/MM/YYYY"),
+                telefone: paciente.telefone,
+                email: paciente.email,
+                idPaciente: paciente.idPaciente,
+            }));
+        }
+    }, [paciente])
 
     return (<Grid container sx={{ height: { xs: '100%', sm: '100dvh' } }}>
         <Grid
@@ -165,7 +209,7 @@ export default function Calculadora() {
                 overflowY: 'auto',
             }}
         >
-            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{width: "100%", height: "auto"}}/>
+            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{ width: "100%", height: "auto" }} priority />
             <Box
                 sx={{
                     display: 'flex',
@@ -197,117 +241,91 @@ export default function Calculadora() {
                 gap: { xs: 4, md: 8 },
             }}
         >
-            {result ? <>
-                <Typography variant='h4'>Resultado do cálculo:</Typography>
-
-                <div style={{ width: "100%" }}>
-                    <Grid container sx={{ alignItems: "center", mb: 2 }}><CheckCircleIcon sx={{ mr: 2 }} /><Typography variant='body1'>Cálculo gerado com sucesso.</Typography></Grid>
-                    <Grid container sx={{ alignItems: "center", mb: 2 }}><SportsScoreIcon sx={{ mr: 2 }} /><Typography variant='body1'><strong>Pontos: </strong>217</Typography></Grid>
-                    <Grid container sx={{ alignItems: "center", mb: 2 }}><AccessibilityIcon sx={{ mr: 2 }} /><Typography variant='body1'><strong>IMC: </strong>19.59</Typography></Grid>
-                    <Grid container sx={{ alignItems: "center", mb: 2, color: "#F00" }}><GppMaybeIcon sx={{ mr: 2 }} /><Typography variant='body1'><strong>Risco: </strong>RISCO MUITO ALTO</Typography></Grid>
-                </div>
-            </>
-                : <>
+            {loading ?
+                <Skeleton animation='wave' sx={{ height: "100vh", width: "100%" }} />
+                : <Box sx={{ width: "100%", gap: 5, display: "flex", flexDirection: "column" }} component={"form"} onSubmit={validateForm}>
+                    {!!success && <Alert severity="success" sx={{ width: "100%", mt: 1 }}>{success}</Alert>}
                     <div style={{ width: "100%" }}>
                         <Typography sx={{ mb: 2 }} variant='h4'>Dados Pessoais</Typography>
-                        <input name='idUsuario' value={user?.idUsuario} hidden />
-                        <input name='idEmpresa' value={empresa?.idEmpresa} hidden />
+                        <input name='idUsuario' value={form.idUsuario} hidden readOnly />
+                        <input name='idEmpresa' value={form.idEmpresa} hidden readOnly />
                         <Grid container spacing={2} size={12}>
                             <Grid size={4}>
-                                <InputMask
-                                    mask="999.999.999-99"
-                                >
-                                    {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
-                                    {(
-                                        inputProps: React.InputHTMLAttributes<HTMLInputElement>
-                                    ) => (
-                                        <FormControl variant="outlined">
-                                            <InputLabel htmlFor="outlined-adornment-password">CPF</InputLabel>
-                                            <OutlinedInput
-                                                id="cpf"
-                                                type="text"
-                                                name="cpf"
-                                                label="CPF"
-                                                fullWidth
-                                                endAdornment={
-                                                    <InputAdornment position="end">
-                                                        <IconButton
-                                                            aria-label={'display the password'}
-                                                            edge="end"
-                                                        >
-                                                            <SearchIcon />
-                                                        </IconButton>
-                                                    </InputAdornment>
-                                                }
-                                                inputProps={{
-                                                    ...inputProps,
-                                                    'aria-label': 'cpf',
-                                                }}
-                                            />
-                                        </FormControl>
-                                    )}
-                                </InputMask>
+                                <FormControl variant="outlined">
+                                    <InputLabel htmlFor="outlined-adornment-password">CPF</InputLabel>
+                                    <OutlinedInput
+                                        id="cpf"
+                                        type="text"
+                                        name="cpf"
+                                        value={form.cpf}
+                                        onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                                        label="CPF"
+                                        fullWidth
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label={'display the password'}
+                                                    edge="end"
+                                                    onClick={() => getPaciente()}
+                                                >
+                                                    <SearchIcon />
+                                                </IconButton>
+                                            </InputAdornment>
+                                        }
+                                        inputComponent={CPFMask}
+                                    />
+                                </FormControl>
                             </Grid>
                             <Grid size={8}>
                                 <TextField
                                     id="nomeCompleto"
                                     name='nomeCompleto'
                                     label="Nome Completo"
+                                    value={form.nomeCompleto}
+                                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                                     fullWidth
+                                    disabled={!pacienteFetch || !!paciente?.idPaciente}
                                 />
                             </Grid>
-                            <Grid size={6}>
-                                <TextField
-                                    id="abrevNome"
-                                    name='abrevNome'
-                                    label="Nome Abreviado"
-                                    fullWidth
-                                />
-                            </Grid>
-                            <Grid size={6}>
+                            <Grid size={4}>
                                 <TextField
                                     id="email"
                                     name='email'
                                     label="E-mail"
                                     fullWidth
+                                    value={form.email}
+                                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                                    disabled={!pacienteFetch || !!paciente?.idPaciente}
                                 />
                             </Grid>
-
-                            <Grid size={6}>
+                            <Grid size={4}>
                                 <DatePicker
                                     sx={{ width: "100%" }}
                                     label="Data de Nascimento"
                                     name='dataNascimento'
+                                    value={form.dataNascimento ? moment(form.dataNascimento, "YYYY-MM-YY") : null}
+                                    onChange={d => handleDateChange(d, 'dataNascimento')}
+                                    disabled={!pacienteFetch || !!paciente?.idPaciente}
                                 />
                             </Grid>
-                            <Grid size={6}>
-                                <InputMask
-                                    mask="(99) 99999-9999"
-                                >
-                                    {/* @ts-expect-error Utilizando plugin externo para máscara de Login */}
-                                    {(
-                                        inputProps: React.InputHTMLAttributes<HTMLInputElement>
-                                    ) => (
-                                        <TextField
-                                            id="telefone"
-                                            type="text"
-                                            name="telefone"
-                                            label="Telefone"
-                                            fullWidth
-
-                                            inputProps={{
-                                                ...inputProps,
-                                                'aria-label': 'telefone',
-                                            }}
-                                        />
-                                    )}
-                                </InputMask>
+                            <Grid size={4}>
+                                <TextField
+                                    id="telefone"
+                                    name='telefone'
+                                    label="Telefone"
+                                    fullWidth
+                                    InputProps={{
+                                        inputComponent: TelefoneMask,
+                                    }}
+                                    value={form.telefone}
+                                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                                    disabled={!pacienteFetch || !!paciente?.idPaciente}
+                                />
                             </Grid>
                         </Grid>
                     </div>
                     <div style={{ width: "100%" }}>
                         <Typography sx={{ mb: 2 }} variant='h4'>Dados da Gestante</Typography>
-                        <input name='idGestante' value={1} hidden />
                         <Grid container spacing={2} size={12}>
                             <Grid size={4}>
                                 <TextField
@@ -316,6 +334,8 @@ export default function Calculadora() {
                                     name='idadeGestante'
                                     type='number'
                                     fullWidth
+                                    value={form.idadeGestante}
+                                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                                 />
                             </Grid>
                             <Grid size={4}>
@@ -329,8 +349,8 @@ export default function Calculadora() {
                                         },
                                     }}
                                     fullWidth
-                                    value={altura}
-                                    onChange={e => setAltura(Number(e.target.value))}
+                                    value={form.alturaGestante}
+                                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                                 />
                             </Grid>
                             <Grid size={4}>
@@ -338,8 +358,8 @@ export default function Calculadora() {
                                     label="Peso"
                                     id="pesoKg"
                                     type='number'
-                                    value={peso}
-                                    onChange={e => setPeso(Number(e.target.value))}
+                                    value={form.pesoKg}
+                                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                                     name='pesoKg'
                                     slotProps={{
                                         input: {
@@ -353,25 +373,31 @@ export default function Calculadora() {
                                 <TextField
                                     label="IMC"
                                     id="imc"
-                                    value={calcularIMC(altura, peso)}
+                                    value={Number(form.imc)}
                                     name='imc'
                                     type='number'
                                     fullWidth
-                                // disabled
+                                    disabled
+                                    aria-readonly="true"
+                                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                                 />
                             </Grid>
                             <Grid size={4}>
                                 <DatePicker
                                     sx={{ width: "100%" }}
                                     label="Data de Cálculo"
-                                    name='dtcálculo'
+                                    name='dtCalculo'
+                                    value={form.dtCalculo ? moment(form.dtCalculo, "DD/MM/YYYY") : null}
+                                    onChange={d => handleDateChange(d, 'dtCalculo')}
                                 />
                             </Grid>
                             <Grid size={4}>
                                 <TimePicker
                                     sx={{ width: "100%" }}
                                     label="Hora de Cálculo"
-                                    name='hrcálculo'
+                                    name='hrCalculo'
+                                    value={form.hrCalculo ? moment(form.hrCalculo, "HH:MM") : null}
+                                    onChange={handleTimeChange}
                                 />
                             </Grid>
                             <Grid size={6}>
@@ -385,6 +411,8 @@ export default function Calculadora() {
                                         },
                                     }}
                                     fullWidth
+                                    value={form.IdadeGestacionalSemanas}
+                                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                                 />
                             </Grid>
                             <Grid size={6}>
@@ -398,6 +426,8 @@ export default function Calculadora() {
                                         },
                                     }}
                                     fullWidth
+                                    value={form.IdadeGestacionalDias}
+                                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                                 />
                             </Grid>
                         </Grid>
@@ -423,7 +453,7 @@ export default function Calculadora() {
                                     <RadioGroup
                                         row
                                         name={v.name}
-                                        value={formValues[v.name]}
+                                        value={form[v.name]}
                                         onChange={(e) => handleRadioChange(v.name, e.target.value)}
                                     >
                                         <FormControlLabel value="S" control={<Radio />} label="Sim" disabled={naoDignoDeNotaSF} />
@@ -448,13 +478,50 @@ export default function Calculadora() {
                                     label="Não digno de nota"
                                 />
                             </Grid>
+                            <Grid size={6}>
+                                <TextField
+                                    label="Qtd Abortos"
+                                    id="qtAborto"
+                                    value={Number(form.qtAborto)}
+                                    name='qtAborto'
+                                    type='number'
+                                    fullWidth
+                                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                                    disabled={naoDignoDeNotaHO}
+                                />
+                            </Grid>
+                            <Grid size={6}>
+                                <TextField
+                                    label="Qtd Natimorto Fetal"
+                                    id="qtNatimorto"
+                                    value={Number(form.qtNatimorto)}
+                                    name='qtNatimorto'
+                                    type='number'
+                                    fullWidth
+                                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                                    disabled={naoDignoDeNotaHO}
+                                />
+                            </Grid>
+                            <Grid size={6}>
+                                <TextField
+                                    label="Qtd Parto Prematuro"
+                                    id="qtPartoPrematuro"
+                                    value={Number(form.qtPartoPrematuro)}
+                                    name='qtPartoPrematuro'
+                                    type='number'
+                                    fullWidth
+                                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                                    disabled={naoDignoDeNotaHO}
+                                />
+                            </Grid>
+
                             {historicoObst.map((v, i) => <Grid size={6} key={i}>
                                 <FormControl fullWidth>
                                     <FormLabel>{v.label}</FormLabel>
                                     <RadioGroup
                                         row
                                         name={v.name}
-                                        value={formValues[v.name]}
+                                        value={form[v.name]}
                                         onChange={(e) => handleRadioChange(v.name, e.target.value)}
                                     >
                                         <FormControlLabel value="S" control={<Radio />} label="Sim" disabled={naoDignoDeNotaHO} />
@@ -485,7 +552,7 @@ export default function Calculadora() {
                                     <RadioGroup
                                         row
                                         name={v.name}
-                                        value={formValues[v.name]}
+                                        value={form[v.name]}
                                         onChange={(e) => handleRadioChange(v.name, e.target.value)}
                                     >
                                         <FormControlLabel value="S" control={<Radio />} label="Sim" disabled={naoDignoDeNotaCM} />
@@ -495,8 +562,10 @@ export default function Calculadora() {
                             </Grid>)}
                         </Grid>
                     </div>
-                </>}
-            <Button onClick={() => setResult(!result)} variant="contained">{result ? "Gerar novo cálculo" : "Gerar cálculo"}</Button>
+                    <Button type='submit' variant="contained">Gerar cálculo</Button>
+                    {warnings.map((v, i) => <Alert key={i} severity="warning" sx={{ width: "100%", mt: 1 }}>{v}</Alert>)}
+                    {!!error && <Alert severity="error" sx={{ width: "100%", mt: 1 }}>{error}</Alert>}
+                </Box>}
         </Grid>
     </Grid>);
 }

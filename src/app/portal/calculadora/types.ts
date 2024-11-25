@@ -1,0 +1,81 @@
+export const situacaoFamiliar = [
+    { "name": "situacaoFamiliar", "label": "Situação Familiar Instável", "type": "boolean" },
+    { "name": "aceitacaoGravidez", "label": "Aceitação da Gravidez", "type": "boolean" },
+    { "name": "sabeLer", "label": "Analfabeto", "type": "boolean" },
+    { "name": "fumante", "label": "Fumante", "type": "boolean" },
+    { "name": "dependenteDrogas", "label": "Dependente de Drogas", "type": "boolean" },
+    { "name": "expostaRiscoOcupacional", "label": "Exposta a Risco Ocupacional", "type": "boolean" },
+    { "name": "expostaCondAmbientais", "label": "Exposta a Condições Ambientais", "type": "boolean" }
+]
+
+export const historicoObst = [
+    { "name": "histRnCrescimento", "label": "Histórico de RN com Crescimento", "type": "boolean" },
+    { "name": "intervaloInterpartal", "label": "Intervalo Interpartal", "type": "boolean" },
+    { "name": "eclampsia", "label": "Eclampsia", "type": "boolean" },
+    { "name": "preEclampsia", "label": "Pré-eclampsia", "type": "boolean" },
+    { "name": "placentaPrevia", "label": "Placenta Prévia", "type": "boolean" },
+    { "name": "insuficienciaIstmoCervical", "label": "Insuficiência de Istmo Cervical", "type": "boolean" },
+    { "name": "cesarea12", "label": "Cesariana (1-2)", "type": "boolean" },
+    { "name": "cesarea3Mais", "label": "Cesariana (3 ou mais)", "type": "boolean" },
+    { "name": "ultimoPartoMenos12", "label": "Último Parto Menos de 12 meses", "type": "boolean" },
+    { "name": "diabetesGestacional", "label": "Diabetes Gestacional", "type": "boolean" },
+    { "name": "nuliparidadeMultiparidade", "label": "Nuliparidade / Multiparidade", "type": "boolean" },
+    { "name": "placentaPreviaAtual", "label": "Placenta Prévia Atual", "type": "boolean" },
+    { "name": "acrestismoPlacentario", "label": "Acrestismo Placentário", "type": "boolean" },
+    { "name": "aloimunizacao", "label": "Aloimunização", "type": "boolean" },
+    { "name": "esterilidadeTratada", "label": "Esterilidade Tratada", "type": "boolean" },
+    { "name": "malformacoesCongenitas", "label": "Malformações Congênitas", "type": "boolean" },
+    { "name": "ciur", "label": "CIUR", "type": "boolean" },
+    { "name": "polidramnioOligodramnio", "label": "Polidrâmnio / Oligodrâmnio", "type": "boolean" },
+    { "name": "citologiaCervicalAnormal", "label": "Citologia Cervical Anormal", "type": "boolean" },
+    { "name": "diabetesGestacionalTrat", "label": "Diabetes Gestacional Tratada", "type": "boolean" },
+    { "name": "diabetesGestacionalInsul", "label": "Diabetes Gestacional Insulino", "type": "boolean" },
+    { "name": "gestacaoDicorionica", "label": "Gestação Dicoriónica", "type": "boolean" },
+    { "name": "gestacaoMonocorionica", "label": "Gestação Monocoriónica", "type": "boolean" },
+    { "name": "insufIstmoCervicalAtual", "label": "Insuficiência de Istmo Cervical Atual", "type": "boolean" },
+    { "name": "trabalhoPartoPrematuro", "label": "Trabalho de Parto Prematuro", "type": "boolean" }
+]
+
+export const condicoesMedicas = [
+    { "name": "tromboembolismoGestacao", "label": "Tromboembolismo na Gestação", "type": "boolean" },
+    { "name": "preEclampsiaAtual", "label": "Pré-eclampsia Atual", "type": "boolean" },
+    { "name": "aneurisma", "label": "Aneurisma", "type": "boolean" },
+    { "name": "aterosclerose", "label": "Aterosclerose", "type": "boolean" },
+    { "name": "alteracoesOsteo", "label": "Alterações Ósteas", "type": "boolean" },
+    { "name": "varizesAcentuadas", "label": "Varizes Acentuadas", "type": "boolean" },
+    { "name": "cardiopatias", "label": "Cardiopatias", "type": "boolean" },
+    { "name": "cirurgiaUterina", "label": "Cirurgia Uterina", "type": "boolean" },
+    { "name": "diabetesInsulino", "label": "Diabetes Insulino", "type": "boolean" },
+    { "name": "diabetesMellitus", "label": "Diabetes Mellitus", "type": "boolean" },
+    { "name": "doencasAutoImunesFora", "label": "Doenças Autoimunes (Fora)", "type": "boolean" },
+    { "name": "doencasAutoImunesTrat", "label": "Doenças Autoimunes (Tratadas)", "type": "boolean" },
+    { "name": "tireoidopatias", "label": "Tireoidopatias", "type": "boolean" },
+    { "name": "endometriose", "label": "Endometriose", "type": "boolean" },
+    { "name": "epilepsiaNeurologica", "label": "Epilepsia Neurológica", "type": "boolean" },
+    { "name": "ginecopatias", "label": "Ginecopatias", "type": "boolean" }
+]
+
+export const initialCalculadoraValue = {
+    nomeCompleto: "",
+    cpf: "",
+    dataNascimento: "",
+    telefone: "",
+    email: "",
+    idPaciente: "",
+    dtCalculo: "",
+    idUsuario: "",
+    idEmpresa: "",
+    idadeGestante: "",
+    alturaGestante: "",
+    pesoKg: "",
+    imc: "",
+    hrCalculo: "",
+    IdadeGestacionalSemanas: "",
+    IdadeGestacionalDias: "",
+    qtAborto: "0",
+    qtNatimorto: "0",
+    qtPartoPrematuro: "0",
+    ...situacaoFamiliar.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {}),
+    ...historicoObst.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {}),
+    ...condicoesMedicas.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {})
+}
