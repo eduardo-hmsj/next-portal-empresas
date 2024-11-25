@@ -86,7 +86,7 @@ export async function getEmpresasUsuario(props: {idUsuario: string}): Promise<ge
 
 export async function postEmpresasUsuario(props: ativarUsuarioEmpresaPayload){
     try {
-        const { data, status } = await api.post("/AtivarEmpresaUsuarioPE", props)
+        const { data } = await api.post("/AtivarEmpresaUsuarioPE", props)
         return data
     } catch (error) {
         console.log(error)

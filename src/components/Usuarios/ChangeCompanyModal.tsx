@@ -1,5 +1,5 @@
 import { getEmpresas as getEmpresasApi } from "@/app/portal/empresas/actions";
-import { activateUsuario, deleteEmpresasUsuario, getEmpresasUsuario as getEmpresasUsuarioApi, postEmpresasUsuario } from "@/app/portal/usuarios/actions";
+import { deleteEmpresasUsuario, getEmpresasUsuario as getEmpresasUsuarioApi, postEmpresasUsuario } from "@/app/portal/usuarios/actions";
 import { getEmpresaReturn } from "@/app/portal/empresas/types";
 import { ativarUsuarioEmpresaInitial, getUsuarioReturn } from "@/app/portal/usuarios/types";
 import { UserContext } from "@/context/UserContext";
@@ -111,7 +111,7 @@ export default function ChangeCompanyModal(props: { user: getUsuarioReturn, clos
             idUsuarioCadastro: user?.idUsuario || "",
             idUsuario: props.user.idUsuario,
         }))
-    }, [empresa, getEmpresas, getEmpresasUsuario])
+    }, [empresa, getEmpresas, getEmpresasUsuario, user, props])
 
     const columns: GridColDef<(getEmpresaReturn[])[number]>[] = [
         { field: 'idEmpresa', headerName: 'ID', width: 50, sortComparator: (v1, v2) => Number(v1) - Number(v2) },
