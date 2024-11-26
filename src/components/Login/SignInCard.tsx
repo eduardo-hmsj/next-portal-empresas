@@ -70,7 +70,7 @@ export default function SignInCard() {
         
         if (response.Codigo === "OK") {
 
-          route.push('/portal/calculadora')
+          route.push('/portal/dashboard')
           setSuccess(response.Mensagem)
         } else {
           setError(response.Mensagem || "Houve um erro ao realizar seu login. Em instantes, tente novamente.")

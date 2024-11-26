@@ -12,6 +12,7 @@ import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import { usePathname, useRouter } from 'next/navigation';
 import HelpIcon from '@mui/icons-material/Help';
 import PersonIcon from '@mui/icons-material/Person';
+import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 
 export interface InfoProps {
   title: string,
@@ -32,6 +33,7 @@ export default function Info(props: InfoProps) {
           id="panel1-header"
         >
           <Typography display={'flex'} alignItems={'center'}><MenuIcon sx={{ mr: 2 }} />
+            {pathname === "/portal/dashboard" && "Dashboard"}
             {pathname === "/portal/calculadora" && "Calculadora"}
             {pathname === "/portal/pacientes" && "Pacientes"}
             {pathname === "/portal/empresas" && "Empresas"}
@@ -42,6 +44,14 @@ export default function Info(props: InfoProps) {
         <AccordionDetails>
           <nav aria-label="main mailbox folders">
             <List>
+              <ListItem disablePadding>
+                <ListItemButton selected={pathname === "/portal/dashboard"} onClick={() => router.push("/portal/dashboard")}>
+                  <ListItemIcon>
+                    <LeaderboardIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Dashboard" />
+                </ListItemButton>
+              </ListItem>
               <ListItem disablePadding>
                 <ListItemButton selected={pathname === "/portal/calculadora"} onClick={() => router.push("/portal/calculadora")}>
                   <ListItemIcon>
