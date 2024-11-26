@@ -57,13 +57,13 @@ export default function ShowCalcModal(props: { user: getPacienteReturn, close: (
             type: 'actions',
             width: 100,
             getActions: params => [
-                <GridActionsCellItem
-                    key={"redo"}
-                    color="warning"
-                    icon={<RefreshIcon />}
-                    label="Redo"
-                    onClick={() => console.log(params.row.idCalculo)}
-                />,
+                <Link href={`/portal/calculadora?idCalculo=${params.row.idCalculo}`} key={"redo"}>
+                    <GridActionsCellItem
+                        color="warning"
+                        icon={<RefreshIcon />}
+                        label="Redo"
+                    />
+                </Link>
             ],
         },
     ];

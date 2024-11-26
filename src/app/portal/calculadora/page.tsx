@@ -13,9 +13,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import { aplicarMascaraCpfCnpj, CPFMask, isValidEmail, removeCpfMask, TelefoneMask } from '@/utils/functions';
 import { condicoesMedicas, historicoObst, initialCalculadoraValue, situacaoFamiliar } from './types';
 import moment, { Moment } from 'moment';
-import { getPacienteReturn } from '../pacientes/types';
+import { getCalculosReturn, getPacienteReturn } from '../pacientes/types';
 import { getPacientes } from '../pacientes/actions';
-import { postCalculadora } from './actions';
+import { postCalculadora, getCalculo as getCaluloApi } from './actions';
 import { useSearchParams } from 'next/navigation';
 
 
@@ -33,6 +33,8 @@ export default function Calculadora() {
     const [success, setSuccess] = React.useState("")
     const searchParams = useSearchParams()
     const cpf = searchParams.get('cpf')
+    const idCalculo = searchParams.get('idCalculo')
+    const [result, setResult] = React.useState<null | getCalculosReturn>(null)
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
         const checked = event.target.checked;
@@ -120,6 +122,16 @@ export default function Calculadora() {
         setLoading(false)
     }, [form.cpf]);
 
+    const getCalculo = React.useCallback(async () => {
+        setLoading(true)
+        const response = await getCaluloApi({
+            idEmpresa: empresa?.idEmpresa || "",
+            idCalculo: idCalculo || ""
+        })
+        setForm({...response, dtCalculo: moment(response.dtCalculo, "YYYY-MM-DD").format("DD-MM-YYYY")})
+        setLoading(false)
+    }, [idCalculo, empresa]);
+
     async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
         setLoading(true)
         evt.preventDefault()
@@ -139,6 +151,9 @@ export default function Calculadora() {
         } else {
             const response = await postCalculadora({...form, cpf: removeCpfMask(form.cpf)})
             if (response.Codigo === "OK") {
+                if(Array.isArray(response.Dados) && response.Dados.length > 0){
+                    setResult(response.Dados[0])
+                }
                 setSuccess(response.Mensagem)
             } else {
                 setError(response.Mensagem)
@@ -197,6 +212,10 @@ export default function Calculadora() {
         }
     }, [paciente])
 
+    React.useEffect(() => {
+        if(idCalculo) getCalculo()
+    }, [idCalculo, getCalculo])
+
     return (<Grid container sx={{ height: { xs: '100%', sm: '100dvh' } }}>
         <Grid
             size={{ xs: 12, sm: 5, lg: 4 }}
@@ -250,6 +269,11 @@ export default function Calculadora() {
                 <Skeleton animation='wave' sx={{ height: "100vh", width: "100%" }} />
                 : <Box sx={{ width: "100%", gap: 5, display: "flex", flexDirection: "column" }} component={"form"} onSubmit={validateForm}>
                     {!!success && <Alert severity="success" sx={{ width: "100%", mt: 1 }}>{success}</Alert>}
+                    {!!result && <Alert severity='info' sx={{ width: "100%", mt: 1 }}>
+                        <Typography sx={{ mb: 1 }} variant='h6'>Seu resultado de risco gestacional foi:</Typography>
+                        <Typography><strong>Pontos: </strong>{result.pontos}</Typography>
+                        <Typography><strong>Risco: </strong>{result.risco}</Typography>
+                    </Alert>}
                     <div style={{ width: "100%" }}>
                         <Typography sx={{ mb: 2 }} variant='h4'>Dados Pessoais</Typography>
                         <input name='idUsuario' value={form.idUsuario} hidden readOnly />
