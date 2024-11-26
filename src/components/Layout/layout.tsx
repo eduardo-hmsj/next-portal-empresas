@@ -7,12 +7,13 @@ import TopBar from './topbar';
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import 'moment/locale/pt-br';
 import { LocalizationProvider } from "@mui/x-date-pickers"
-import { ptBR } from '@mui/x-data-grid/locales';
+import { ptBR as gridLocale } from '@mui/x-data-grid/locales';
+import { ptBR as dateLocale } from '@mui/x-date-pickers/locales';
 
 
 export default function Layout(props: { children: React.ReactNode, topBar: boolean }) {
   const [mode, setMode] = React.useState<PaletteMode>('light');
-  const defaultTheme = createTheme({ palette: { mode } }, ptBR);
+  const defaultTheme = createTheme({ palette: { mode } }, gridLocale, dateLocale);
   const toggleColorMode = () => {
     const newMode = mode === 'dark' ? 'light' : 'dark';
     setMode(newMode);
