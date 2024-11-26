@@ -21,6 +21,16 @@ export interface getPacienteReturn {
     telefone: string
 }
 
+export interface getCalculosReturn {
+    idPaciente: string,
+    nomeCompleto: string,
+    pontos: string,
+    risco: string,
+    dtCalculo: string,
+    idCalculo: string,
+    idEmpresa: string,
+}
+
 export interface getPacientesProps {
     idEmpresa: string
 }

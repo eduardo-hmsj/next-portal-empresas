@@ -1,6 +1,6 @@
 "use server"
 import api from "@/services/api"
-import { getPacienteReturn, PacientePayload } from "./types"
+import { getCalculosReturn, getPacienteReturn, PacientePayload } from "./types"
 import { getUsuariosProps } from "../usuarios/types"
 import { removeCpfMask } from "@/utils/functions"
 
@@ -69,4 +69,17 @@ export async function activatePaciente(props: {
     }
 
     return { Codigo: 'NOK', Mensagem: 'Houve um erro a responder requisição.' }
+}
+
+export async function getCalculosPaciente(props: {
+    idPaciente: string
+    idEmpresa: string
+}): Promise<getCalculosReturn[]> {
+    try {
+        const { data, status } = await api.post("/ConsultaPacienteCalculoPE", props)
+        if (status === 200 && Array.isArray(data.Dados)) return data.Dados
+    } catch (error) {
+        console.log(error)
+    }
+    return []
 }

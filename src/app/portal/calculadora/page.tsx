@@ -16,6 +16,7 @@ import moment, { Moment } from 'moment';
 import { getPacienteReturn } from '../pacientes/types';
 import { getPacientes } from '../pacientes/actions';
 import { postCalculadora } from './actions';
+import { useSearchParams } from 'next/navigation';
 
 
 export default function Calculadora() {
@@ -30,6 +31,8 @@ export default function Calculadora() {
     const [warnings, setWarnings] = React.useState<string[]>([])
     const [error, setError] = React.useState("")
     const [success, setSuccess] = React.useState("")
+    const searchParams = useSearchParams()
+    const cpf = searchParams.get('cpf')
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
         const checked = event.target.checked;
@@ -109,13 +112,13 @@ export default function Calculadora() {
         }
     };
 
-    async function getPaciente() {
+    const getPaciente = React.useCallback(async () => {
         setLoading(true)
         const response = await getPacientes({ cpf: removeCpfMask(form.cpf) })
         setPaciente(response.length > 0 ? response[0] : null)
         setPacienteFetch(true)
         setLoading(false)
-    }
+    }, [form.cpf]);
 
     async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
         setLoading(true)
@@ -134,7 +137,7 @@ export default function Calculadora() {
         if (e.length > 0) {
             setWarnings(e)
         } else {
-            const response = await postCalculadora(form)
+            const response = await postCalculadora({...form, cpf: removeCpfMask(form.cpf)})
             if (response.Codigo === "OK") {
                 setSuccess(response.Mensagem)
             } else {
@@ -149,11 +152,13 @@ export default function Calculadora() {
         setForm((prevForm) => ({
             ...prevForm,
             dtCalculo: moment().format("DD/MM/YYYY"),
+            hrCalculo: moment().format("hh:mm"),
             idUsuario: user?.idUsuario || "",
             idEmpresa: empresa?.idEmpresa || "",
         }));
-    }, [empresa, user])
 
+        if(cpf && !pacienteFetch) getPaciente()
+    }, [empresa, user, cpf, pacienteFetch, getPaciente])
 
     React.useEffect(() => {
         if (pacienteFetch && paciente) {
@@ -396,7 +401,7 @@ export default function Calculadora() {
                                     sx={{ width: "100%" }}
                                     label="Hora de Cálculo"
                                     name='hrCalculo'
-                                    value={form.hrCalculo ? moment(form.hrCalculo, "HH:MM") : null}
+                                    value={form.hrCalculo ? moment(form.hrCalculo, "hh:mm") : null}
                                     onChange={handleTimeChange}
                                 />
                             </Grid>

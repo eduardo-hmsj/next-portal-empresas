@@ -1,6 +1,6 @@
 export const situacaoFamiliar = [
     { "name": "situacaoFamiliar", "label": "Situação Familiar Instável", "type": "boolean" },
-    { "name": "aceitacaoGravidez", "label": "Aceitação da Gravidez", "type": "boolean" },
+    { "name": "AceitacaoGravidez", "label": "Aceitação da Gravidez", "type": "boolean" },
     { "name": "sabeLer", "label": "Analfabeto", "type": "boolean" },
     { "name": "fumante", "label": "Fumante", "type": "boolean" },
     { "name": "dependenteDrogas", "label": "Dependente de Drogas", "type": "boolean" },
@@ -52,7 +52,29 @@ export const condicoesMedicas = [
     { "name": "tireoidopatias", "label": "Tireoidopatias", "type": "boolean" },
     { "name": "endometriose", "label": "Endometriose", "type": "boolean" },
     { "name": "epilepsiaNeurologica", "label": "Epilepsia Neurológica", "type": "boolean" },
-    { "name": "ginecopatias", "label": "Ginecopatias", "type": "boolean" }
+    { "name": "ginecopatias", "label": "Ginecopatias", "type": "boolean" },
+    { "name": "anomaliaOrganosReprodutivos", "label": "Existem anormalidades estruturais nos órgãos reprodutivos?", "type": "boolean" },
+    { "name": "hepatopatiasTratamento", "label": "Hepatopatias necessitando de tratamento e acompanhamento conjunto", "type": "boolean" },
+    { "name": "hipertensaoArterial", "label": "Hipertensão Arterial Crônica", "type": "boolean" },
+    { "name": "nefropatias", "label": "Nefropatias", "type": "boolean" },
+    { "name": "ituRepeticao", "label": "ITU repetição ou Pileonefrite na Gestação", "type": "boolean" },
+    { "name": "pneumopatias", "label": "Pneumopatias com necessidade de tratamento", "type": "boolean" },
+    { "name": "traumaObstetrico", "label": "Trauma com repercussões que possam interferir na vida obstrétrica", "type": "boolean" },
+    { "name": "tromboembolismo", "label": "Tromboembolismo", "type": "boolean" },
+    { "name": "trombofiliaAdquirida", "label": "Trombofilia adquirida (SAAF)", "type": "boolean" },
+    { "name": "trombofiliaHereditaria", "label": "Trombofilia hereditária", "type": "boolean" },
+    { "name": "doencasInfecciosasBucais", "label": "Doenças infecciosas bucais", "type": "boolean" },
+    { "name": "hepatites", "label": "Hepatites", "type": "boolean" },
+    { "name": "toxoplasmose", "label": "Toxoplasmose", "type": "boolean" },
+    { "name": "sifilis", "label": "Sifilis", "type": "boolean" },
+    { "name": "hiv", "label": "HIV", "type": "boolean" },
+    { "name": "outrosDsts", "label": "Outros DSTs", "type": "boolean" },
+    { "name": "doencasPsiquiatricas", "label": "Doenças Psiquiatrica em uso de mediação e necessidade de acompanhamento psiquiátrico em conjunto", "type": "boolean" },
+    { "name": "neoplasias", "label": "Neoplasias", "type": "boolean" },
+    { "name": "doencasInfectoGestacao", "label": "Doenças infectocontagiosas vividas durante a presente gestação (ITU, doenças do trato, respiratório, tuberculose, rubéola, gengivites e periodontites, toxoplasmose etc.)", "type": "boolean" },
+    { "name": "sepse", "label": "Sepse ", "type": "boolean" },
+    { "name": "doencasClinicasGestacao", "label": "Doenças clínicas diagnosticadas pela primeira vez nessa gestação (cardiopatias, endocrinopatias)", "type": "boolean" },
+    { "name": "doencasIntestinais", "label": "Doenças Intestinais  ", "type": "boolean" }
 ]
 
 export const initialCalculadoraValue = {

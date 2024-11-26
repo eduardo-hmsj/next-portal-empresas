@@ -19,6 +19,8 @@ import PersonOffIcon from '@mui/icons-material/PersonOff';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import EditPaciente from '@/components/Pacientes/EditPaciente';
 import moment from 'moment';
+import ChecklistIcon from '@mui/icons-material/Checklist';
+import ShowCalcModal from '@/components/Pacientes/ShowCalcModal';
 
 export default function Pacientes() {
     const { empresa, user } = React.useContext(UserContext)
@@ -30,6 +32,7 @@ export default function Pacientes() {
     const [formOpen, setFormOpen] = React.useState("")
     const [loading, setLoading] = React.useState(false)
     const route = useRouter()
+    const [showCalcModal, setShowCalcModal] = React.useState<null | getPacienteReturn>(null)
 
     function cleanAdvises() {
         setWarnings([])
@@ -194,6 +197,13 @@ export default function Pacientes() {
                         />}
                 </>,
                 <GridActionsCellItem
+                    key={"showCalc"}
+                    icon={<ChecklistIcon />}
+                    label="showCalc"
+                    color={'info'}
+                    onClick={() => setShowCalcModal(params.row)}
+                />,
+                <GridActionsCellItem
                     key={"edit"}
                     icon={<CreateIcon />}
                     label="Edit"
@@ -302,5 +312,6 @@ export default function Pacientes() {
             </>
                 : <Skeleton animation='wave' sx={{ height: "100vh", width: "100%" }} />}
         </Grid>
+        {!!showCalcModal && <ShowCalcModal user={showCalcModal} close={() => setShowCalcModal(null)}/>}
     </Grid>);
 }
