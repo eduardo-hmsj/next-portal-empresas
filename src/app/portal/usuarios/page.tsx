@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { Alert, Button, Skeleton } from '@mui/material';
 import { activateUsuario, getUsuarios, intativaUsuario, updateUsuario } from './actions';
 import { UserContext } from '@/context/UserContext';
-import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { getUsuarioReturn, usuarioInitial, usuarioPayload } from './types';
 import { aplicarMascaraCpfCnpj, isValidEmail } from '@/utils/functions';
 import CreateUsuario from '@/components/Usuarios/CreateUsuario';
@@ -295,6 +295,7 @@ export default function Usuarios() {
                         rows={users}
                         columns={columns}
                         getRowId={(row) => row.idUsuario}
+                        slots={{ toolbar: GridToolbar }}
                         initialState={{
                             sorting: {
                                 sortModel: [{ field: 'nomeCompleto', sort: 'asc' }],

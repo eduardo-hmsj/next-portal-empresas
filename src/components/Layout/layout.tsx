@@ -6,12 +6,13 @@ import UserProvider from '@/context/UserContext';
 import TopBar from './topbar';
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import 'moment/locale/pt-br';
-import { LocalizationProvider } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers"
+import { ptBR } from '@mui/x-data-grid/locales';
 
 
 export default function Layout(props: { children: React.ReactNode, topBar: boolean }) {
   const [mode, setMode] = React.useState<PaletteMode>('light');
-  const defaultTheme = createTheme({ palette: { mode } });
+  const defaultTheme = createTheme({ palette: { mode } }, ptBR);
   const toggleColorMode = () => {
     const newMode = mode === 'dark' ? 'light' : 'dark';
     setMode(newMode);

@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { Alert, Button, Skeleton } from '@mui/material';
 import { activatePaciente, getPacientes as getPacientesApi, intativaPaciente, updatePaciente } from './actions';
 import { UserContext } from '@/context/UserContext';
-import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { getPacienteReturn, PacienteInitial, PacientePayload } from './types';
 import { aplicarMascaraCpfCnpj, isValidEmail } from '@/utils/functions';
 import CreatePaciente from '@/components/Pacientes/CreatePaciente';
@@ -285,6 +285,7 @@ export default function Pacientes() {
                         rows={pacientes}
                         columns={columns}
                         getRowId={(row) => row.idPaciente}
+                        slots={{ toolbar: GridToolbar }}
                         initialState={{
                             sorting: {
                                 sortModel: [{ field: 'nomeCompleto', sort: 'asc' }],

@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { Alert, Button, Skeleton } from '@mui/material';
 import { activateEmpresa, intativaEmpresa, updateEmpresa } from './actions';
 import { UserContext } from '@/context/UserContext';
-import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { getEmpresaReturn, EmpresaInitial, EmpresaPayload } from './types';
 import { aplicarMascaraCpfCnpj, aplicarMascaraTelefone, isValidEmail } from '@/utils/functions';
 import { useRouter } from 'next/navigation';
@@ -284,6 +284,7 @@ export default function Empresas() {
                         rows={users}
                         columns={columns}
                         getRowId={(row) => row.idEmpresa}
+                        slots={{ toolbar: GridToolbar }}
                         initialState={{
                             sorting: {
                                 sortModel: [{ field: 'nomeEmpresa', sort: 'asc' }]
