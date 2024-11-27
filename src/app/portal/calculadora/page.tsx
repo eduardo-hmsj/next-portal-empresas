@@ -15,7 +15,7 @@ import { condicoesMedicas, historicoObst, initialCalculadoraValue, situacaoFamil
 import moment, { Moment } from 'moment';
 import { getCalculosReturn, getPacienteReturn } from '../pacientes/types';
 import { getPacientes } from '../pacientes/actions';
-import { postCalculadora, getCalculo as getCaluloApi } from './actions';
+import { postCalculadora, getCalculo as getCaluloApi, updateCalculadora } from './actions';
 import { useSearchParams } from 'next/navigation';
 
 
@@ -34,6 +34,7 @@ export default function Calculadora() {
     const searchParams = useSearchParams()
     const cpf = searchParams.get('cpf')
     const idCalculo = searchParams.get('idCalculo')
+    const mode = searchParams.get('mode')
     const [result, setResult] = React.useState<null | getCalculosReturn>(null)
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
@@ -128,7 +129,7 @@ export default function Calculadora() {
             idEmpresa: empresa?.idEmpresa || "",
             idCalculo: idCalculo || ""
         })
-        setForm({...response, dtCalculo: moment(response.dtCalculo, "YYYY-MM-DD").format("DD-MM-YYYY")})
+        setForm({ ...response, dtCalculo: moment(response.dtCalculo, "YYYY-MM-DD").format("DD-MM-YYYY") })
         setLoading(false)
     }, [idCalculo, empresa]);
 
@@ -143,15 +144,16 @@ export default function Calculadora() {
         if (form.cpf === initialCalculadoraValue.cpf) e.push('CPF necessita estar preenchido!')
         if (form.dataNascimento === initialCalculadoraValue.dataNascimento) e.push('Data de Nascimento necessita estar preenchido!')
         if (form.email === initialCalculadoraValue.email) e.push('E-mail necessita estar preenchido!')
-        if (form.telefone === initialCalculadoraValue.telefone) e.push('Telefone necessita estar preenchido!')
+        if (form.telefone === initialCalculadoraValue.telefone) e.push('Telefone necessita estar preenchido!')    
+        if (mode === 'edit' && !form.dsMotivo) e.push('Motivo da edição necessita estar preenchido!')
         if (!isValidEmail(form.email)) e.push('E-mail inválido!')
 
         if (e.length > 0) {
             setWarnings(e)
         } else {
-            const response = await postCalculadora({...form, cpf: removeCpfMask(form.cpf)})
+            const response = await (mode === 'edit' ? updateCalculadora({ ...form, cpf: removeCpfMask(form.cpf) }) : postCalculadora({ ...form, cpf: removeCpfMask(form.cpf) }))
             if (response.Codigo === "OK") {
-                if(Array.isArray(response.Dados) && response.Dados.length > 0){
+                if (Array.isArray(response.Dados) && response.Dados.length > 0) {
                     setResult(response.Dados[0])
                 }
                 setSuccess(response.Mensagem)
@@ -172,7 +174,7 @@ export default function Calculadora() {
             idEmpresa: empresa?.idEmpresa || "",
         }));
 
-        if(cpf && !pacienteFetch) getPaciente()
+        if (cpf && !pacienteFetch) getPaciente()
     }, [empresa, user, cpf, pacienteFetch, getPaciente])
 
     React.useEffect(() => {
@@ -213,8 +215,17 @@ export default function Calculadora() {
     }, [paciente])
 
     React.useEffect(() => {
-        if(idCalculo) getCalculo()
-    }, [idCalculo, getCalculo])
+        if (idCalculo) getCalculo()
+        
+        if(mode === 'edit'){
+            setForm((prevForm) => ({
+                ...prevForm,
+                dsMotivo: "",
+                idCalculo: idCalculo || ""
+            }));
+        }
+
+    }, [idCalculo, getCalculo, mode])
 
     return (<Grid container sx={{ height: { xs: '100%', sm: '100dvh' } }}>
         <Grid
@@ -269,6 +280,7 @@ export default function Calculadora() {
                 <Skeleton animation='wave' sx={{ height: "100vh", width: "100%" }} />
                 : <Box sx={{ width: "100%", gap: 5, display: "flex", flexDirection: "column" }} component={"form"} onSubmit={validateForm}>
                     {!!success && <Alert severity="success" sx={{ width: "100%", mt: 1 }}>{success}</Alert>}
+                    {!!error && <Alert severity="error" sx={{ width: "100%", mt: 1 }}>{error}</Alert>}
                     {!!result && <Alert severity='info' sx={{ width: "100%", mt: 1 }}>
                         <Typography sx={{ mb: 1 }} variant='h6'>Seu resultado de risco gestacional foi:</Typography>
                         <Typography><strong>Pontos: </strong>{result.pontos}</Typography>
@@ -591,9 +603,17 @@ export default function Calculadora() {
                             </Grid>)}
                         </Grid>
                     </div>
-                    <Button type='submit' variant="contained">Gerar cálculo</Button>
+                    {mode === "edit" && <TextField
+                        label="Motivo da edição"
+                        id="dsMotivo"
+                        value={form.dsMotivo}
+                        name='dsMotivo'
+                        type='string'
+                        fullWidth
+                        onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                    />}
+                    <Button type='submit' variant="contained">{mode === "edit" ? 'Editar Cálculo': 'Gerar cálculo'}</Button>
                     {warnings.map((v, i) => <Alert key={i} severity="warning" sx={{ width: "100%", mt: 1 }}>{v}</Alert>)}
-                    {!!error && <Alert severity="error" sx={{ width: "100%", mt: 1 }}>{error}</Alert>}
                 </Box>}
         </Grid>
     </Grid>);

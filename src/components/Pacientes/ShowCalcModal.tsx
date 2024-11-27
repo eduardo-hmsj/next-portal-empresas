@@ -8,6 +8,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import moment from "moment";
 import Link from "next/link";
 import { removeCpfMask } from "@/utils/functions";
+import CreateIcon from '@mui/icons-material/Create';
 
 const style = {
     position: 'absolute',
@@ -62,6 +63,12 @@ export default function ShowCalcModal(props: { user: getPacienteReturn, close: (
                         color="warning"
                         icon={<RefreshIcon />}
                         label="Redo"
+                    />
+                </Link>,
+                <Link href={`/portal/calculadora?idCalculo=${params.row.idCalculo}&mode=edit`} key={"edit"}>
+                    <GridActionsCellItem
+                        icon={<CreateIcon />}
+                        label="Edit"
                     />
                 </Link>
             ],
