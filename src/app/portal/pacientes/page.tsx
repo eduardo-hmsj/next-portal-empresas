@@ -82,7 +82,7 @@ export default function Pacientes() {
                 idPaciente: u.idPaciente,
                 cpf: u.cpf,
                 dataNascimento: moment(new Date(u.dataNascimento)).format("DD/MM/YYYY"),
-                email: u.cpf,
+                email: u.email,
                 nomeCompleto: u.nomeCompleto,
                 telefone: u.telefone
             })

@@ -145,6 +145,13 @@ export default function Calculadora() {
         if (form.dataNascimento === initialCalculadoraValue.dataNascimento) e.push('Data de Nascimento necessita estar preenchido!')
         if (form.email === initialCalculadoraValue.email) e.push('E-mail necessita estar preenchido!')
         if (form.telefone === initialCalculadoraValue.telefone) e.push('Telefone necessita estar preenchido!')    
+        if (form.idadeGestante === initialCalculadoraValue.idadeGestante) e.push('Idade da gestante necessita estar preenchido!')    
+        if (form.alturaGestante === initialCalculadoraValue.alturaGestante) e.push('Altura da gestante necessita estar preenchido!')    
+        if (form.pesoKg === initialCalculadoraValue.pesoKg) e.push('Peso da gestante necessita estar preenchido!')    
+        if (form.IdadeGestacionalSemanas === initialCalculadoraValue.IdadeGestacionalSemanas) e.push('Idade gestacional (semanas) necessita estar preenchido!')    
+        if (Number(form.IdadeGestacionalSemanas) > 44) e.push('Idade gestacional (semanas) não pode ultrapassar 44!')    
+        if (Number(form.IdadeGestacionalSemanas) > 6) e.push('Idade gestacional (dias) não pode ultrapassar 6!')    
+        if (form.IdadeGestacionalDias === initialCalculadoraValue.IdadeGestacionalDias) e.push('Idade gestacional (dias) necessita estar preenchido!')    
         if (mode === 'edit' && !form.dsMotivo) e.push('Motivo da edição necessita estar preenchido!')
         if (!isValidEmail(form.email)) e.push('E-mail inválido!')
 
@@ -172,9 +179,12 @@ export default function Calculadora() {
             hrCalculo: moment().format("hh:mm"),
             idUsuario: user?.idUsuario || "",
             idEmpresa: empresa?.idEmpresa || "",
+            cpf: aplicarMascaraCpfCnpj(cpf || "")
         }));
 
-        if (cpf && !pacienteFetch) getPaciente()
+        if (cpf && !pacienteFetch) {
+            getPaciente()
+        }
     }, [empresa, user, cpf, pacienteFetch, getPaciente])
 
     React.useEffect(() => {
@@ -202,11 +212,12 @@ export default function Calculadora() {
 
     React.useEffect(() => {
         if (paciente) {
+            const nascimento = new Date(paciente.dataNascimento)
             setForm((prevForm) => ({
                 ...prevForm,
                 nomeCompleto: paciente.nomeCompleto,
                 cpf: aplicarMascaraCpfCnpj(paciente.cpf),
-                dataNascimento: moment(new Date(paciente.dataNascimento)).format("DD/MM/YYYY"),
+                dataNascimento: nascimento.toLocaleDateString('pt-BR'),
                 telefone: paciente.telefone,
                 email: paciente.email,
                 idPaciente: paciente.idPaciente,
@@ -344,7 +355,7 @@ export default function Calculadora() {
                                     sx={{ width: "100%" }}
                                     label="Data de Nascimento"
                                     name='dataNascimento'
-                                    value={form.dataNascimento ? moment(form.dataNascimento, "YYYY-MM-YY") : null}
+                                    value={form.dataNascimento ? moment(form.dataNascimento, "DD/MM/YYYY") : null}
                                     onChange={d => handleDateChange(d, 'dataNascimento')}
                                     disabled={!pacienteFetch || !!paciente?.idPaciente}
                                 />
@@ -452,6 +463,7 @@ export default function Calculadora() {
                                         },
                                     }}
                                     fullWidth
+                                    type='number'
                                     value={form.IdadeGestacionalSemanas}
                                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                                 />
@@ -461,6 +473,7 @@ export default function Calculadora() {
                                     label="Idade Gestacional"
                                     id="IdadeGestacionalDias"
                                     name='IdadeGestacionalDias'
+                                    type='number'
                                     slotProps={{
                                         input: {
                                             startAdornment: <InputAdornment position="start">dias</InputAdornment>,
@@ -469,6 +482,7 @@ export default function Calculadora() {
                                     fullWidth
                                     value={form.IdadeGestacionalDias}
                                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                                    InputProps={{ inputProps: { min: 0, max: 6 } }}
                                 />
                             </Grid>
                         </Grid>
@@ -613,7 +627,7 @@ export default function Calculadora() {
                         onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                     />}
                     <Button type='submit' variant="contained">{mode === "edit" ? 'Editar Cálculo': 'Gerar cálculo'}</Button>
-                    {warnings.map((v, i) => <Alert key={i} severity="warning" sx={{ width: "100%", mt: 1 }}>{v}</Alert>)}
+                    {warnings.map((v, i) => <Alert key={i} severity="warning" sx={{ width: "100%", mt: 0 }}>{v}</Alert>)}
                 </Box>}
         </Grid>
     </Grid>);
