@@ -210,6 +210,7 @@ export default function Calculadora() {
         if (pacienteFetch && paciente) {
             if (removeCpfMask(form.cpf) !== removeCpfMask(paciente?.cpf || "")) {
                 setPacienteFetch(false)
+                setPaciente(null)
                 setForm((prevForm) => ({
                     ...prevForm,
                     nomeCompleto: "",

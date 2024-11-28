@@ -26,12 +26,33 @@ export default async function GetLoginData(request: NextRequest) {
     }
 
     if (
-        url.pathname === "/portal/usuarios" ||
-        url.pathname === "/portal/empresas"
+        url.pathname === "/portal/usuarios"
     ) {
         const em = JSON.parse(empresa?.value || "")
         if (!(em.tpUsuario === "MASTER" || em.tpUsuario === "ADMINISTRATIVO")) {
             url.pathname = '/portal/calculadora'
+            return NextResponse.redirect(url)
+        }
+    }
+
+    if (
+        url.pathname === "/portal/empresas"
+    ) {
+        const em = JSON.parse(empresa?.value || "")
+        if (!(em.tpUsuario === "MASTER")) {
+            url.pathname = '/portal/calculadora'
+            return NextResponse.redirect(url)
+        }
+    }
+
+    if (
+        url.pathname === "/portal/calculadora" ||
+        url.pathname === "/portal/pacientes" ||
+        url.pathname === "/portal/dashboard"
+    ) {
+        const em = JSON.parse(empresa?.value || "")
+        if (em.tpUsuario === "ADMINISTRATIVO") {
+            url.pathname = '/portal/usuarios'
             return NextResponse.redirect(url)
         }
     }
