@@ -118,8 +118,21 @@ export default function Calculadora() {
     const getPaciente = React.useCallback(async () => {
         setLoading(true)
         const response = await getPacientes({ cpf: removeCpfMask(form.cpf) })
-        setPaciente(response.length > 0 ? response[0] : null)
         setPacienteFetch(true)
+        if(response.length > 0){
+            setPaciente(response[0])
+            const nascimento = new Date(response[0].dataNascimento)
+            setForm((prevForm) => ({
+                ...prevForm,
+                nomeCompleto: response[0].nomeCompleto,
+                cpf: aplicarMascaraCpfCnpj(response[0].cpf),
+                dataNascimento: nascimento.toLocaleDateString('pt-BR'),
+                telefone: response[0].telefone,
+                email: response[0].email,
+                idPaciente: response[0].idPaciente,
+            }));
+        }
+        
         setLoading(false)
     }, [form.cpf]);
 
@@ -179,7 +192,7 @@ export default function Calculadora() {
             hrCalculo: moment().format("hh:mm"),
             idUsuario: user?.idUsuario || "",
             idEmpresa: empresa?.idEmpresa || "",
-            cpf: aplicarMascaraCpfCnpj(cpf || "")
+            cpf: cpf ? aplicarMascaraCpfCnpj(cpf) : ""
         }));
 
         if (cpf && !pacienteFetch) {
@@ -209,21 +222,6 @@ export default function Calculadora() {
             imc: calcularIMC(Number(form.alturaGestante), Number(form.pesoKg)).toString()
         }));
     }, [form.alturaGestante, form.pesoKg])
-
-    React.useEffect(() => {
-        if (paciente) {
-            const nascimento = new Date(paciente.dataNascimento)
-            setForm((prevForm) => ({
-                ...prevForm,
-                nomeCompleto: paciente.nomeCompleto,
-                cpf: aplicarMascaraCpfCnpj(paciente.cpf),
-                dataNascimento: nascimento.toLocaleDateString('pt-BR'),
-                telefone: paciente.telefone,
-                email: paciente.email,
-                idPaciente: paciente.idPaciente,
-            }));
-        }
-    }, [paciente])
 
     React.useEffect(() => {
         if (idCalculo) getCalculo()
