@@ -160,11 +160,9 @@ export default function Calculadora() {
         if (form.telefone === initialCalculadoraValue.telefone) e.push('Telefone necessita estar preenchido!')    
         if (form.idadeGestante === initialCalculadoraValue.idadeGestante) e.push('Idade da gestante necessita estar preenchido!')    
         if (form.alturaGestante === initialCalculadoraValue.alturaGestante) e.push('Altura da gestante necessita estar preenchido!')    
-        if (form.pesoKg === initialCalculadoraValue.pesoKg) e.push('Peso da gestante necessita estar preenchido!')    
-        if (form.IdadeGestacionalSemanas === initialCalculadoraValue.IdadeGestacionalSemanas) e.push('Idade gestacional (semanas) necessita estar preenchido!')    
+        if (form.pesoKg === initialCalculadoraValue.pesoKg) e.push('Peso da gestante necessita estar preenchido!')  
         if (Number(form.IdadeGestacionalSemanas) > 44) e.push('Idade gestacional (semanas) não pode ultrapassar 44!')    
-        if (Number(form.IdadeGestacionalSemanas) > 6) e.push('Idade gestacional (dias) não pode ultrapassar 6!')    
-        if (form.IdadeGestacionalDias === initialCalculadoraValue.IdadeGestacionalDias) e.push('Idade gestacional (dias) necessita estar preenchido!')    
+        if (Number(form.IdadeGestacionalSemanas) > 6) e.push('Idade gestacional (dias) não pode ultrapassar 6!')
         if (mode === 'edit' && !form.dsMotivo) e.push('Motivo da edição necessita estar preenchido!')
         if (!isValidEmail(form.email)) e.push('E-mail inválido!')
 
