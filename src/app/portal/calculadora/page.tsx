@@ -192,13 +192,19 @@ export default function Calculadora() {
             hrCalculo: moment().format("hh:mm"),
             idUsuario: user?.idUsuario || "",
             idEmpresa: empresa?.idEmpresa || "",
-            cpf: cpf ? aplicarMascaraCpfCnpj(cpf) : ""
         }));
 
+    }, [empresa, user, pacienteFetch])
+
+    React.useEffect(() => {
         if (cpf && !pacienteFetch) {
+            setForm((prevForm) => ({
+                ...prevForm,
+                cpf: aplicarMascaraCpfCnpj(cpf)
+            }));
             getPaciente()
         }
-    }, [empresa, user, cpf, pacienteFetch, getPaciente])
+    },[cpf, pacienteFetch, getPaciente])
 
     React.useEffect(() => {
         if (pacienteFetch && paciente) {
