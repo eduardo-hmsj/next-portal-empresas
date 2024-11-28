@@ -12,10 +12,10 @@ import Logo from "@/img/logo.png"
 import { styled } from '@mui/material/styles';
 
 import Image from 'next/image';
-import Login from '../../app/(login)/actions';
 import { useFormState } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { Skeleton } from '@mui/material';
+import { Login } from '@/app/(login)/actions';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',

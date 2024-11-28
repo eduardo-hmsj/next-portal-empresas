@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation';
 import { Alert, Link, Skeleton } from '@mui/material';
 import { CPFMask } from '@/utils/functions';
 import { LoginInitial } from '@/app/(login)/types';
-import Login from '@/app/(login)/actions';
+import { Login, RedefinirSenha } from '@/app/(login)/actions';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -138,9 +138,33 @@ export default function SignInCard() {
   }
 
   function SignUp() {
+    const [form, setForm] = React.useState({cpf: ""})
+    async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
+      evt.preventDefault()
+      cleanAdvises()
+      setLoading(true)
+      const e: string[] = []
+
+      if (form.cpf === LoginInitial.cpf) e.push('CPF necessita estar preenchido!')
+
+      if (e.length > 0) {
+        setWarnings(e)
+      } else {
+        const response = await RedefinirSenha(form)
+        
+        if (response.Codigo === "OK") {
+
+          route.push('/portal/dashboard')
+          setSuccess(response.Mensagem)
+        } else {
+          setError(response.Mensagem || "Houve um erro ao realizar seu login. Em instantes, tente novamente.")
+        }
+      }
+      setLoading(false)
+    }
     return <Box
       component="form"
-      onSubmit={() => setLoading(true)}
+      onSubmit={validateForm}
       noValidate
       sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2 }}
     >
@@ -154,15 +178,14 @@ export default function SignInCard() {
           fullWidth
           variant="outlined"
           color="primary"
+          value={form.cpf}
+          onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
           InputProps={{
             inputComponent: CPFMask,
           }}
         />
       </FormControl>
-      <Button type="submit" fullWidth variant="contained"
-        onClick={e => {
-          e.preventDefault()
-        }}>
+      <Button type="submit" fullWidth variant="contained">
         Recuperar Senha
       </Button>
       <Link

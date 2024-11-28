@@ -393,6 +393,7 @@ export default function Calculadora() {
                                     fullWidth
                                     value={form.idadeGestante}
                                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                                    inputProps={{step: 1, min: 0}}
                                 />
                             </Grid>
                             <Grid size={4}>
@@ -471,6 +472,7 @@ export default function Calculadora() {
                                     type='number'
                                     value={form.IdadeGestacionalSemanas}
                                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                                    inputProps={{step: 1, min: 0, max: 44}}
                                 />
                             </Grid>
                             <Grid size={6}>
@@ -487,7 +489,7 @@ export default function Calculadora() {
                                     fullWidth
                                     value={form.IdadeGestacionalDias}
                                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
-                                    InputProps={{ inputProps: { min: 0, max: 6 } }}
+                                    inputProps={{step: 1, min: 0, max: 6}}
                                 />
                             </Grid>
                         </Grid>
@@ -548,6 +550,7 @@ export default function Calculadora() {
                                     fullWidth
                                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                                     disabled={naoDignoDeNotaHO}
+                                    inputProps={{step: 1, min: 0}}
                                 />
                             </Grid>
                             <Grid size={6}>
@@ -560,6 +563,7 @@ export default function Calculadora() {
                                     fullWidth
                                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                                     disabled={naoDignoDeNotaHO}
+                                    inputProps={{step: 1, min: 0}}
                                 />
                             </Grid>
                             <Grid size={6}>
@@ -572,6 +576,7 @@ export default function Calculadora() {
                                     fullWidth
                                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                                     disabled={naoDignoDeNotaHO}
+                                    inputProps={{step: 1, min: 0}}
                                 />
                             </Grid>
 

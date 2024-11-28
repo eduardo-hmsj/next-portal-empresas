@@ -6,7 +6,7 @@ import { cookies } from 'next/headers'
 import { LoginPayload } from "./types"
 import { removeCpfMask } from "@/utils/functions"
 
-export default async function Login(props: LoginPayload) {
+export async function Login(props: LoginPayload) {
     const cookieStore = await cookies()
     try {
         const response = await api.post('/LoginPE', {...props, cpf: removeCpfMask(props.cpf)})
@@ -17,6 +17,16 @@ export default async function Login(props: LoginPayload) {
             cookieStore.set('usuario', JSON.stringify(response.data.User))
             if (dados.length === 1) cookieStore.set('empresa', JSON.stringify(dados[0]))
         }
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return { Codigo: 'NOK', Mensagem: 'Houve um erro a responder requisição.' }
+    }
+}
+
+export async function RedefinirSenha(props: {cpf: string}) {
+    try {
+        const response = await api.post('/EsqueciSenhaPE', {...props, cpf: removeCpfMask(props.cpf)})
         return response.data
     } catch (error) {
         console.log(error)
