@@ -269,8 +269,8 @@ export default function Calculadora() {
                 }}
             >
                 <Info
-                    subtitle='Preencha os campos abaixo para obter uma análise personalizada do seu risco. Essa calculadora foi desenvolvida para fornecer uma estimativa rápida e confiável, ajudando você a tomar decisões informadas. Basta inserir as informações solicitadas e visualizar o resultado imediatamente.'
-                    title='Calcule o Seu Nível de Risco com Facilidade'
+                    subtitle='Por meio de análise precisa de dados clínicos e histórico da gestante, a calculadora identifica os riscos associados à gestação, permitindo intervenções mais assertivas e personalizadas. Caso necessário, o profissional médico poderá solicitar uma interconsulta com nossos especialistas e juntos construir metas terapêuticas para a gestante ou até mesmo encaminhar a paciente para nossos especialistas em alto risco gestacional.'
+                    title='Calculadora de Risco Gestacional do Grupo Santa Joana'
                 />
             </Box>
         </Grid>
