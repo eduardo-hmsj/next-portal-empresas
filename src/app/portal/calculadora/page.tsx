@@ -162,7 +162,7 @@ export default function Calculadora() {
         if (form.alturaGestante === initialCalculadoraValue.alturaGestante) e.push('Altura da gestante necessita estar preenchido!')    
         if (form.pesoKg === initialCalculadoraValue.pesoKg) e.push('Peso da gestante necessita estar preenchido!')  
         if (Number(form.IdadeGestacionalSemanas) > 44) e.push('Idade gestacional (semanas) não pode ultrapassar 44!')    
-        if (Number(form.IdadeGestacionalSemanas) > 6) e.push('Idade gestacional (dias) não pode ultrapassar 6!')
+        if (Number(form.IdadeGestacionalDias) > 6) e.push('Idade gestacional (dias) não pode ultrapassar 6!')
         if (mode === 'edit' && !form.dsMotivo) e.push('Motivo da edição necessita estar preenchido!')
         if (!isValidEmail(form.email)) e.push('E-mail inválido!')
 
