@@ -10,7 +10,7 @@ import { Alert, Button, Checkbox, FormControl, FormControlLabel, FormLabel, Icon
 import { UserContext } from '@/context/UserContext';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import SearchIcon from '@mui/icons-material/Search';
-import { aplicarMascaraCpfCnpj, CPFMask, isValidEmail, removeCpfMask, TelefoneMask } from '@/utils/functions';
+import { aplicarMascaraCpfCnpj, calcularIdade, CPFMask, isValidEmail, removeCpfMask, TelefoneMask } from '@/utils/functions';
 import { condicoesMedicas, historicoObst, initialCalculadoraValue, situacaoFamiliar } from './types';
 import moment, { Moment } from 'moment';
 import { getCalculosReturn, getPacienteReturn } from '../pacientes/types';
@@ -241,6 +241,13 @@ export default function Calculadora() {
 
     }, [idCalculo, getCalculo, mode])
 
+    React.useEffect(() => {
+        setForm((prevForm) => ({
+            ...prevForm,
+            idadeGestante: calcularIdade(form.dataNascimento).toString()
+        }));
+    }, [form.dataNascimento])
+
     return (<Grid container sx={{ height: { xs: '100%', sm: '100dvh' } }}>
         <Grid
             size={{ xs: 12, sm: 5, lg: 4 }}
@@ -390,7 +397,8 @@ export default function Calculadora() {
                                     type='number'
                                     fullWidth
                                     value={form.idadeGestante}
-                                    onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                                    disabled
+                                    aria-readonly
                                     inputProps={{step: 1, min: 0}}
                                 />
                             </Grid>

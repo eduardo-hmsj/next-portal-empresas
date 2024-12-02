@@ -44,13 +44,29 @@ export default function Info(props: InfoProps) {
         <AccordionDetails>
           <nav aria-label="main mailbox folders">
             <List>
+            {(empresa?.tpUsuario === "MASTER") && <ListItem disablePadding>
+                <ListItemButton selected={pathname === "/portal/empresas"} onClick={() => router.push("/portal/empresas")}>
+                  <ListItemIcon>
+                    <AddBusinessIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Empresas" />
+                </ListItemButton>
+              </ListItem>}
+              {(empresa?.tpUsuario === "MASTER" || empresa?.tpUsuario === "ADMINISTRATIVO") && <ListItem disablePadding>
+                <ListItemButton selected={pathname === "/portal/usuarios"} onClick={() => router.push("/portal/usuarios")}>
+                  <ListItemIcon>
+                    <PersonIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Usuários" />
+                </ListItemButton>
+              </ListItem>}
               {empresa?.tpUsuario !== "ADMINISTRATIVO" && <>
                 <ListItem disablePadding>
-                  <ListItemButton selected={pathname === "/portal/dashboard"} onClick={() => router.push("/portal/dashboard")}>
+                  <ListItemButton selected={pathname === "/portal/pacientes"} onClick={() => router.push("/portal/pacientes")}>
                     <ListItemIcon>
-                      <LeaderboardIcon />
+                      <AccessibilityIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Dashboard" />
+                    <ListItemText primary="Pacientes" />
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
@@ -62,30 +78,14 @@ export default function Info(props: InfoProps) {
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <ListItemButton selected={pathname === "/portal/pacientes"} onClick={() => router.push("/portal/pacientes")}>
+                  <ListItemButton selected={pathname === "/portal/dashboard"} onClick={() => router.push("/portal/dashboard")}>
                     <ListItemIcon>
-                      <AccessibilityIcon />
+                      <LeaderboardIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Pacientes" />
+                    <ListItemText primary="Dashboard" />
                   </ListItemButton>
                 </ListItem>
               </>}
-              {(empresa?.tpUsuario === "MASTER" || empresa?.tpUsuario === "ADMINISTRATIVO") && <ListItem disablePadding>
-                <ListItemButton selected={pathname === "/portal/usuarios"} onClick={() => router.push("/portal/usuarios")}>
-                  <ListItemIcon>
-                    <PersonIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Usuários" />
-                </ListItemButton>
-              </ListItem>}
-              {(empresa?.tpUsuario === "MASTER") && <ListItem disablePadding>
-                <ListItemButton selected={pathname === "/portal/empresas"} onClick={() => router.push("/portal/empresas")}>
-                  <ListItemIcon>
-                    <AddBusinessIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Empresas" />
-                </ListItemButton>
-              </ListItem>}
               <ListItem disablePadding>
                 <ListItemButton selected={pathname === "/portal/ajuda"} onClick={() => router.push("/portal/ajuda")}>
                   <ListItemIcon>

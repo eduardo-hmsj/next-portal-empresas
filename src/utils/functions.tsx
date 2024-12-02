@@ -48,3 +48,30 @@ export function aplicarMascaraTelefone(valor: string): string {
         return valor;
     }
 }
+
+export function calcularIdade(dataNascimento: string): number {
+    const regex = /^\d{2}\/\d{2}\/\d{4}$/;
+    if (!regex.test(dataNascimento)) {
+        return 0
+    }
+
+    const [dia, mes, ano] = dataNascimento.split('/').map(Number);
+
+    const dataNasc = new Date(ano, mes - 1, dia);
+
+    if (dataNasc.getDate() !== dia || dataNasc.getMonth() !== mes - 1 || dataNasc.getFullYear() !== ano) {
+        return 0
+    }
+
+    const hoje = new Date();
+    let idade = hoje.getFullYear() - dataNasc.getFullYear();
+
+    if (
+        hoje.getMonth() < dataNasc.getMonth() ||
+        (hoje.getMonth() === dataNasc.getMonth() && hoje.getDate() < dataNasc.getDate())
+    ) {
+        idade--;
+    }
+
+    return idade;
+}
