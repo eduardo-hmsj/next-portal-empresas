@@ -49,6 +49,7 @@ export const condicoesMedicas = [
     { "name": "diabetesMellitus", "label": "Diabetes Mellitus tratada com HO", "type": "boolean" },
     { "name": "doencasAutoImunesFora", "label": "Doenças auto-imunes , LES e outras colagenoses fora de atividade", "type": "boolean" },
     { "name": "doencasAutoImunesTrat", "label": "Doenças auto-imunes, LES e outras colagenoses necessitando de tratamento e acompanhamento conjunto", "type": "boolean" },
+    { "name": "doencasIntestinais", "label": "Doenças inflamatórias intestinais crônicas", "type": "boolean" },
     { "name": "tireoidopatias", "label": "Tireoidopatias necessitando de tratamento e acompanhamentoconjunto", "type": "boolean" },
     { "name": "endometriose", "label": "Endometriose", "type": "boolean" },
     { "name": "epilepsiaNeurologica", "label": "Epilepsia ou Doença Neurológica Crônica", "type": "boolean" },
@@ -73,8 +74,7 @@ export const condicoesMedicas = [
     { "name": "neoplasias", "label": "Neoplasias", "type": "boolean" },
     { "name": "doencasInfectoGestacao", "label": "Doenças infectocontagiosas vividas durante a presente gestação (ITU, doenças do trato, respiratório, tuberculose, rubéola, gengivites e periodontites, toxoplasmose etc.)", "type": "boolean" },
     { "name": "sepse", "label": "Sepse ", "type": "boolean" },
-    { "name": "doencasClinicasGestacao", "label": "Doenças clínicas diagnosticadas pela primeira vez nessa gestação (cardiopatias, endocrinopatias)", "type": "boolean" },
-    { "name": "doencasIntestinais", "label": "Doenças inflamatórias intestinais crônicas", "type": "boolean" }
+    { "name": "doencasClinicasGestacao", "label": "Doenças clínicas diagnosticadas pela primeira vez nessa gestação (cardiopatias, endocrinopatias)", "type": "boolean" }
 ]
 
 export const initialCalculadoraValue = {
