@@ -21,7 +21,7 @@ export const historicoObst = [
     { "name": "diabetesGestacional", "label": "Diabetes Gestacional", "type": "boolean" },
     { "name": "nuliparidadeMultiparidade", "label": "Nuliparidade / Multiparidade", "type": "boolean" },
     { "name": "placentaPreviaAtual", "label": "Placenta Prévia Atual", "type": "boolean" },
-    { "name": "acrestismoPlacentario", "label": "Acrestismo Placentário", "type": "boolean" },
+    { "name": "acrestismoPlacentario", "label": "Acretismo Placentário", "type": "boolean" },
     { "name": "aloimunizacao", "label": "Aloimunização", "type": "boolean" },
     { "name": "esterilidadeTratada", "label": "Esterilidade Tratada", "type": "boolean" },
     { "name": "malformacoesCongenitas", "label": "Malformações Congênitas", "type": "boolean" },
