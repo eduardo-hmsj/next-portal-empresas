@@ -313,7 +313,7 @@ export default function Calculadora() {
                         <input name='idEmpresa' value={form.idEmpresa} hidden readOnly />
                         <Grid container spacing={2} size={12}>
                             <Grid size={4}>
-                                <FormControl variant="outlined">
+                                <FormControl variant="outlined" sx={{width: "100%"}}>
                                     <InputLabel htmlFor="outlined-adornment-password">CPF</InputLabel>
                                     <OutlinedInput
                                         id="cpf"
