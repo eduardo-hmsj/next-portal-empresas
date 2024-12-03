@@ -74,7 +74,7 @@ export const condicoesMedicas = [
     { "name": "doencasInfectoGestacao", "label": "Doenças infectocontagiosas vividas durante a presente gestação (ITU, doenças do trato, respiratório, tuberculose, rubéola, gengivites e periodontites, toxoplasmose etc.)", "type": "boolean" },
     { "name": "sepse", "label": "Sepse ", "type": "boolean" },
     { "name": "doencasClinicasGestacao", "label": "Doenças clínicas diagnosticadas pela primeira vez nessa gestação (cardiopatias, endocrinopatias)", "type": "boolean" },
-    { "name": "Doenças inflamatórias intestinais crônicas", "label": "Doenças Intestinais  ", "type": "boolean" }
+    { "name": "doencasIntestinais", "label": "Doenças inflamatórias intestinais crônicas", "type": "boolean" }
 ]
 
 export const initialCalculadoraValue = {
