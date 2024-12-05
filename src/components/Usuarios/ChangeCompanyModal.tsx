@@ -25,7 +25,7 @@ export default function ChangeCompanyModal(props: { user: getUsuarioReturn, clos
     const [loading, setLoading] = useState(false)
     const [empresasFilter, setEmpresasFilter] = useState<getEmpresaReturn[]>([])
     const [form, setForm] = useState(ativarUsuarioEmpresaInitial)
-    const { empresa, user } = useContext(UserContext)
+    const { empresa, user, refreshUser } = useContext(UserContext)
     const [empresas, setEmpresas] = useState<getEmpresaReturn[]>([])
     const [warnings, setWarnings] = useState<string[]>([])
     const [error, setError] = useState("")
@@ -67,6 +67,7 @@ export default function ChangeCompanyModal(props: { user: getUsuarioReturn, clos
             const response = await postEmpresasUsuario(form)
             if (response.Codigo === "OK") {
                 getEmpresasUsuario()
+                if(form.idUsuario === user?.idUsuario) refreshUser()
                 setForm({
                     ...ativarUsuarioEmpresaInitial,
                     idUsuarioCadastro: user?.idUsuario || "",

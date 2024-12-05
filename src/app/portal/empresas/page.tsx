@@ -18,7 +18,9 @@ import CreateEmpresa from '@/components/Empresas/CreateEmpresa';
 import EditEmpresa from '@/components/Empresas/EditEmpresa';
 import { getEmpresas as getEmpresasApi } from './actions';
 import CorporateFareIcon from '@mui/icons-material/CorporateFare';
-import DomainDisabledIcon from '@mui/icons-material/DomainDisabled'; 
+import DomainDisabledIcon from '@mui/icons-material/DomainDisabled';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteEmpresaModal from '@/components/Empresas/DeleteEmpresaModal';
 
 export default function Empresas() {
     const { empresa, user } = React.useContext(UserContext)
@@ -30,6 +32,7 @@ export default function Empresas() {
     const [success, setSuccess] = React.useState("")
     const [formOpen, setFormOpen] = React.useState("")
     const [loading, setLoading] = React.useState(false)
+    const [deleteModal, setDeleteModal] = React.useState<null | getEmpresaReturn>(null)
     const route = useRouter()
 
     function cleanAdvises() {
@@ -174,11 +177,17 @@ export default function Empresas() {
             type: 'actions',
             width: 160,
             getActions: (params) => [
+                <GridActionsCellItem
+                    key={"edit"}
+                    icon={<CreateIcon />}
+                    label="Edit"
+                    onClick={() => editEmpresa(params.id.toString())}
+                />,
                 <>
                     {params.row.status === "A" ?
                         <GridActionsCellItem
                             icon={<DomainDisabledIcon />}
-                            color="error"
+                            color="warning"
                             label="Inativar"
                             onClick={() => inative(params.id.toString())}
                         />
@@ -191,10 +200,11 @@ export default function Empresas() {
                         />}
                 </>,
                 <GridActionsCellItem
-                    key={"edit"}
-                    icon={<CreateIcon />}
-                    label="Edit"
-                    onClick={() => editEmpresa(params.id.toString())}
+                    key={"delete"}
+                    color="error"
+                    icon={<DeleteIcon />}
+                    label="Delete"
+                    onClick={() => setDeleteModal(params.row)}
                 />,
             ],
         },
@@ -301,5 +311,6 @@ export default function Empresas() {
             </>
                 : <Skeleton animation='wave' sx={{ height: "100vh", width: "100%" }} />}
         </Grid>
+        {!!deleteModal && <DeleteEmpresaModal cleanAdvises={cleanAdvises} setError={setError} setSuccess={setSuccess} empresa={deleteModal} close={() => setDeleteModal(null)} getEmpresas={getEmpresas} />}
     </Grid>);
 }

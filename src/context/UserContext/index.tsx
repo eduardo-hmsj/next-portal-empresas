@@ -1,6 +1,6 @@
 "use client";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
-import { deleteAllCookies, getEmpresaByCookie, getUsuarioByCookie, updateEmpresaCookies } from "./actions";
+import { deleteAllCookies, getEmpresaByCookie, getUsuarioByCookie, refreshLogin, updateEmpresaCookies } from "./actions";
 import { ContextType, EmpresaProps, UserProps } from "./types";
 import { useRouter } from "next/navigation";
 
@@ -8,6 +8,7 @@ export const UserContext = createContext<ContextType>({
     user: null,
     empresa: null,
     logout: () => { },
+    refreshUser: () => { },
     chooseEmpresa: (v: string) => { if(v) return }
 });
 
@@ -36,11 +37,18 @@ export default function UserProvider(props: PropsWithChildren) {
         }
     }
 
+    async function refreshUser(){
+        const response = await refreshLogin({idUsuario: user?.idUsuario || ""})
+        if (response.Codigo === "OK") {
+            updateStatus()
+        }
+    }
+
     useEffect(() => {
         updateStatus()
     }, [])
 
-    return <UserContext.Provider value={{ user, empresa, logout, chooseEmpresa }}>
+    return <UserContext.Provider value={{ user, empresa, logout, chooseEmpresa, refreshUser }}>
         {props.children}
     </UserContext.Provider>
 

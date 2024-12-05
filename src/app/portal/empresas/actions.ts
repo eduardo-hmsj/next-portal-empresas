@@ -70,3 +70,17 @@ export async function activateEmpresa(props: {
 
     return { Codigo: 'NOK', Mensagem: 'Houve um erro a responder requisição.' }
 }
+
+export async function deleteEmpresa(props: {
+    idEmpresa: string
+    idUsuarioCadastro: string
+}) {
+    try {
+        const { data } = await api.post("/ApagarEmpresaPE", props)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+
+    return { Codigo: 'NOK', Mensagem: 'Houve um erro a responder requisição.' }
+}

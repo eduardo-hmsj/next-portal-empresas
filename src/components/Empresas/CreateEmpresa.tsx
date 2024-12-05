@@ -16,7 +16,7 @@ export default function CreateEmpresa(props: {
     setError: (sa: string) => void,
     setSuccess: (sa: string) => void,
 }) {
-    const { empresa, user } = React.useContext(UserContext)
+    const { empresa, user, refreshUser } = React.useContext(UserContext)
     const [form, setForm] = React.useState<EmpresaPayload>(EmpresaInitial)
 
     async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
@@ -46,6 +46,7 @@ export default function CreateEmpresa(props: {
                     ...EmpresaInitial,
                     idUsuarioCadastro: user?.idUsuario || "",
                 })
+                refreshUser()
                 props.setSuccess(response.Mensagem)
             } else {
                 props.setError(response.Mensagem || "Houve um erro ao realizar seu cadastro. Em instantes, tente novamente.")

@@ -33,18 +33,21 @@ export default function Info(props: InfoProps) {
           id="panel1-header"
         >
           <Typography display={'flex'} alignItems={'center'}><MenuIcon sx={{ mr: 2 }} />
-            {pathname === "/portal/dashboard" && "Dashboard"}
-            {pathname === "/portal/calculadora" && "Calculadora"}
-            {pathname === "/portal/pacientes" && "Pacientes"}
-            {pathname === "/portal/empresas" && "Empresas"}
-            {pathname === "/portal/usuarios" && "Usuários"}
-            {pathname === "/portal/ajuda" && "Ajuda"}
+            <span>
+              <small><strong>Menu</strong></small><br />
+              {pathname === "/portal/dashboard" && "Dashboard"}
+              {pathname === "/portal/calculadora" && "Calculadora"}
+              {pathname === "/portal/pacientes" && "Pacientes"}
+              {pathname === "/portal/empresas" && "Empresas"}
+              {pathname === "/portal/usuarios" && "Usuários"}
+              {pathname === "/portal/ajuda" && "Ajuda"}
+            </span>
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <nav aria-label="main mailbox folders">
             <List>
-            {(empresa?.tpUsuario === "MASTER") && <ListItem disablePadding>
+              {(empresa?.tpUsuario === "MASTER") && <ListItem disablePadding>
                 <ListItemButton selected={pathname === "/portal/empresas"} onClick={() => router.push("/portal/empresas")}>
                   <ListItemIcon>
                     <AddBusinessIcon />
