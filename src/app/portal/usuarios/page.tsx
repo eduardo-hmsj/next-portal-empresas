@@ -94,9 +94,13 @@ export default function Usuarios() {
     const getUsers = React.useCallback(async () => {
         setLoading(true)
         const u = await getUsuarios({ idEmpresa: empresa?.idEmpresa })
-        setUsers(u)
+        const us: getUsuarioReturn[] = []
+        u.forEach((v) => {
+            if(!(empresa?.tpUsuario !== "MASTER" && v.tipoUsuario === "MASTER")) us.push(v) 
+        })
+        setUsers(us)
         setLoading(false)
-    }, [empresa?.idEmpresa]);
+    }, [empresa]);
 
     async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
         setLoading(true)

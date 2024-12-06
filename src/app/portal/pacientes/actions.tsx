@@ -74,6 +74,7 @@ export async function activatePaciente(props: {
 export async function getCalculosPaciente(props: {
     idPaciente: string
     idEmpresa: string
+    idUsuario: string
 }): Promise<getCalculosReturn[]> {
     try {
         const { data, status } = await api.post("/ConsultaPacienteCalculoPE", props)

@@ -25,15 +25,15 @@ const style = {
 
 export default function ShowCalcModal(props: { user: getPacienteReturn, close: () => void }) {
     const [loading, setLoading] = useState(false)
-    const { empresa } = useContext(UserContext)
+    const { empresa, user } = useContext(UserContext)
     const [calculos, setCalculos] = useState<getCalculosReturn[]>([])
 
     const getCalculos = useCallback(async () => {
         setLoading(true);
-        const u = await getCalculosPaciente({ idEmpresa: empresa?.idEmpresa || "", idPaciente: props.user.idPaciente });
+        const u = await getCalculosPaciente({ idEmpresa: empresa?.idEmpresa || "", idPaciente: props.user.idPaciente, idUsuario: empresa?.tpUsuario !== "MASTER" ? user?.idUsuario || "" : "" });
         setCalculos(u);
         setLoading(false);
-    }, [empresa?.idEmpresa, props]);
+    }, [empresa, user, props]);
 
     const columns: GridColDef<(getCalculosReturn[])[number]>[] = [
         { field: 'idCalculo', headerName: 'ID', width: 70, sortComparator: (v1, v2) => Number(v1) - Number(v2) },
