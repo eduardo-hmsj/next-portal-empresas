@@ -14,7 +14,7 @@ import { getGraficoReturn } from './types';
 
 export default function Dashboard() {
     const [loading, setLoading] = useState(false)
-    const { empresa } = useContext(UserContext)
+    const { empresa, user } = useContext(UserContext)
     const [data, setData] = useState<getGraficoReturn[]>([])
     const [form, setForm] = useState({
         idEmpresa: empresa?.idEmpresa || "",
@@ -31,10 +31,10 @@ export default function Dashboard() {
 
     const getGrafico = useCallback(async () => {
         setLoading(true)
-        const response = await getGraficoApi({...form, idEmpresa: empresa?.idEmpresa || ""})
+        const response = await getGraficoApi({...form, idEmpresa: empresa?.idEmpresa || "", idUsuario: empresa?.tpUsuario !== "MASTER" ? user?.idUsuario || "" : "" })
         setData(response)
         setLoading(false)
-    }, [form, empresa]);
+    }, [form, empresa, user]);
 
     useEffect(() => {
         if(empresa) getGrafico()

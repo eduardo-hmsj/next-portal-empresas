@@ -196,13 +196,15 @@ export default function Pacientes() {
                             onClick={() => active(params.id.toString())}
                         />}
                 </>,
-                <GridActionsCellItem
-                    key={"showCalc"}
-                    icon={<ChecklistIcon />}
-                    label="showCalc"
-                    color={'info'}
-                    onClick={() => setShowCalcModal(params.row)}
-                />,
+                <>
+                    {empresa?.tpUsuario !== "ADMINISTRATIVO" && <GridActionsCellItem
+                        key={"showCalc"}
+                        icon={<ChecklistIcon />}
+                        label="showCalc"
+                        color={'info'}
+                        onClick={() => setShowCalcModal(params.row)}
+                    />}
+                </>,
                 <GridActionsCellItem
                     key={"edit"}
                     icon={<CreateIcon />}
@@ -312,6 +314,6 @@ export default function Pacientes() {
             </>
                 : <Skeleton animation='wave' sx={{ height: "100vh", width: "100%" }} />}
         </Grid>
-        {!!showCalcModal && <ShowCalcModal user={showCalcModal} close={() => setShowCalcModal(null)}/>}
+        {!!showCalcModal && <ShowCalcModal user={showCalcModal} close={() => setShowCalcModal(null)} />}
     </Grid>);
 }

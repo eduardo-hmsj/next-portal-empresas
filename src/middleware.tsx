@@ -47,7 +47,6 @@ export default async function GetLoginData(request: NextRequest) {
 
     if (
         url.pathname === "/portal/calculadora" ||
-        url.pathname === "/portal/pacientes" ||
         url.pathname === "/portal/dashboard"
     ) {
         const em = JSON.parse(empresa?.value || "")

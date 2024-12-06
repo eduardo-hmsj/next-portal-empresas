@@ -5,6 +5,7 @@ import { getGraficoReturn } from "./types";
 
 export async function getGrafico(props: {
     idEmpresa: string,
+    idUsuario:string,
     dataInicio: string,
     dataFim: string,
 }): Promise<getGraficoReturn[]> {

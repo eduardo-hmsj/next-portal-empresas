@@ -63,15 +63,15 @@ export default function Info(props: InfoProps) {
                   <ListItemText primary="Usuários" />
                 </ListItemButton>
               </ListItem>}
+              <ListItem disablePadding>
+                <ListItemButton selected={pathname === "/portal/pacientes"} onClick={() => router.push("/portal/pacientes")}>
+                  <ListItemIcon>
+                    <AccessibilityIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Pacientes" />
+                </ListItemButton>
+              </ListItem>
               {empresa?.tpUsuario !== "ADMINISTRATIVO" && <>
-                <ListItem disablePadding>
-                  <ListItemButton selected={pathname === "/portal/pacientes"} onClick={() => router.push("/portal/pacientes")}>
-                    <ListItemIcon>
-                      <AccessibilityIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Pacientes" />
-                  </ListItemButton>
-                </ListItem>
                 <ListItem disablePadding>
                   <ListItemButton selected={pathname === "/portal/calculadora"} onClick={() => router.push("/portal/calculadora")}>
                     <ListItemIcon>

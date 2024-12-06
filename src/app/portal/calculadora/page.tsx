@@ -142,7 +142,11 @@ export default function Calculadora() {
             idEmpresa: empresa?.idEmpresa || "",
             idCalculo: idCalculo || ""
         })
-        setForm({ ...response, dtCalculo: moment(response.dtCalculo, "YYYY-MM-DD").format("DD-MM-YYYY") })
+        setForm({ ...response, 
+            dtCalculo: moment(response.dtCalculo, "YYYY-MM-DD").format("DD-MM-YYYY"),
+            cpf: aplicarMascaraCpfCnpj(response.cpf),
+            dataNascimento: moment(response.dataNascimento, "YYYY-MM-DD").format("DD-MM-YYYY"),
+        })
         setLoading(false)
     }, [idCalculo, empresa]);
 
