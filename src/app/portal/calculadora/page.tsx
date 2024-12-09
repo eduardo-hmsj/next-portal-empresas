@@ -119,7 +119,7 @@ export default function Calculadora() {
         setLoading(true)
         const response = await getPacientes({ cpf: removeCpfMask(form.cpf) })
         setPacienteFetch(true)
-        if(response.length > 0){
+        if (response.length > 0) {
             setPaciente(response[0])
             const nascimento = new Date(response[0].dataNascimento)
             setForm((prevForm) => ({
@@ -132,7 +132,7 @@ export default function Calculadora() {
                 idPaciente: response[0].idPaciente,
             }));
         }
-        
+
         setLoading(false)
     }, [form.cpf]);
 
@@ -142,7 +142,8 @@ export default function Calculadora() {
             idEmpresa: empresa?.idEmpresa || "",
             idCalculo: idCalculo || ""
         })
-        setForm({ ...response, 
+        setForm({
+            ...response,
             dtCalculo: moment(response.dtCalculo, "YYYY-MM-DD").format("DD-MM-YYYY"),
             cpf: aplicarMascaraCpfCnpj(response.cpf),
             dataNascimento: moment(response.dataNascimento, "YYYY-MM-DD").format("DD-MM-YYYY"),
@@ -161,11 +162,11 @@ export default function Calculadora() {
         if (form.cpf === initialCalculadoraValue.cpf) e.push('CPF necessita estar preenchido!')
         if (form.dataNascimento === initialCalculadoraValue.dataNascimento) e.push('Data de Nascimento necessita estar preenchido!')
         if (form.email === initialCalculadoraValue.email) e.push('E-mail necessita estar preenchido!')
-        if (form.telefone === initialCalculadoraValue.telefone) e.push('Telefone necessita estar preenchido!')    
-        if (form.idadeGestante === initialCalculadoraValue.idadeGestante) e.push('Idade da gestante necessita estar preenchido!')    
-        if (form.alturaGestante === initialCalculadoraValue.alturaGestante) e.push('Altura da gestante necessita estar preenchido!')    
-        if (form.pesoKg === initialCalculadoraValue.pesoKg) e.push('Peso da gestante necessita estar preenchido!')  
-        if (Number(form.IdadeGestacionalSemanas) > 44) e.push('Idade gestacional (semanas) não pode ultrapassar 44!')    
+        if (form.telefone === initialCalculadoraValue.telefone) e.push('Telefone necessita estar preenchido!')
+        if (form.idadeGestante === initialCalculadoraValue.idadeGestante) e.push('Idade da gestante necessita estar preenchido!')
+        if (form.alturaGestante === initialCalculadoraValue.alturaGestante) e.push('Altura da gestante necessita estar preenchido!')
+        if (form.pesoKg === initialCalculadoraValue.pesoKg) e.push('Peso da gestante necessita estar preenchido!')
+        if (Number(form.IdadeGestacionalSemanas) > 44) e.push('Idade gestacional (semanas) não pode ultrapassar 44!')
         if (Number(form.IdadeGestacionalDias) > 6) e.push('Idade gestacional (dias) não pode ultrapassar 6!')
         if (mode === 'edit' && !form.dsMotivo) e.push('Motivo da edição necessita estar preenchido!')
         if (!isValidEmail(form.email)) e.push('E-mail inválido!')
@@ -206,7 +207,7 @@ export default function Calculadora() {
             }));
             getPaciente()
         }
-    },[cpf, pacienteFetch, getPaciente])
+    }, [cpf, pacienteFetch, getPaciente])
 
     React.useEffect(() => {
         if (pacienteFetch && paciente) {
@@ -234,8 +235,8 @@ export default function Calculadora() {
 
     React.useEffect(() => {
         if (idCalculo) getCalculo()
-        
-        if(mode === 'edit'){
+
+        if (mode === 'edit') {
             setForm((prevForm) => ({
                 ...prevForm,
                 dsMotivo: "",
@@ -246,10 +247,12 @@ export default function Calculadora() {
     }, [idCalculo, getCalculo, mode])
 
     React.useEffect(() => {
-        setForm((prevForm) => ({
-            ...prevForm,
-            idadeGestante: calcularIdade(form.dataNascimento).toString()
-        }));
+        setForm((prevForm) => {
+            return {
+                ...prevForm,
+                idadeGestante: calcularIdade(moment(prevForm.dataNascimento, prevForm.dataNascimento.includes("-") ? "YYYY-MM-DD" : "DD/MM/YYYY").format("DD/MM/YYYY")).toString()
+            }
+        });
     }, [form.dataNascimento])
 
     return (<Grid container sx={{ height: { xs: '100%', sm: '100dvh' } }}>
@@ -317,7 +320,7 @@ export default function Calculadora() {
                         <input name='idEmpresa' value={form.idEmpresa} hidden readOnly />
                         <Grid container spacing={2} size={12}>
                             <Grid size={4}>
-                                <FormControl variant="outlined" sx={{width: "100%"}}>
+                                <FormControl variant="outlined" sx={{ width: "100%" }}>
                                     <InputLabel htmlFor="outlined-adornment-password">CPF</InputLabel>
                                     <OutlinedInput
                                         id="cpf"
@@ -403,7 +406,7 @@ export default function Calculadora() {
                                     value={form.idadeGestante}
                                     disabled
                                     aria-readonly
-                                    inputProps={{step: 1, min: 0}}
+                                    inputProps={{ step: 1, min: 0 }}
                                 />
                             </Grid>
                             <Grid size={4}>
@@ -482,7 +485,7 @@ export default function Calculadora() {
                                     type='number'
                                     value={form.IdadeGestacionalSemanas}
                                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
-                                    inputProps={{step: 1, min: 0, max: 44}}
+                                    inputProps={{ step: 1, min: 0, max: 44 }}
                                 />
                             </Grid>
                             <Grid size={6}>
@@ -499,7 +502,7 @@ export default function Calculadora() {
                                     fullWidth
                                     value={form.IdadeGestacionalDias}
                                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
-                                    inputProps={{step: 1, min: 0, max: 6}}
+                                    inputProps={{ step: 1, min: 0, max: 6 }}
                                 />
                             </Grid>
                         </Grid>
@@ -560,7 +563,7 @@ export default function Calculadora() {
                                     fullWidth
                                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                                     disabled={naoDignoDeNotaHO}
-                                    inputProps={{step: 1, min: 0}}
+                                    inputProps={{ step: 1, min: 0 }}
                                 />
                             </Grid>
                             <Grid size={6}>
@@ -573,7 +576,7 @@ export default function Calculadora() {
                                     fullWidth
                                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                                     disabled={naoDignoDeNotaHO}
-                                    inputProps={{step: 1, min: 0}}
+                                    inputProps={{ step: 1, min: 0 }}
                                 />
                             </Grid>
                             <Grid size={6}>
@@ -586,10 +589,10 @@ export default function Calculadora() {
                                     fullWidth
                                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                                     disabled={naoDignoDeNotaHO}
-                                    inputProps={{step: 1, min: 0}}
+                                    inputProps={{ step: 1, min: 0 }}
                                 />
                             </Grid>
-
+                            <Grid size={6}></Grid>
                             {historicoObst.map((v, i) => <Grid size={6} key={i}>
                                 <FormControl fullWidth>
                                     <FormLabel>{v.label}</FormLabel>
@@ -646,7 +649,7 @@ export default function Calculadora() {
                         fullWidth
                         onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                     />}
-                    <Button type='submit' variant="contained">{mode === "edit" ? 'Editar Cálculo': 'Gerar cálculo'}</Button>
+                    <Button type='submit' variant="contained">{mode === "edit" ? 'Editar Cálculo' : 'Gerar cálculo'}</Button>
                     {warnings.map((v, i) => <Alert key={i} severity="warning" sx={{ width: "100%", mt: 0 }}>{v}</Alert>)}
                 </Box>}
         </Grid>

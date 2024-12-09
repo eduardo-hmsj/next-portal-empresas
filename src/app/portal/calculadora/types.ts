@@ -1,6 +1,6 @@
 export const situacaoFamiliar = [
     { "name": "situacaoFamiliar", "label": "Situação Familiar Instável", "type": "boolean" },
-    { "name": "AceitacaoGravidez", "label": "Aceitação da Gravidez", "type": "boolean" },
+    { "name": "AceitacaoGravidez", "label": "Negação da Gravidez", "type": "boolean" },
     { "name": "sabeLer", "label": "Analfabeto", "type": "boolean" },
     { "name": "fumante", "label": "Fumante", "type": "boolean" },
     { "name": "dependenteDrogas", "label": "Dependente de Drogas", "type": "boolean" },
@@ -9,7 +9,6 @@ export const situacaoFamiliar = [
 ]
 
 export const historicoObst = [
-    { "name": "histRnCrescimento", "label": "História de recém-nascido com crescimento restrito ou Malformação Fetal", "type": "boolean" },
     { "name": "intervaloInterpartal", "label": "Intervalo interpartal menor que dois anos ou maior que cinco anos", "type": "boolean" },
     { "name": "eclampsia", "label": "Eclampsia", "type": "boolean" },
     { "name": "preEclampsia", "label": "Pré-eclampsia", "type": "boolean" },
