@@ -654,7 +654,7 @@ export default function Calculadora() {
                         </Grid>
                     </div>
                     <div style={{ width: "100%" }}>
-                        <Typography sx={{ mb: 2 }} variant='h4'>Fatores de risco atuais - Obstétricos e Ginecológicos </Typography>
+                        <Typography sx={{ mb: 2 }} variant='h4'>Condições Clínicas Preexistentes</Typography>
                         <Grid container spacing={2} size={12}>
                             <Grid size={12}>
                                 <FormControlLabel
