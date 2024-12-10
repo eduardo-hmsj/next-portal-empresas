@@ -5,7 +5,8 @@ export const situacaoFamiliar = [
     { "name": "fumante", "label": "Fumante", "type": "boolean" },
     { "name": "dependenteDrogas", "label": "Dependente de Drogas", "type": "boolean" },
     { "name": "expostaRiscoOcupacional", "label": "Exposta a Risco Ocupacional", "type": "boolean" },
-    { "name": "expostaCondAmbientais", "label": "Exposta a Condições Ambientais", "type": "boolean" }
+    { "name": "expostaCondAmbientais", "label": "Exposta a Condições Ambientais", "type": "boolean" },
+    { "name": "anomaliaOrganosReprodutivos", "label": "Existem anormalidades estruturais nos órgãos reprodutivos?", "type": "boolean" },
 ]
 
 export const historicoObst = [
@@ -18,7 +19,10 @@ export const historicoObst = [
     { "name": "cesarea3Mais", "label": "3 ou mais cesáreas anteriores", "type": "boolean" },
     { "name": "ultimoPartoMenos12", "label": "Último Parto Menos de 12 meses", "type": "boolean" },
     { "name": "diabetesGestacional", "label": "Diabetes Gestacional", "type": "boolean" },
-    { "name": "nuliparidadeMultiparidade", "label": "Nuliparidade e grande multiparidade", "type": "boolean" },
+    { "name": "nuliparidadeMultiparidade", "label": "Nuliparidade e grande multiparidade", "type": "boolean" }
+]
+
+export const condicoesMedicas = [
     { "name": "placentaPreviaAtual", "label": "Placenta Prévia Atual", "type": "boolean" },
     { "name": "acrestismoPlacentario", "label": "Acretismo Placentário", "type": "boolean" },
     { "name": "aloimunizacao", "label": "Aloimunização / Doença Hemolítica", "type": "boolean" },
@@ -32,10 +36,7 @@ export const historicoObst = [
     { "name": "gestacaoDicorionica", "label": "Gestação Gemelar Dicoriônica", "type": "boolean" },
     { "name": "gestacaoMonocorionica", "label": "Gestação Gemelar Monocoriônico ou Mais de Dois Fetos", "type": "boolean" },
     { "name": "insufIstmoCervicalAtual", "label": "Insuficiência Istmo-cervical", "type": "boolean" },
-    { "name": "trabalhoPartoPrematuro", "label": "Trabalho de parto prematuro ou gravidez prolongada", "type": "boolean" }
-]
-
-export const condicoesMedicas = [
+    { "name": "trabalhoPartoPrematuro", "label": "Trabalho de parto prematuro ou gravidez prolongada", "type": "boolean" },
     { "name": "tromboembolismoGestacao", "label": "Tromboembolismo na Gestação", "type": "boolean" },
     { "name": "preEclampsiaAtual", "label": "Pré-eclâmpsia qualquer tipo", "type": "boolean" },
     { "name": "aneurisma", "label": "Aneurisma", "type": "boolean" },
@@ -53,7 +54,6 @@ export const condicoesMedicas = [
     { "name": "endometriose", "label": "Endometriose", "type": "boolean" },
     { "name": "epilepsiaNeurologica", "label": "Epilepsia ou Doença Neurológica Crônica", "type": "boolean" },
     { "name": "ginecopatias", "label": "Ginecopatias (malformação uterina, miomatose, tumores anexiais e outros)", "type": "boolean" },
-    { "name": "anomaliaOrganosReprodutivos", "label": "Existem anormalidades estruturais nos órgãos reprodutivos?", "type": "boolean" },
     { "name": "hepatopatiasTratamento", "label": "Hepatopatias necessitando de tratamento e acompanhamento conjunto", "type": "boolean" },
     { "name": "hipertensaoArterial", "label": "Hipertensão Arterial Crônica", "type": "boolean" },
     { "name": "nefropatias", "label": "Nefropatias", "type": "boolean" },
@@ -70,7 +70,10 @@ export const condicoesMedicas = [
     { "name": "hiv", "label": "HIV", "type": "boolean" },
     { "name": "outrosDsts", "label": "Outros DSTs", "type": "boolean" },
     { "name": "doencasPsiquiatricas", "label": "Doenças Psiquiatrica em uso de mediação e necessidade de acompanhamento psiquiátrico em conjunto", "type": "boolean" },
-    { "name": "neoplasias", "label": "Neoplasias", "type": "boolean" },
+    { "name": "neoplasias", "label": "Neoplasias", "type": "boolean" }
+]
+
+export const intercorrenciasClinicas = [
     { "name": "doencasInfectoGestacao", "label": "Doenças infectocontagiosas vividas durante a presente gestação (ITU, doenças do trato, respiratório, tuberculose, rubéola, gengivites e periodontites, toxoplasmose etc.)", "type": "boolean" },
     { "name": "sepse", "label": "Sepse ", "type": "boolean" },
     { "name": "doencasClinicasGestacao", "label": "Doenças clínicas diagnosticadas pela primeira vez nessa gestação (cardiopatias, endocrinopatias)", "type": "boolean" }
@@ -91,12 +94,13 @@ export const initialCalculadoraValue = {
     pesoKg: "0",
     imc: "0",
     hrCalculo: "",
-    IdadeGestacionalSemanas: "0",
+    IdadeGestacionalSemanas: "4",
     IdadeGestacionalDias: "0",
     qtAborto: "0",
     qtNatimorto: "0",
     qtPartoPrematuro: "0",
     ...situacaoFamiliar.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {}),
     ...historicoObst.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {}),
-    ...condicoesMedicas.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {})
+    ...condicoesMedicas.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {}),
+    ...intercorrenciasClinicas.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {})
 }

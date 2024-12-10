@@ -11,7 +11,7 @@ import { UserContext } from '@/context/UserContext';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import SearchIcon from '@mui/icons-material/Search';
 import { aplicarMascaraCpfCnpj, calcularIdade, CPFMask, isValidEmail, removeCpfMask, TelefoneMask } from '@/utils/functions';
-import { condicoesMedicas, historicoObst, initialCalculadoraValue, situacaoFamiliar } from './types';
+import { condicoesMedicas, historicoObst, initialCalculadoraValue, intercorrenciasClinicas, situacaoFamiliar } from './types';
 import moment, { Moment } from 'moment';
 import { getCalculosReturn, getPacienteReturn } from '../pacientes/types';
 import { getPacientes } from '../pacientes/actions';
@@ -25,6 +25,7 @@ export default function Calculadora() {
     const [naoDignoDeNotaSF, setNaoDignoDeNotaSF] = React.useState(false);
     const [naoDignoDeNotaHO, setNaoDignoDeNotaHO] = React.useState(false);
     const [naoDignoDeNotaCM, setNaoDignoDeNotaCM] = React.useState(false);
+    const [naoDignoDeNotaIC, setNaoDignoDeNotaIC] = React.useState(false);
     const [paciente, setPaciente] = React.useState<null | getPacienteReturn>(null)
     const [pacienteFetch, setPacienteFetch] = React.useState(false)
     const [loading, setLoading] = React.useState(false)
@@ -72,6 +73,17 @@ export default function Calculadora() {
                 setForm({
                     ...form,
                     ...condicoesMedicas.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {})
+                });
+            }
+        }
+
+        if (type == "ic") {
+            setNaoDignoDeNotaIC(checked);
+
+            if (checked) {
+                setForm({
+                    ...form,
+                    ...intercorrenciasClinicas.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {})
                 });
             }
         }
@@ -168,6 +180,7 @@ export default function Calculadora() {
         if (form.pesoKg === initialCalculadoraValue.pesoKg) e.push('Peso da gestante necessita estar preenchido!')
         if (Number(form.IdadeGestacionalSemanas) > 44) e.push('Idade gestacional (semanas) não pode ultrapassar 44!')
         if (Number(form.IdadeGestacionalDias) > 6) e.push('Idade gestacional (dias) não pode ultrapassar 6!')
+        if (Number(form.IdadeGestacionalSemanas) < 4) e.push('Idade gestacional (semanas) não pode ser menor que 4!')
         if (mode === 'edit' && !form.dsMotivo) e.push('Motivo da edição necessita estar preenchido!')
         if (!isValidEmail(form.email)) e.push('E-mail inválido!')
 
@@ -539,7 +552,7 @@ export default function Calculadora() {
                         </Grid>
                     </div>
                     <div style={{ width: "100%" }}>
-                        <Typography sx={{ mb: 2 }} variant='h4'>Histórico Obstétrico</Typography>
+                        <Typography sx={{ mb: 2 }} variant='h4'>Antecedentes Obstétricos</Typography>
                         <Grid container spacing={2} size={12}>
                             <Grid size={12}>
                                 <FormControlLabel
@@ -610,7 +623,7 @@ export default function Calculadora() {
                         </Grid>
                     </div>
                     <div style={{ width: "100%" }}>
-                        <Typography sx={{ mb: 2 }} variant='h4'>Condições Médicas</Typography>
+                        <Typography sx={{ mb: 2 }} variant='h4'>Fatores de risco atuais - Obstétricos e Ginecológicos </Typography>
                         <Grid container spacing={2} size={12}>
                             <Grid size={12}>
                                 <FormControlLabel
@@ -635,6 +648,37 @@ export default function Calculadora() {
                                     >
                                         <FormControlLabel value="S" control={<Radio />} label="Sim" disabled={naoDignoDeNotaCM} />
                                         <FormControlLabel value="N" control={<Radio />} label="Não" disabled={naoDignoDeNotaCM} />
+                                    </RadioGroup>
+                                </FormControl>
+                            </Grid>)}
+                        </Grid>
+                    </div>
+                    <div style={{ width: "100%" }}>
+                        <Typography sx={{ mb: 2 }} variant='h4'>Fatores de risco atuais - Obstétricos e Ginecológicos </Typography>
+                        <Grid container spacing={2} size={12}>
+                            <Grid size={12}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={naoDignoDeNotaIC}
+                                            onChange={e => handleCheckboxChange(e, "ic")}
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Não digno de nota"
+                                />
+                            </Grid>
+                            {intercorrenciasClinicas.map((v, i) => <Grid size={6} key={i}>
+                                <FormControl fullWidth>
+                                    <FormLabel>{v.label}</FormLabel>
+                                    <RadioGroup
+                                        row
+                                        name={v.name}
+                                        value={form[v.name]}
+                                        onChange={(e) => handleRadioChange(v.name, e.target.value)}
+                                    >
+                                        <FormControlLabel value="S" control={<Radio />} label="Sim" disabled={naoDignoDeNotaIC} />
+                                        <FormControlLabel value="N" control={<Radio />} label="Não" disabled={naoDignoDeNotaIC} />
                                     </RadioGroup>
                                 </FormControl>
                             </Grid>)}
