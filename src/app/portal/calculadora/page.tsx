@@ -11,7 +11,7 @@ import { UserContext } from '@/context/UserContext';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import SearchIcon from '@mui/icons-material/Search';
 import { aplicarMascaraCpfCnpj, calcularIdade, CPFMask, isValidEmail, removeCpfMask, TelefoneMask } from '@/utils/functions';
-import { condicoesMedicas, historicoObst, initialCalculadoraValue, intercorrenciasClinicas, situacaoFamiliar } from './types';
+import { condicoesClinicas, condicoesMedicas, historicoObst, initialCalculadoraValue, intercorrenciasClinicas, situacaoFamiliar } from './types';
 import moment, { Moment } from 'moment';
 import { getCalculosReturn, getPacienteReturn } from '../pacientes/types';
 import { getPacientes } from '../pacientes/actions';
@@ -26,6 +26,7 @@ export default function Calculadora() {
     const [naoDignoDeNotaHO, setNaoDignoDeNotaHO] = React.useState(false);
     const [naoDignoDeNotaCM, setNaoDignoDeNotaCM] = React.useState(false);
     const [naoDignoDeNotaIC, setNaoDignoDeNotaIC] = React.useState(false);
+    const [naoDignoDeNotaCC, setNaoDignoDeNotaCC] = React.useState(false);
     const [paciente, setPaciente] = React.useState<null | getPacienteReturn>(null)
     const [pacienteFetch, setPacienteFetch] = React.useState(false)
     const [loading, setLoading] = React.useState(false)
@@ -84,6 +85,17 @@ export default function Calculadora() {
                 setForm({
                     ...form,
                     ...intercorrenciasClinicas.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {})
+                });
+            }
+        }
+
+        if (type == "cc") {
+            setNaoDignoDeNotaCC(checked);
+
+            if (checked) {
+                setForm({
+                    ...form,
+                    ...condicoesClinicas.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {})
                 });
             }
         }
@@ -655,6 +667,37 @@ export default function Calculadora() {
                     </div>
                     <div style={{ width: "100%" }}>
                         <Typography sx={{ mb: 2 }} variant='h4'>Condições Clínicas Preexistentes</Typography>
+                        <Grid container spacing={2} size={12}>
+                            <Grid size={12}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={naoDignoDeNotaCC}
+                                            onChange={e => handleCheckboxChange(e, "cc")}
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Não digno de nota"
+                                />
+                            </Grid>
+                            {condicoesClinicas.map((v, i) => <Grid size={6} key={i}>
+                                <FormControl fullWidth>
+                                    <FormLabel>{v.label}</FormLabel>
+                                    <RadioGroup
+                                        row
+                                        name={v.name}
+                                        value={form[v.name]}
+                                        onChange={(e) => handleRadioChange(v.name, e.target.value)}
+                                    >
+                                        <FormControlLabel value="S" control={<Radio />} label="Sim" disabled={naoDignoDeNotaCC} />
+                                        <FormControlLabel value="N" control={<Radio />} label="Não" disabled={naoDignoDeNotaCC} />
+                                    </RadioGroup>
+                                </FormControl>
+                            </Grid>)}
+                        </Grid>
+                    </div>
+                    <div style={{ width: "100%" }}>
+                        <Typography sx={{ mb: 2 }} variant='h4'>Intercorrências Clínicas</Typography>
                         <Grid container spacing={2} size={12}>
                             <Grid size={12}>
                                 <FormControlLabel

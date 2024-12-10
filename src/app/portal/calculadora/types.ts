@@ -38,7 +38,10 @@ export const condicoesMedicas = [
     { "name": "insufIstmoCervicalAtual", "label": "Insuficiência Istmo-cervical", "type": "boolean" },
     { "name": "trabalhoPartoPrematuro", "label": "Trabalho de parto prematuro ou gravidez prolongada", "type": "boolean" },
     { "name": "tromboembolismoGestacao", "label": "Tromboembolismo na Gestação", "type": "boolean" },
-    { "name": "preEclampsiaAtual", "label": "Pré-eclâmpsia qualquer tipo", "type": "boolean" },
+    { "name": "preEclampsiaAtual", "label": "Pré-eclâmpsia qualquer tipo", "type": "boolean" }
+]
+
+export const condicoesClinicas = [
     { "name": "aneurisma", "label": "Aneurisma", "type": "boolean" },
     { "name": "aterosclerose", "label": "Aterosclerose", "type": "boolean" },
     { "name": "alteracoesOsteo", "label": "Alterações osteo-articulares de interesse obstétrico", "type": "boolean" },
@@ -102,5 +105,6 @@ export const initialCalculadoraValue = {
     ...situacaoFamiliar.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {}),
     ...historicoObst.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {}),
     ...condicoesMedicas.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {}),
-    ...intercorrenciasClinicas.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {})
+    ...intercorrenciasClinicas.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {}),
+    ...condicoesClinicas.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {})
 }
