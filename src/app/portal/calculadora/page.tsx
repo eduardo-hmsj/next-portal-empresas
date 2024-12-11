@@ -112,7 +112,6 @@ export default function Calculadora() {
 
 
     function calcularIMC(alturaCm: number | undefined, pesoKg: number | undefined): number {
-
         if (!!pesoKg && !!alturaCm) {
             const alturaM = alturaCm / 100;
             const imc = pesoKg / (alturaM * alturaM);
@@ -124,7 +123,11 @@ export default function Calculadora() {
     const handleDateChange = (date: Moment | null, name: string) => {
         if (date) {
             const formattedDate = date.format("DD/MM/YYYY"); // Formatar como string
-            setForm({ ...form, [name]: formattedDate });
+            setForm({
+                ...form,
+                [name]: formattedDate,
+                idadeGestante: name === "dataNascimento" ? calcularIdade(moment(formattedDate, formattedDate.includes("-") ? "YYYY-MM-DD" : "DD/MM/YYYY").format("DD/MM/YYYY")).toString() : form.idadeGestante
+            });
         } else {
             setForm({ ...form, [name]: "" });
         }
@@ -140,6 +143,7 @@ export default function Calculadora() {
     };
 
     const getPaciente = React.useCallback(async () => {
+        if (!form.cpf) return
         setLoading(true)
         const response = await getPacientes({ cpf: removeCpfMask(form.cpf) })
         setPacienteFetch(true)
@@ -154,6 +158,7 @@ export default function Calculadora() {
                 telefone: response[0].telefone,
                 email: response[0].email,
                 idPaciente: response[0].idPaciente,
+                idadeGestante: calcularIdade(moment(nascimento.toLocaleDateString('pt-BR'), nascimento.toLocaleDateString('pt-BR').includes("-") ? "YYYY-MM-DD" : "DD/MM/YYYY").format("DD/MM/YYYY")).toString()
             }));
         }
 
@@ -171,6 +176,7 @@ export default function Calculadora() {
             dtCalculo: moment(response.dtCalculo, "YYYY-MM-DD").format("DD-MM-YYYY"),
             cpf: aplicarMascaraCpfCnpj(response.cpf),
             dataNascimento: moment(response.dataNascimento, "YYYY-MM-DD").format("DD-MM-YYYY"),
+            idadeGestante: calcularIdade(moment(response.dataNascimento, response.dataNascimento.includes("-") ? "YYYY-MM-DD" : "DD/MM/YYYY").format("DD/MM/YYYY")).toString()
         })
         setLoading(false)
     }, [idCalculo, empresa]);
@@ -213,6 +219,7 @@ export default function Calculadora() {
         setLoading(false)
     }
 
+
     React.useEffect(() => {
         setForm((prevForm) => ({
             ...prevForm,
@@ -222,9 +229,16 @@ export default function Calculadora() {
             idEmpresa: empresa?.idEmpresa || "",
         }));
 
-    }, [empresa, user, pacienteFetch])
+        if (mode === 'edit') {
+            setForm((prevForm) => ({
+                ...prevForm,
+                dsMotivo: "",
+                idCalculo: idCalculo || ""
+            }));
+        }
 
-    React.useEffect(() => {
+        if (idCalculo) getCalculo()
+
         if (cpf && !pacienteFetch) {
             setForm((prevForm) => ({
                 ...prevForm,
@@ -232,7 +246,7 @@ export default function Calculadora() {
             }));
             getPaciente()
         }
-    }, [cpf, pacienteFetch, getPaciente])
+    }, [cpf, pacienteFetch, getPaciente, idCalculo, user, empresa, mode, getCalculo])
 
     React.useEffect(() => {
         if (pacienteFetch && paciente) {
@@ -257,28 +271,6 @@ export default function Calculadora() {
             imc: calcularIMC(Number(form.alturaGestante), Number(form.pesoKg)).toString()
         }));
     }, [form.alturaGestante, form.pesoKg])
-
-    React.useEffect(() => {
-        if (idCalculo) getCalculo()
-
-        if (mode === 'edit') {
-            setForm((prevForm) => ({
-                ...prevForm,
-                dsMotivo: "",
-                idCalculo: idCalculo || ""
-            }));
-        }
-
-    }, [idCalculo, getCalculo, mode])
-
-    React.useEffect(() => {
-        setForm((prevForm) => {
-            return {
-                ...prevForm,
-                idadeGestante: calcularIdade(moment(prevForm.dataNascimento, prevForm.dataNascimento.includes("-") ? "YYYY-MM-DD" : "DD/MM/YYYY").format("DD/MM/YYYY")).toString()
-            }
-        });
-    }, [form.dataNascimento])
 
     return (<Grid container sx={{ height: { xs: '100%', sm: '100dvh' } }}>
         <Grid
