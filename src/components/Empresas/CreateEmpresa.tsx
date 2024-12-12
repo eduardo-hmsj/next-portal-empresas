@@ -15,13 +15,17 @@ export default function CreateEmpresa(props: {
     setWarnings: (sa: string[]) => void,
     setError: (sa: string) => void,
     setSuccess: (sa: string) => void,
+    oldForm: EmpresaPayload,
+    setOldFOrm: (of: EmpresaPayload) => void
+
 }) {
     const { empresa, user, refreshUser } = React.useContext(UserContext)
-    const [form, setForm] = React.useState<EmpresaPayload>(EmpresaInitial)
+    const [form, setForm] = React.useState<EmpresaPayload>(props.oldForm)
 
     async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
         props.setLoading(true)
         evt.preventDefault()
+        props.setOldFOrm(form)
         props.setWarnings([])
         props.setError("")
         props.setSuccess("")

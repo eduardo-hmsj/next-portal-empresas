@@ -15,9 +15,11 @@ export default function CreateUsuario(props: {
     setWarnings: (sa: string[]) => void,
     setError: (sa: string) => void,
     setSuccess: (sa: string) => void,
+    oldForm: usuarioPayload,
+    setOldFOrm: (of: usuarioPayload) => void
 }) {
     const { empresa, user } = React.useContext(UserContext)
-    const [form, setForm] = React.useState<usuarioPayload>(usuarioInitial)
+    const [form, setForm] = React.useState<usuarioPayload>(props.oldForm)
     const [confirmPassword, setConfirmPassword] = React.useState("")
 
     async function validateForm(evt: React.FormEvent<HTMLFormElement>) {

@@ -272,6 +272,8 @@ export default function Pacientes() {
                     setSuccess={setSuccess}
                     setWarnings={setWarnings}
                     getPacientes={getPacientes}
+                    oldForm={form}
+                    setOldFOrm={setForm}
                 />}
                 {formOpen === "edit" && <EditPaciente
                     form={form}
@@ -288,6 +290,7 @@ export default function Pacientes() {
                         <Typography variant='h4'>Pacientes Cadastrados</Typography>
                         <Button type='button' color='info' variant="contained" onClick={() => {
                             cleanAdvises()
+                            setForm(PacienteInitial)
                             setFormOpen(formOpen === "" ? "create" : "")
                         }}>
                             {formOpen ? "Fechar Formulário" : "Cadastrar Paciente"}

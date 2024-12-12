@@ -272,6 +272,8 @@ export default function Usuarios() {
                     setError={setError}
                     setSuccess={setSuccess}
                     setWarnings={setWarnings}
+                    oldForm={form}
+                    setOldFOrm={setForm}
                 />}
                 {formOpen === "edit" && <EditUsuario
                     confirmPassword={confirmPassword}
@@ -290,6 +292,7 @@ export default function Usuarios() {
                         <Typography variant='h4'>Usuários Cadastrados</Typography>
                         <Button type='button' color='info' variant="contained" onClick={() => {
                             cleanAdvises()
+                            setForm(usuarioInitial)
                             setFormOpen(formOpen === "" ? "create" : "")
                         }}>
                             {formOpen ? "Fechar Formulário" : "Cadastrar Usuário"}

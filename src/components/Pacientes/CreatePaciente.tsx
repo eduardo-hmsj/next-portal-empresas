@@ -18,9 +18,11 @@ export default function CreatePaciente(props: {
     setWarnings: (sa: string[]) => void,
     setError: (sa: string) => void,
     setSuccess: (sa: string) => void,
+    oldForm: PacientePayload,
+    setOldFOrm: (of: PacientePayload) => void
 }) {
     const { empresa, user } = React.useContext(UserContext)
-    const [form, setForm] = React.useState<PacientePayload>(PacienteInitial)
+    const [form, setForm] = React.useState<PacientePayload>(props.oldForm)
 
     const handleDateChange = (date: Moment | null) => {
         if (date) {

@@ -267,6 +267,8 @@ export default function Empresas() {
                     setError={setError}
                     setSuccess={setSuccess}
                     setWarnings={setWarnings}
+                    oldForm={form}
+                    setOldFOrm={setForm}
                 />}
                 {formOpen === "edit" && <EditEmpresa
                     confirmPassword={confirmPassword}
@@ -285,6 +287,7 @@ export default function Empresas() {
                         <Typography variant='h4'>Empresas Cadastradas</Typography>
                         <Button type='button' color='info' variant="contained" onClick={() => {
                             cleanAdvises()
+                            setForm(EmpresaInitial)
                             setFormOpen(formOpen === "" ? "create" : "")
                         }}>
                             {formOpen ? "Fechar Formulário" : "Cadastrar Empresa"}
