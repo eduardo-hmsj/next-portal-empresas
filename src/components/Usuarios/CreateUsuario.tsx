@@ -31,12 +31,10 @@ export default function CreateUsuario(props: {
         props.setSuccess("")
         const e: string[] = []
         if (form.nomeCompleto === usuarioInitial.nomeCompleto) e.push('Nome necessita estar preenchido!')
-        if (form.senha === usuarioInitial.senha) e.push('Senha necessita estar preenchida!')
         if (form.cpf === usuarioInitial.cpf) e.push('CPF necessita estar preenchido!')
         if (!isValidEmail(form.email)) e.push('E-mail inválido!')
         if (form.tipoUsuario === usuarioInitial.tipoUsuario) e.push('Tipo do usuário necessita estar preenchido!')
         if (form.email === usuarioInitial.email) e.push('E-mail necessita estar preenchido!')
-        if (form.senha !== confirmPassword) e.push('Senhas não conferem!')
 
         if (e.length > 0) {
             props.setWarnings(e)
