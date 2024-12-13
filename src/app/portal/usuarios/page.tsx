@@ -86,7 +86,9 @@ export default function Usuarios() {
                 email: u.email,
                 nomeCompleto: u.nomeCompleto,
                 tipoUsuario: u.tipoUsuario,
-                idUsuario: u.idUsuario
+                idUsuario: u.idUsuario,
+                idUsuarioCadastro: user?.idUsuario || "",
+                idEmpresa: empresa?.idEmpresa || ""
             })
         }
     }
@@ -159,6 +161,11 @@ export default function Usuarios() {
             headerName: 'CPF',
             width: 80,
             valueGetter: (value, row) => `${aplicarMascaraCpfCnpj(row.cpf)}`,
+        },
+        {
+            field: 'nrConselho',
+            headerName: 'Conselho',
+            width: 100,
         },
         {
             field: 'email',

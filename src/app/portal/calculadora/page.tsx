@@ -59,9 +59,9 @@ export default function Calculadora() {
             if (checked) {
                 setForm({
                     ...form,
-                    qtAborto: "0",
-                    qtNatimorto: "0",
-                    qtPartoPrematuro: "0",
+                    qtAborto: "",
+                    qtNatimorto: "",
+                    qtPartoPrematuro: "",
                     ...historicoObst.reduce((acc, curr) => ({ ...acc, [curr.name]: "N" }), {})
                 });
             }
@@ -536,7 +536,7 @@ export default function Calculadora() {
                                             color="primary"
                                         />
                                     }
-                                    label="Não digno de nota"
+                                    label="Nada digno de nota"
                                 />
                             </Grid>
                             {situacaoFamiliar.map((v, i) => <Grid size={6} key={i}>
@@ -567,14 +567,14 @@ export default function Calculadora() {
                                             color="primary"
                                         />
                                     }
-                                    label="Não digno de nota"
+                                    label="Nada digno de nota"
                                 />
                             </Grid>
                             <Grid size={6}>
                                 <TextField
                                     label="Qtd Abortos"
                                     id="qtAborto"
-                                    value={Number(form.qtAborto)}
+                                    value={form.qtAborto}
                                     name='qtAborto'
                                     type='number'
                                     fullWidth
@@ -585,9 +585,9 @@ export default function Calculadora() {
                             </Grid>
                             <Grid size={6}>
                                 <TextField
-                                    label="Qtd Natimorto Fetal"
+                                    label="Qtd Natimorto - Óbito Fetal"
                                     id="qtNatimorto"
-                                    value={Number(form.qtNatimorto)}
+                                    value={form.qtNatimorto}
                                     name='qtNatimorto'
                                     type='number'
                                     fullWidth
@@ -600,7 +600,7 @@ export default function Calculadora() {
                                 <TextField
                                     label="Qtd Parto Prematuro"
                                     id="qtPartoPrematuro"
-                                    value={Number(form.qtPartoPrematuro)}
+                                    value={form.qtPartoPrematuro}
                                     name='qtPartoPrematuro'
                                     type='number'
                                     fullWidth
@@ -638,7 +638,7 @@ export default function Calculadora() {
                                             color="primary"
                                         />
                                     }
-                                    label="Não digno de nota"
+                                    label="Nada digno de nota"
                                 />
                             </Grid>
                             {condicoesMedicas.map((v, i) => <Grid size={6} key={i}>
@@ -669,7 +669,7 @@ export default function Calculadora() {
                                             color="primary"
                                         />
                                     }
-                                    label="Não digno de nota"
+                                    label="Nada digno de nota"
                                 />
                             </Grid>
                             {condicoesClinicas.map((v, i) => <Grid size={6} key={i}>
@@ -700,7 +700,7 @@ export default function Calculadora() {
                                             color="primary"
                                         />
                                     }
-                                    label="Não digno de nota"
+                                    label="Nada digno de nota"
                                 />
                             </Grid>
                             {intercorrenciasClinicas.map((v, i) => <Grid size={6} key={i}>

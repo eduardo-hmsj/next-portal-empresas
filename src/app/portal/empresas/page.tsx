@@ -86,7 +86,9 @@ export default function Empresas() {
                 nomeContato: u.nomeContato,
                 nomeEmpresa: u.nomeEmpresa,
                 telefone: aplicarMascaraTelefone(u.telefone),
-                idEmpresa: u.idEmpresa
+                idEmpresa: u.idEmpresa,
+                idUsuarioCadastro: user?.idUsuario || "",
+                idEmpresaPai: empresa?.idEmpresa || "",
             })
         }
     }

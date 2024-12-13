@@ -25,6 +25,7 @@ export default function CreateUsuario(props: {
     async function validateForm(evt: React.FormEvent<HTMLFormElement>) {
         props.setLoading(true)
         evt.preventDefault()
+        props.setOldFOrm(form)
         props.setWarnings([])
         props.setError("")
         props.setSuccess("")
