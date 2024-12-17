@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import Grid from '@mui/material/Grid2';
 import Logo from "@/img/logo.png"
 import Image from 'next/image';
@@ -11,11 +11,13 @@ import moment, { Moment } from 'moment';
 import { UserContext } from '@/context/UserContext';
 import { getGrafico as getGraficoApi } from './actions';
 import { getGraficoReturn } from './types';
+import { DefaultizedPieValueType } from '@mui/x-charts';
 
 export default function Dashboard() {
     const [loading, setLoading] = useState(false)
     const { empresa, user } = useContext(UserContext)
     const [data, setData] = useState<getGraficoReturn[]>([])
+    const TOTAL = useMemo(() => data?.map((item) => item.value).reduce((a, b) => Number(a) + Number(b), 0), [data]);
     const [form, setForm] = useState({
         idEmpresa: empresa?.idEmpresa || "",
         dataInicio: moment().startOf("month").format("DD/MM/YYYY"),
@@ -31,14 +33,21 @@ export default function Dashboard() {
 
     const getGrafico = useCallback(async () => {
         setLoading(true)
-        const response = await getGraficoApi({...form, idEmpresa: empresa?.idEmpresa || "", idUsuario: empresa?.tpUsuario !== "MASTER" ? user?.idUsuario || "" : "" })
+        const response = await getGraficoApi({ ...form, idEmpresa: empresa?.idEmpresa || "", idUsuario: empresa?.tpUsuario !== "MASTER" ? user?.idUsuario || "" : "" })
         setData(response)
         setLoading(false)
     }, [form, empresa, user]);
 
     useEffect(() => {
-        if(empresa) getGrafico()
+        if (empresa) getGrafico()
     }, [empresa, getGrafico])
+
+
+    const getArcLabel = (params: DefaultizedPieValueType) => {
+        const percent = params.value / TOTAL;
+        return `${(percent * 100).toFixed(0)}%`;
+    };
+
 
     return <Grid container sx={{ height: { xs: '100%', sm: '100%' } }}>
         <Grid
@@ -116,10 +125,11 @@ export default function Dashboard() {
                         </FormControl>
                         <Button variant="contained" size="large" type="submit">Pesquisar</Button>
                     </Grid>
-                    {data.length > 0 && <PieChart
+                    {data?.length > 0 && <PieChart
                         series={[
                             {
-                                data
+                                data,
+                                arcLabel: getArcLabel,
                             },
                         ]}
                         width={600}

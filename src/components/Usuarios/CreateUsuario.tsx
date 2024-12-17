@@ -88,6 +88,9 @@ export default function CreateUsuario(props: {
                     fullWidth
                     value={form.email}
                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                    inputProps={{
+                        autoComplete: 'new-password'
+                   }}
                 />
             </Grid>
             <Grid size={4}>
@@ -145,6 +148,9 @@ export default function CreateUsuario(props: {
                     fullWidth
                     value={form.senha}
                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                    inputProps={{
+                        autoComplete: 'new-password'
+                   }}
                 />
             </Grid>
             <Grid size={6}>

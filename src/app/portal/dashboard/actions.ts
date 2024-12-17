@@ -17,7 +17,7 @@ export async function getGrafico(props: {
                 g.push({
                     id: index,
                     value: element.total,
-                    label: element.risco
+                    label: `${element.risco}: ${element.total}`
                 })
             });
             return g
