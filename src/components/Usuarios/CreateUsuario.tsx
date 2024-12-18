@@ -35,6 +35,8 @@ export default function CreateUsuario(props: {
         if (!isValidEmail(form.email)) e.push('E-mail inválido!')
         if (form.tipoUsuario === usuarioInitial.tipoUsuario) e.push('Tipo do usuário necessita estar preenchido!')
         if (form.email === usuarioInitial.email) e.push('E-mail necessita estar preenchido!')
+        if (form.senha !== confirmPassword) e.push('Senhas não conferem!')
+        if (form.senha === usuarioInitial.senha) e.push('Senha necessita estar preenchida!')
 
         if (e.length > 0) {
             props.setWarnings(e)
@@ -90,7 +92,7 @@ export default function CreateUsuario(props: {
                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                     inputProps={{
                         autoComplete: 'new-password'
-                   }}
+                    }}
                 />
             </Grid>
             <Grid size={4}>
@@ -150,7 +152,7 @@ export default function CreateUsuario(props: {
                     onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
                     inputProps={{
                         autoComplete: 'new-password'
-                   }}
+                    }}
                 />
             </Grid>
             <Grid size={6}>
