@@ -165,7 +165,7 @@ export default function Calculadora() {
         }
 
         setLoading(false)
-    }, [form.cpf]);
+    }, [form.cpf, empresa]);
 
     const getCalculo = React.useCallback(async () => {
         setLoading(true)
@@ -228,9 +228,6 @@ export default function Calculadora() {
         }
 
         setForm((prevForm) => {
-            console.log("empresa: ", empresa?.idEmpresa)
-            console.log("pacienteFetch: ", pacienteFetch)
-            console.log("logica: ", !!empresa?.idEmpresa && empresa?.idEmpresa !== prevForm.idEmpresa && pacienteFetch)
             if(!!empresa?.idEmpresa && empresa?.idEmpresa !== prevForm.idEmpresa && pacienteFetch){
                 setPacienteFetch(false)
                 setPaciente(null)
