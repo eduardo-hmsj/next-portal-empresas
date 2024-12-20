@@ -228,6 +228,9 @@ export default function Calculadora() {
         }
 
         setForm((prevForm) => {
+            console.log("empresa: ", empresa?.idEmpresa)
+            console.log("pacienteFetch: ", pacienteFetch)
+            console.log("logica: ", empresa?.idEmpresa !== prevForm.idEmpresa && pacienteFetch)
             if(empresa?.idEmpresa !== prevForm.idEmpresa && pacienteFetch){
                 setPacienteFetch(false)
                 setPaciente(null)
