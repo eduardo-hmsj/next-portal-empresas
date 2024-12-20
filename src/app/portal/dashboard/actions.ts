@@ -13,11 +13,12 @@ export async function getGrafico(props: {
         const { data, status } = await api.post("/GraficoPE", props)
         if (status === 200 && Array.isArray(data.Dados)) {
             const g: getGraficoReturn[] = []
-            data.Dados.forEach((element: {risco: string, total: number}, index: number) => {
+            data.Dados.forEach((element: {risco: string, total: number, hexa: string}, index: number) => {
                 g.push({
                     id: index,
                     value: element.total,
-                    label: `${element.risco}: ${element.total}`
+                    label: `${element.risco}: ${element.total}`,
+                    color: element.hexa
                 })
             });
             return g

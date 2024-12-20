@@ -16,7 +16,8 @@ import moment, { Moment } from 'moment';
 import { getCalculosReturn, getPacienteReturn } from '../pacientes/types';
 import { getPacientes } from '../pacientes/actions';
 import { postCalculadora, getCalculo as getCaluloApi, updateCalculadora } from './actions';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
+
 
 
 export default function Calculadora() {
@@ -38,6 +39,7 @@ export default function Calculadora() {
     const idCalculo = searchParams.get('idCalculo')
     const mode = searchParams.get('mode')
     const [result, setResult] = React.useState<null | getCalculosReturn>(null)
+    const router = useRouter();
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
         const checked = event.target.checked;
@@ -221,13 +223,32 @@ export default function Calculadora() {
 
 
     React.useEffect(() => {
-        setForm((prevForm) => ({
-            ...prevForm,
-            dtCalculo: moment().format("DD/MM/YYYY"),
-            hrCalculo: moment().format("hh:mm"),
-            idUsuario: user?.idUsuario || "",
-            idEmpresa: empresa?.idEmpresa || "",
-        }));
+        if(empresa?.tpUsuario === "ADMINISTRATIVO"){
+            router.replace("/portal/usuarios");
+        }
+
+        setForm((prevForm) => {
+            if(empresa?.idEmpresa !== prevForm.idEmpresa && pacienteFetch){
+                setPacienteFetch(false)
+                setPaciente(null)
+                router.replace(window.location.pathname);
+                return {
+                    ...initialCalculadoraValue,
+                    dtCalculo: moment().format("DD/MM/YYYY"),
+                    hrCalculo: moment().format("hh:mm"),
+                    idUsuario: user?.idUsuario || "",
+                    idEmpresa: empresa?.idEmpresa || "",
+                }
+            }
+
+            return {
+                ...prevForm,
+                dtCalculo: moment().format("DD/MM/YYYY"),
+                hrCalculo: moment().format("hh:mm"),
+                idUsuario: user?.idUsuario || "",
+                idEmpresa: empresa?.idEmpresa || "",
+            }
+        });
 
         if (mode === 'edit') {
             setForm((prevForm) => ({
@@ -246,7 +267,7 @@ export default function Calculadora() {
             }));
             getPaciente()
         }
-    }, [cpf, pacienteFetch, getPaciente, idCalculo, user, empresa, mode, getCalculo])
+    }, [cpf, pacienteFetch, getPaciente, idCalculo, user, empresa, mode, getCalculo, router])
 
     React.useEffect(() => {
         if (pacienteFetch && paciente) {
