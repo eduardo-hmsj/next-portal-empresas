@@ -147,7 +147,7 @@ export default function Calculadora() {
     const getPaciente = React.useCallback(async () => {
         if (!form.cpf) return
         setLoading(true)
-        const response = await getPacientes({ cpf: removeCpfMask(form.cpf) })
+        const response = await getPacientes({ cpf: removeCpfMask(form.cpf), idEmpresa: empresa?.idEmpresa })
         setPacienteFetch(true)
         if (response.length > 0) {
             setPaciente(response[0])
