@@ -228,6 +228,12 @@ export default function Calculadora() {
         }
 
         setForm((prevForm) => {
+            console.log('Paciente foi carregado: ', pacienteFetch)
+            console.log('Empresa: ', empresa?.idEmpresa)
+            console.log('Empresa existe: ', !!empresa?.idEmpresa)
+            console.log('Empresa do formulario: ', prevForm.idEmpresa)
+            console.log('Empresa do formulario é diferente a empresa: ', empresa?.idEmpresa !== prevForm.idEmpresa)
+            console.log('Lógica', !!empresa?.idEmpresa && empresa?.idEmpresa !== prevForm.idEmpresa && pacienteFetch)
             if(!!empresa?.idEmpresa && empresa?.idEmpresa !== prevForm.idEmpresa && pacienteFetch){
                 setPacienteFetch(false)
                 setPaciente(null)
