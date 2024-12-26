@@ -67,8 +67,8 @@ export default function SignInCard() {
         setWarnings(e)
       } else {
         const response = await Login(form)
-        
-        if (response.Codigo === "OK") {
+        console.log(response.Codigo)
+        if (!!response.Codigo && response.Codigo === "OK") {
 
           route.push('/portal/dashboard')
           setSuccess(response.Mensagem)
