@@ -17,6 +17,7 @@ export async function Login(props: LoginPayload) {
             cookieStore.set('usuario', JSON.stringify(response.data.User))
             if (dados.length === 1) cookieStore.set('empresa', JSON.stringify(dados[0]))
         }
+        console.log(response.data)
         return response.data
     } catch (error) {
         console.log(error)
