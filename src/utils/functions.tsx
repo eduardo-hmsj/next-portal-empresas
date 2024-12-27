@@ -78,7 +78,7 @@ export function calcularIdade(dataNascimento: string): number {
 
 
 export const exportToCsv = ({ data, fileName }: {
-    data: object[];
+    data: Record<string, string>[];
     fileName: string;
 }) => {
     if (!data || data.length === 0) {
@@ -89,7 +89,7 @@ export const exportToCsv = ({ data, fileName }: {
 
     const csvContent = [
         headers.join(","),
-        ...data.map((row: any) =>
+        ...data.map(row =>
             headers.map(header => JSON.stringify(row[header] || "")).join(",")
         ),
     ].join("\n");

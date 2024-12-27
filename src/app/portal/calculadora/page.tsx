@@ -41,7 +41,7 @@ export default function Calculadora() {
     const [result, setResult] = React.useState<null | getCalculosReturn>(null)
     const router = useRouter();
 
-    const resetarCalculador = () => {
+    const resetarCalculador = React.useCallback(() => {
         setForm(initialCalculadoraValue)
         setNaoDignoDeNotaSF(false)
         setNaoDignoDeNotaHO(false)
@@ -55,7 +55,7 @@ export default function Calculadora() {
         setSuccess("")
         setResult(null)
         router.replace(window.location.pathname);
-    }
+    }, [router]);
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
         const checked = event.target.checked;
@@ -280,7 +280,7 @@ export default function Calculadora() {
             }));
             getPaciente()
         }
-    }, [cpf, pacienteFetch, getPaciente, idCalculo, user, empresa, mode, getCalculo, router])
+    }, [cpf, pacienteFetch, getPaciente, idCalculo, user, empresa, mode, getCalculo, router, resetarCalculador])
 
     React.useEffect(() => {
         if (pacienteFetch && paciente) {
