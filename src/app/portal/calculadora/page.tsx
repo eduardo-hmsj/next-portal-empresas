@@ -41,6 +41,22 @@ export default function Calculadora() {
     const [result, setResult] = React.useState<null | getCalculosReturn>(null)
     const router = useRouter();
 
+    const resetarCalculador = () => {
+        setForm(initialCalculadoraValue)
+        setNaoDignoDeNotaSF(false)
+        setNaoDignoDeNotaHO(false)
+        setNaoDignoDeNotaCM(false)
+        setNaoDignoDeNotaIC(false)
+        setNaoDignoDeNotaCC(false)
+        setPaciente(null)
+        setPacienteFetch(false)
+        setWarnings([])
+        setError("")
+        setSuccess("")
+        setResult(null)
+        router.replace(window.location.pathname);
+    }
+
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
         const checked = event.target.checked;
 
@@ -110,8 +126,6 @@ export default function Calculadora() {
             [name]: value
         }));
     };
-
-
 
     function calcularIMC(alturaCm: number | undefined, pesoKg: number | undefined): number {
         if (!!pesoKg && !!alturaCm) {
@@ -223,15 +237,14 @@ export default function Calculadora() {
 
 
     React.useEffect(() => {
-        if(empresa?.tpUsuario === "ADMINISTRATIVO"){
+        if (empresa?.tpUsuario === "ADMINISTRATIVO") {
             router.replace("/portal/usuarios");
         }
+        
 
         setForm((prevForm) => {
-            if(!!empresa?.idEmpresa && empresa?.idEmpresa !== prevForm.idEmpresa && pacienteFetch){
-                setPacienteFetch(false)
-                setPaciente(null)
-                router.replace(window.location.pathname);
+            if (!!empresa?.idEmpresa && empresa?.idEmpresa !== prevForm.idEmpresa && pacienteFetch) {
+                resetarCalculador()
                 return {
                     ...initialCalculadoraValue,
                     dtCalculo: moment().format("DD/MM/YYYY"),
@@ -347,11 +360,15 @@ export default function Calculadora() {
                 : <Box sx={{ width: "100%", gap: 5, display: "flex", flexDirection: "column" }} component={"form"} onSubmit={validateForm}>
                     {!!success && <Alert severity="success" sx={{ width: "100%", mt: 1 }}>{success}</Alert>}
                     {!!error && <Alert severity="error" sx={{ width: "100%", mt: 1 }}>{error}</Alert>}
-                    {!!result && <Alert severity='info' sx={{ width: "100%", mt: 1 }}>
-                        <Typography sx={{ mb: 1 }} variant='h6'>Seu resultado de risco gestacional foi:</Typography>
-                        <Typography><strong>Pontos: </strong>{result.pontos}</Typography>
-                        <Typography><strong>Risco: </strong>{result.risco}</Typography>
-                    </Alert>}
+                    {!!result &&
+                        <>
+                            <Alert severity='info' sx={{ width: "100%", mt: 1 }}>
+                                <Typography sx={{ mb: 1 }} variant='h6'>Seu resultado de risco gestacional foi:</Typography>
+                                <Typography><strong>Pontos: </strong>{result.pontos}</Typography>
+                                <Typography><strong>Risco: </strong>{result.risco}</Typography>
+                            </Alert>
+                            <Button fullWidth variant='contained' onClick={resetarCalculador}>Novo Cálculo</Button>
+                        </>}
                     <div style={{ width: "100%" }}>
                         <Typography sx={{ mb: 2 }} variant='h4'>Dados Pessoais</Typography>
                         <input name='idUsuario' value={form.idUsuario} hidden readOnly />

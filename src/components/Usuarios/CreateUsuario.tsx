@@ -50,6 +50,7 @@ export default function CreateUsuario(props: {
                     idEmpresa: empresa?.idEmpresa || ""
                 })
                 setConfirmPassword("")
+                props.setOldFOrm(usuarioInitial)
                 props.setSuccess(response.Mensagem)
             } else {
                 props.setError(response.Mensagem)

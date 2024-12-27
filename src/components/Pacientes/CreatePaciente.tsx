@@ -60,6 +60,7 @@ export default function CreatePaciente(props: {
                     idUsuarioCadastro: user?.idUsuario || "",
                     idEmpresa: empresa?.idEmpresa || ""
                 })
+                props.setOldFOrm(PacienteInitial)
                 props.setSuccess(response.Mensagem)
             } else {
                 props.setError(response.Mensagem)

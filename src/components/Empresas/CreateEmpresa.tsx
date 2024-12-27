@@ -51,6 +51,7 @@ export default function CreateEmpresa(props: {
                     idUsuarioCadastro: user?.idUsuario || "",
                 })
                 refreshUser()
+                props.setOldFOrm(EmpresaInitial)
                 props.setSuccess(response.Mensagem)
             } else {
                 props.setError(response.Mensagem || "Houve um erro ao realizar seu cadastro. Em instantes, tente novamente.")
