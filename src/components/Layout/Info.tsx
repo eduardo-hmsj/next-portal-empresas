@@ -24,10 +24,12 @@ export interface InfoProps {
 
 export default function Info(props: InfoProps) {
   const { logout, empresa } = React.useContext(UserContext)
+  const [loading, setLoading] = React.useState(false)
   const router = useRouter()
   const pathname = usePathname()
 
   const handleExport = async () => {
+    setLoading(true)
     const nomeRelatorio = `Relatorio_Geral_Calculadora_De_Risco_Gestacional`
     const response = await getRelatorio({
       nomeRelatorio: "",
@@ -37,6 +39,7 @@ export default function Info(props: InfoProps) {
       tipoRelatorio: ""
     })
     exportToCsv({ data: response, fileName: nomeRelatorio });
+    setLoading(false)
   };
 
   return (
@@ -121,11 +124,11 @@ export default function Info(props: InfoProps) {
                 </ListItemButton>
               </ListItem>
               {(empresa?.tpUsuario === "MASTER") && <ListItem disablePadding>
-                <ListItemButton onClick={handleExport}>
+                <ListItemButton onClick={handleExport} disabled={loading}>
                   <ListItemIcon>
                     <DownloadForOfflineIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Exportar Relatório Geral" />
+                  <ListItemText primary={loading ? "Exportando Dados" : "Exportar Relatório Geral"} />
                 </ListItemButton>
               </ListItem>}
             </List>

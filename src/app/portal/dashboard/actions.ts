@@ -38,7 +38,7 @@ export async function getRelatorio(props: {
 }) {
     try {
         const { data } = await api.post("/RelatorioPE", props)
-        if(data.Dados.length > 0){
+        if(!!data.Dados && data.Dados.length > 0){
             return data.Dados
         }
     } catch (error) {
