@@ -13,6 +13,9 @@ import { usePathname, useRouter } from 'next/navigation';
 import HelpIcon from '@mui/icons-material/Help';
 import PersonIcon from '@mui/icons-material/Person';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
+import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
+import { getRelatorio } from '@/app/portal/dashboard/actions';
+import { exportToCsv } from '@/utils/functions';
 
 export interface InfoProps {
   title: string,
@@ -23,6 +26,18 @@ export default function Info(props: InfoProps) {
   const { logout, empresa } = React.useContext(UserContext)
   const router = useRouter()
   const pathname = usePathname()
+
+  const handleExport = async () => {
+    const nomeRelatorio = `Relatorio_Geral_Calculadora_De_Risco_Gestacional`
+    const response = await getRelatorio({
+      nomeRelatorio: "",
+      dataFimCalculo: "",
+      dataInicioCalculo: "",
+      idEmpresa: "",
+      tipoRelatorio: ""
+    })
+    exportToCsv({ data: response, fileName: nomeRelatorio });
+  };
 
   return (
     <React.Fragment>
@@ -105,6 +120,14 @@ export default function Info(props: InfoProps) {
                   <ListItemText primary="Sair" />
                 </ListItemButton>
               </ListItem>
+              {(empresa?.tpUsuario === "MASTER") && <ListItem disablePadding>
+                <ListItemButton onClick={handleExport}>
+                  <ListItemIcon>
+                    <DownloadForOfflineIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Exportar Relatório Geral" />
+                </ListItemButton>
+              </ListItem>}
             </List>
           </nav>
         </AccordionDetails>

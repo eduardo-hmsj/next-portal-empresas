@@ -9,9 +9,11 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { DatePicker } from '@mui/x-date-pickers';
 import moment, { Moment } from 'moment';
 import { UserContext } from '@/context/UserContext';
-import { getGrafico as getGraficoApi } from './actions';
-import { getGraficoReturn } from './types';
+import { getGrafico as getGraficoApi, getRelatorio } from './actions';
+import { getGraficoReturn, relatorioType } from './types';
 import { DefaultizedPieValueType } from '@mui/x-charts';
+import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
+import { exportToCsv } from '@/utils/functions';
 
 export default function Dashboard() {
     const [loading, setLoading] = useState(false)
@@ -23,6 +25,10 @@ export default function Dashboard() {
         dataInicio: moment().startOf("month").format("DD/MM/YYYY"),
         dataFim: moment().endOf("month").format("DD/MM/YYYY"),
     });
+    const [currentForm, setCurrentForm] = useState({
+        dataInicioCalculo: moment().startOf("month").format("YYYY-MM-DD"),
+        dataFimCalculo: moment().startOf("month").format("YYYY-MM-DD")
+    })
 
     const handleDateChange = (name: string, value: Moment | null) => {
         setForm((prev) => ({
@@ -33,6 +39,10 @@ export default function Dashboard() {
 
     const getGrafico = useCallback(async () => {
         setLoading(true)
+        setCurrentForm({
+            dataFimCalculo: moment(form.dataFim, "DD/MM/YYYY").format("YYYY-MM-DD"),
+            dataInicioCalculo: moment(form.dataInicio, "DD/MM/YYYY").format("YYYY-MM-DD"),
+        })
         const response = await getGraficoApi({ ...form, idEmpresa: empresa?.idEmpresa || "", idUsuario: empresa?.tpUsuario !== "MASTER" ? user?.idUsuario || "" : "" })
         setData(response)
         setLoading(false)
@@ -46,6 +56,19 @@ export default function Dashboard() {
     const getArcLabel = (params: DefaultizedPieValueType) => {
         const percent = params.value / TOTAL;
         return `${(percent * 100).toFixed(0)}%`;
+    };
+
+    const handleExport = async (type: relatorioType) => {
+        setLoading(true)
+        const nomeRelatorio = `Relatorio_${type}_${empresa?.nomeEmpresa.replace(/ /g, "_")}_de_${currentForm.dataInicioCalculo}_ate_${currentForm.dataFimCalculo}`
+        const response = await getRelatorio({
+            nomeRelatorio,
+            ...currentForm,
+            idEmpresa: empresa?.idEmpresa || "",
+            tipoRelatorio: type
+        })
+        exportToCsv({ data: response, fileName: nomeRelatorio });
+        setLoading(false)
     };
 
 
@@ -125,16 +148,24 @@ export default function Dashboard() {
                         </FormControl>
                         <Button variant="contained" size="large" type="submit">Pesquisar</Button>
                     </Grid>
-                    {data?.length > 0 && <PieChart
-                        series={[
-                            {
-                                data,
-                                arcLabel: getArcLabel,
-                            },
-                        ]}
-                        width={600}
-                        height={250}
-                    />}
+                    {data?.length > 0 &&
+                        <>
+                            <PieChart
+                                series={[
+                                    {
+                                        data,
+                                        arcLabel: getArcLabel,
+                                    },
+                                ]}
+                                width={600}
+                                height={250}
+                            />
+
+                            <Grid container alignContent={'stretch'} gap={2} justifyContent={'space-between'} mt={5}>
+                                <Button color='info' variant='contained' style={{ flex: 1 }} onClick={() => handleExport(relatorioType.resumido)}><DownloadForOfflineIcon /> Exportar Relatório Resumido</Button>
+                                <Button color='secondary' style={{ flex: 1 }} variant='contained' onClick={() => handleExport(relatorioType.total)}><DownloadForOfflineIcon /> Exportar Relatório Completo</Button>
+                            </Grid>
+                        </>}
                 </Box>
             </>
                 : <Skeleton animation='wave' sx={{ height: "100vh", width: "100%" }} />}
