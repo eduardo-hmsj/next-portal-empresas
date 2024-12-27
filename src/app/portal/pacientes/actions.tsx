@@ -46,6 +46,7 @@ export async function updatePaciente(props: PacientePayload) {
 export async function intativaPaciente(props: {
     idPaciente: string
     idUsuarioCadastro: string
+    idEmpresa: string
 }) {
     try {
         const { data } = await api.post("/InativarPacientePE", props)
@@ -60,6 +61,7 @@ export async function intativaPaciente(props: {
 export async function activatePaciente(props: {
     idPaciente: string
     idUsuarioCadastro: string
+    idEmpresa: string
 }) {
     try {
         const { data } = await api.post("/AtivarPacientePE", props)

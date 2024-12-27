@@ -45,7 +45,8 @@ export default function Pacientes() {
         setLoading(true)
         const response = await intativaPaciente({
             idPaciente: id,
-            idUsuarioCadastro: user?.idUsuario || ""
+            idUsuarioCadastro: user?.idUsuario || "",
+            idEmpresa: empresa?.idEmpresa || ""
         })
         if (response.Codigo === "OK") {
             getPacientes()
@@ -61,7 +62,8 @@ export default function Pacientes() {
         setLoading(true)
         const response = await activatePaciente({
             idPaciente: id,
-            idUsuarioCadastro: user?.idUsuario || ""
+            idUsuarioCadastro: user?.idUsuario || "",
+            idEmpresa: empresa?.idEmpresa || ""
         })
         if (response.Codigo === "OK") {
             getPacientes()
