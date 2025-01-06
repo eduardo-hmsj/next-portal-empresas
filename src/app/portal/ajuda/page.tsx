@@ -6,10 +6,10 @@ import Typography from '@mui/material/Typography';
 import Info from '@/components/Layout/Info';
 import Logo from "@/img/logo.png"
 import Image from 'next/image';
-import { Alert, Button, Skeleton, TextField } from '@mui/material';
+import { Alert, Button, FormControl, InputLabel, MenuItem, Select, Skeleton, TextField } from '@mui/material';
 import { UserContext } from '@/context/UserContext';
 import { AjudaInitial, AjudaPayload } from './types';
-import { postAjuda } from './actions'; 
+import { postAjuda } from './actions';
 
 export default function Ajuda() {
     const { user, empresa } = React.useContext(UserContext)
@@ -30,6 +30,9 @@ export default function Ajuda() {
         setLoading(true)
         evt.preventDefault()
         const e: string[] = []
+
+        if (form.assunto === AjudaInitial.assunto) e.push('Assunto necessita estar preenchido!')
+        if (form.mensagem === AjudaInitial.mensagem) e.push('Mensagem necessita estar preenchida!')
 
         if (e.length > 0) {
             setWarnings(e)
@@ -72,7 +75,7 @@ export default function Ajuda() {
                 overflowY: 'auto',
             }}
         >
-            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{ width: "100%", height: "auto" }} priority/>
+            <Image src={Logo} alt='Logo Grupo Santa Joana Negócios' style={{ width: "100%", height: "auto" }} priority />
             <Box
                 sx={{
                     display: 'flex',
@@ -106,19 +109,26 @@ export default function Ajuda() {
         >{!loading ? <>
             <Box sx={{ width: "100%" }} component={"form"} onSubmit={validateForm}>
                 <Typography sx={{ mb: 2 }} variant='h4'>Criar solicitação</Typography>
-                <input name='idUsuarioCadastro' value={form.idUsuario} hidden readOnly/>
-                <input name='idEmpresa' value={form.idEmpresa} hidden readOnly/>
+                <input name='idUsuarioCadastro' value={form.idUsuario} hidden readOnly />
+                <input name='idEmpresa' value={form.idEmpresa} hidden readOnly />
 
                 <Grid container spacing={2} size={12}>
                     <Grid size={12}>
-                        <TextField
-                            id="assunto"
-                            name='assunto'
-                            label="Assunto"
-                            fullWidth
-                            value={form.assunto}
-                            onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
-                        />
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Assunto</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                label="Assunto"
+                                value={form.assunto}
+                                name="assunto"
+                                onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                            >
+                                <MenuItem value="">Selecione uma opção</MenuItem>
+                                <MenuItem value="Suporte Técnico">Suporte Técnico</MenuItem>
+                                <MenuItem value="Outros assuntos - Portal Empresas">Outros assuntos - Portal Empresas</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
                     <Grid size={12}>
                         <TextField
