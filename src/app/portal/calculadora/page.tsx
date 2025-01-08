@@ -35,9 +35,9 @@ export default function Calculadora() {
     const [error, setError] = React.useState("")
     const [success, setSuccess] = React.useState("")
     const searchParams = useSearchParams()
-    const cpf = searchParams.get('cpf')
-    const idCalculo = searchParams.get('idCalculo')
-    const mode = searchParams.get('mode')
+    const [cpf, setCpf] = React.useState(searchParams.get('cpf')) 
+    const [idCalculo, setIdCalculo] = React.useState(searchParams.get('idCalculo'))
+    const [mode, setMode] = React.useState(searchParams.get('mode'))
     const [result, setResult] = React.useState<null | getCalculosReturn>(null)
     const router = useRouter();
 
@@ -54,6 +54,9 @@ export default function Calculadora() {
         setError("")
         setSuccess("")
         setResult(null)
+        setCpf(null)
+        setIdCalculo(null)
+        setMode(null)
         router.replace(window.location.pathname);
     }, [router]);
 
@@ -271,7 +274,7 @@ export default function Calculadora() {
             }));
         }
 
-        if (idCalculo) getCalculo()
+        if (!!empresa?.idEmpresa && idCalculo) getCalculo()
 
         if (!!empresa?.idEmpresa && cpf && !pacienteFetch) {
             setForm((prevForm) => ({
