@@ -19,6 +19,8 @@ export default function Ajuda() {
     const [error, setError] = React.useState("")
     const [success, setSuccess] = React.useState("")
 
+    console.log(form)
+
     function cleanAdvises() {
         setWarnings([])
         setError("")
@@ -39,7 +41,9 @@ export default function Ajuda() {
         } else {
             const response = await postAjuda(form)
             if (response.Codigo === "OK") {
-                setForm(AjudaInitial)
+                setForm({...AjudaInitial,
+                    idUsuario: user?.idUsuario || "",
+                    idEmpresa: empresa?.idEmpresa || ""})
                 setSuccess(response.Mensagem)
             } else {
                 setError(response.Mensagem || "Houve um erro ao realizar seu cadastro. Em instantes, tente novamente.")
