@@ -139,11 +139,12 @@ export default function Usuarios() {
             route.push("/portal/calculadora")
         }
 
-        setForm((prevForm) => ({
-            ...prevForm,
+        setFormOpen("")
+        setForm({
+            ...usuarioInitial,
             idUsuarioCadastro: user?.idUsuario || "",
             idEmpresa: empresa?.idEmpresa || ""
-        }))
+        })
 
     }, [empresa, user, getUsers, route])
 

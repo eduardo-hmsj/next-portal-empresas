@@ -132,11 +132,12 @@ export default function Pacientes() {
             getPacientes()
         }
 
-        setForm((prevForm) => ({
-            ...prevForm,
+        setFormOpen("")
+        setForm({
+            ...PacienteInitial,
             idUsuarioCadastro: user?.idUsuario || "",
             idEmpresa: empresa?.idEmpresa || ""
-        }))
+        })
 
     }, [empresa, user, getPacientes, route])
 

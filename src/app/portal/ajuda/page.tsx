@@ -19,8 +19,6 @@ export default function Ajuda() {
     const [error, setError] = React.useState("")
     const [success, setSuccess] = React.useState("")
 
-    console.log(form)
-
     function cleanAdvises() {
         setWarnings([])
         setError("")

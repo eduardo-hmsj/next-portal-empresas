@@ -137,11 +137,12 @@ export default function Empresas() {
             route.push("/portal/calculadora")
         }
 
-        setForm((prevForm) => ({
-            ...prevForm,
+        setFormOpen("")
+        setForm({
+            ...EmpresaInitial,
             idUsuarioCadastro: user?.idUsuario || "",
             idEmpresaPai: empresa?.idEmpresa || "",
-        }));
+        });
 
     }, [empresa, user, route, getEmpresas])
 
