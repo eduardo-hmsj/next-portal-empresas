@@ -49,6 +49,7 @@ export default function UserProvider(props: PropsWithChildren) {
         const response = await refreshLogin({idUsuario: id})
         if (response.Codigo === "OK") {
             updateStatus()
+            route.push("/")
         }
     }
 
