@@ -9,6 +9,7 @@ export const UserContext = createContext<ContextType>({
     empresa: null,
     logout: () => { },
     refreshUser: () => { },
+    refreshUserWithId: (id: string) => { if(id) return },
     chooseEmpresa: (v: string) => { if(v) return }
 });
 
@@ -44,11 +45,18 @@ export default function UserProvider(props: PropsWithChildren) {
         }
     }
 
+    async function refreshUserWithId(id: string){
+        const response = await refreshLogin({idUsuario: id})
+        if (response.Codigo === "OK") {
+            updateStatus()
+        }
+    }
+
     useEffect(() => {
         updateStatus()
     }, [])
 
-    return <UserContext.Provider value={{ user, empresa, logout, chooseEmpresa, refreshUser }}>
+    return <UserContext.Provider value={{ user, empresa, logout, chooseEmpresa, refreshUser, refreshUserWithId }}>
         {props.children}
     </UserContext.Provider>
 

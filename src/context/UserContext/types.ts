@@ -17,5 +17,6 @@ export interface ContextType{
     empresa: EmpresaProps | null,
     logout: () => void,
     refreshUser: () => void,
+    refreshUserWithId: (id: string) => void,
     chooseEmpresa: (v: string) => void
 }
