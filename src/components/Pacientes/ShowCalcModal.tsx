@@ -105,7 +105,7 @@ export default function ShowCalcModal(props: { user: getPacienteReturn, close: (
                     slots={{ toolbar: GridToolbar }}
                 />
                 <Link href={`/portal/calculadora?cpf=${removeCpfMask(props.user.cpf)}`}>
-                    <Button variant="contained" fullWidth sx={{ mt: 3 }}>Realizar Novo Cáculo</Button>
+                    <Button variant="contained" fullWidth sx={{ mt: 3 }}>Realizar Novo Cálculo</Button>
                 </Link>
             </> : <Skeleton animation='wave' sx={{ height: "500px", width: "100%" }} />}
         </Box>
