@@ -9,5 +9,6 @@ export const AjudaInitial = {
     idUsuario: "",
     idEmpresa: "",
     assunto: "",
-    mensagem: ""
+    mensagem: "",
+    origem: "Calculadora"
 }
