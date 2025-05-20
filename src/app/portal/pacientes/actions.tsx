@@ -21,6 +21,7 @@ export async function postPaciente(props: PacientePayload) {
             ...props,
             cpf: removeCpfMask(props.cpf)
         })
+        console.log(data)
         return data
     } catch (error) {
         console.log(error)
