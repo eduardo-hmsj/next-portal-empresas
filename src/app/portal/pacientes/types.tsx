@@ -7,6 +7,7 @@ export interface PacientePayload {
     email: string
     idEmpresa: string,
     idPaciente?: string
+    log?: string
 }
 
 export interface getPacienteReturn {
@@ -18,7 +19,7 @@ export interface getPacienteReturn {
     dataNascimento: string
     status: string
     idEmpresa: string,
-    telefone: string
+    telefone: string,
 }
 
 export interface getCalculosReturn {

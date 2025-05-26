@@ -288,25 +288,23 @@ export default function Pacientes() {
                 const response = await postPaciente(v)
                 console.log(response)
                 if (response.Codigo === "OK") s.push(v)
-                else f.push(v)
+                else f.push({
+                    ...v,
+                    log: response.Mensagem
+                })
             } catch (error) {
                 console.log(error)
-                f.push(v)
+                f.push({
+                    ...v,
+                    log: "Erro de servidor"
+                })
             }
         }
-
-        console.log(s)
-        console.log(f)
         setImportSuccess(s)
         setImportFail(f)
         setFiles([])
         setLoading(false)
     }, [files, setFiles, setImportFail, setImportSuccess])
-
-
-    console.log(files)
-    console.log(importFail)
-    console.log(importSuccess)
 
     return (<Grid container sx={{ height: { xs: '100%', sm: '100%' } }}>
         <Grid
@@ -464,7 +462,7 @@ export default function Pacientes() {
                                     </TableCell>
                                     <TableCell>{aplicarMascaraCpfCnpj(row.cpf)}</TableCell>
                                     <TableCell>{row.email}</TableCell>
-                                    <TableCell>{moment(new Date(row?.dataNascimento || "")).format("DD/MM/YYYY")}</TableCell>
+                                    <TableCell>{row.dataNascimento}</TableCell>
                                     <TableCell>{row.telefone}</TableCell>
                                 </TableRow>
                             ))}
@@ -521,7 +519,7 @@ export default function Pacientes() {
                                     </TableCell>
                                     <TableCell>{aplicarMascaraCpfCnpj(row.cpf)}</TableCell>
                                     <TableCell>{row.email}</TableCell>
-                                    <TableCell>{moment(new Date(row?.dataNascimento || "")).format("DD/MM/YYYY")}</TableCell>
+                                    <TableCell>{row.dataNascimento}</TableCell>
                                     <TableCell>{row.telefone}</TableCell>
                                 </TableRow>
                             ))}
@@ -541,6 +539,7 @@ export default function Pacientes() {
                                 <TableCell>E-mail</TableCell>
                                 <TableCell>Data de nascimento</TableCell>
                                 <TableCell>Telefone</TableCell>
+                                <TableCell>Log</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -554,8 +553,9 @@ export default function Pacientes() {
                                     </TableCell>
                                     <TableCell>{aplicarMascaraCpfCnpj(row.cpf)}</TableCell>
                                     <TableCell>{row.email}</TableCell>
-                                    <TableCell>{moment(new Date(row?.dataNascimento || "")).format("DD/MM/YYYY")}</TableCell>
+                                    <TableCell>{row.dataNascimento}</TableCell>
                                     <TableCell>{row.telefone}</TableCell>
+                                    <TableCell>{row.log}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
