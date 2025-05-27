@@ -1,7 +1,7 @@
-nomeCompleto,cpf,dataNascimento,telefone,email
-John Due,44433322244,09/09/1999,11933333333,john@due.com
-John Due,44433322244,10/09/1999,11933333333,john@due.com
-John Due,44433322244,11/09/1999,11933333333,john@due.com
-John Due,44433322244,12/09/1999,11933333333,john@due.com
-John Due,44433322244,13/09/1999,11933333333,john@due.com
-John Due,44433322244,14/09/1999,11933333333,john@due.com
+nomeCompleto;cpf;dataNascimento;telefone;email
+John Due;44433322244;09/09/1999;11933333333;john@due.com
+John Due;44433322244;10/09/1999;11933333333;john@due.com
+John Due;44433322244;11/09/1999;11933333333;john@due.com
+John Due;44433322244;12/09/1999;11933333333;john@due.com
+John Due;44433322244;13/09/1999;11933333333;john@due.com
+John Due;44433322244;14/09/1999;11933333333;john@due.com

@@ -68,10 +68,10 @@ export default function Pacientes() {
 
             const lines = text.split('\n').filter(Boolean);
             const [headerLine, ...rows] = lines;
-            const headers = headerLine.trim().split(',');
+            const headers = headerLine.trim().split(';');
 
             const newFiles: PacientePayload[] = rows.map(row => {
-                const values = row.trim().split(',');
+                const values = row.trim().split(';');
 
                 const paciente: PacientePayload = {
                     idUsuarioCadastro: user?.idUsuario || '',
