@@ -304,6 +304,7 @@ export default function Pacientes() {
         setImportFail(f)
         setFiles([])
         setLoading(false)
+        setOpenLogs(true)
     }, [files, setFiles, setImportFail, setImportSuccess])
 
     return (<Grid container sx={{ height: { xs: '100%', sm: '100%' } }}>
@@ -417,7 +418,7 @@ export default function Pacientes() {
                                 onChange={uploadFile}
                             />
                         </Grid>
-                        {(importSuccess.length > 0 || importFail.length > 0) && <Grid size={12}>
+                        {(importSuccess.length > 0 || importFail.length > 0) && <Grid size={12} pb={5}>
                             <Button variant='contained' color='warning' fullWidth onClick={() => setOpenLogs(true)}>Verificar logs da importação</Button>
                         </Grid>}
                     </Grid>
@@ -481,86 +482,88 @@ export default function Pacientes() {
             </Box>
         </Modal>
         <Modal
-            open={openLogs}
+            open={!loading && openLogs}
             onClose={() => setOpenLogs(false)}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                    Logs de importação.
-                </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Foram encontrados {importSuccess.length} pacientes cadastrados com sucesso e {importFail.length} pacientes cadastrados com sucesso em seu documento.
-                </Typography>
+                <div style={{ overflow: "auto", maxHeight: "80vh" }}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Logs de importação.
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Foram encontrados {importSuccess.length} pacientes cadastrados com sucesso e {importFail.length} pacientes cadastrados com sucesso em seu documento.
+                    </Typography>
 
-                <Typography id="modal-modal-title" variant="h6" component="h2" mt={5}>
-                    Importados com sucesso
-                </Typography>
-                <TableContainer component={Paper} sx={{ mt: 5 }}>
-                    <Table sx={{ width: "100%" }} aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Nome Completo</TableCell>
-                                <TableCell>CPF</TableCell>
-                                <TableCell>E-mail</TableCell>
-                                <TableCell>Data de nascimento</TableCell>
-                                <TableCell>Telefone</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {importSuccess.map((row, i) => (
-                                <TableRow
-                                    key={i}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell>
-                                        {row.nomeCompleto}
-                                    </TableCell>
-                                    <TableCell>{aplicarMascaraCpfCnpj(row.cpf)}</TableCell>
-                                    <TableCell>{row.email}</TableCell>
-                                    <TableCell>{row.dataNascimento}</TableCell>
-                                    <TableCell>{row.telefone}</TableCell>
+                    <Typography id="modal-modal-title" variant="h6" component="h2" mt={5}>
+                        Importados com sucesso
+                    </Typography>
+                    <TableContainer component={Paper} sx={{ mt: 5 }}>
+                        <Table sx={{ width: "100%" }} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Nome Completo</TableCell>
+                                    <TableCell>CPF</TableCell>
+                                    <TableCell>E-mail</TableCell>
+                                    <TableCell>Data de nascimento</TableCell>
+                                    <TableCell>Telefone</TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                            </TableHead>
+                            <TableBody>
+                                {importSuccess.map((row, i) => (
+                                    <TableRow
+                                        key={i}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell>
+                                            {row.nomeCompleto}
+                                        </TableCell>
+                                        <TableCell>{aplicarMascaraCpfCnpj(row.cpf)}</TableCell>
+                                        <TableCell>{row.email}</TableCell>
+                                        <TableCell>{row.dataNascimento}</TableCell>
+                                        <TableCell>{row.telefone}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
 
-                <Typography id="modal-modal-title" variant="h6" component="h2" mt={5}>
-                    Importados com falha
-                </Typography>
-                <TableContainer component={Paper} sx={{ my: 5 }}>
-                    <Table sx={{ width: "100%" }} aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Nome Completo</TableCell>
-                                <TableCell>CPF</TableCell>
-                                <TableCell>E-mail</TableCell>
-                                <TableCell>Data de nascimento</TableCell>
-                                <TableCell>Telefone</TableCell>
-                                <TableCell>Log</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {importFail.map((row, i) => (
-                                <TableRow
-                                    key={i}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell>
-                                        {row.nomeCompleto}
-                                    </TableCell>
-                                    <TableCell>{aplicarMascaraCpfCnpj(row.cpf)}</TableCell>
-                                    <TableCell>{row.email}</TableCell>
-                                    <TableCell>{row.dataNascimento}</TableCell>
-                                    <TableCell>{row.telefone}</TableCell>
-                                    <TableCell>{row.log}</TableCell>
+                    <Typography id="modal-modal-title" variant="h6" component="h2" mt={5}>
+                        Importados com falha
+                    </Typography>
+                    <TableContainer component={Paper} sx={{ my: 5 }}>
+                        <Table sx={{ width: "100%" }} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Nome Completo</TableCell>
+                                    <TableCell>CPF</TableCell>
+                                    <TableCell>E-mail</TableCell>
+                                    <TableCell>Data de nascimento</TableCell>
+                                    <TableCell>Telefone</TableCell>
+                                    <TableCell>Log</TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                            </TableHead>
+                            <TableBody>
+                                {importFail.map((row, i) => (
+                                    <TableRow
+                                        key={i}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell>
+                                            {row.nomeCompleto}
+                                        </TableCell>
+                                        <TableCell>{aplicarMascaraCpfCnpj(row.cpf)}</TableCell>
+                                        <TableCell>{row.email}</TableCell>
+                                        <TableCell>{row.dataNascimento}</TableCell>
+                                        <TableCell>{row.telefone}</TableCell>
+                                        <TableCell>{row.log}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </div>
             </Box>
         </Modal>
     </Grid>);
