@@ -305,7 +305,8 @@ export default function Pacientes() {
         setFiles([])
         setLoading(false)
         setOpenLogs(true)
-    }, [files, setFiles, setImportFail, setImportSuccess])
+        getPacientes()
+    }, [files, setFiles, setImportFail, setImportSuccess, getPacientes])
 
     return (<Grid container sx={{ height: { xs: '100%', sm: '100%' } }}>
         <Grid
