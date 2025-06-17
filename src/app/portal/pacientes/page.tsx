@@ -494,7 +494,7 @@ export default function Pacientes() {
                         Logs de importação.
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Foram encontrados {importSuccess.length} pacientes cadastrados com sucesso e {importFail.length} pacientes cadastrados com sucesso em seu documento.
+                        Foram encontrados {importSuccess.length} pacientes cadastrados com sucesso e {importFail.length} pacientes cadastrados com falha em seu documento.
                     </Typography>
 
                     <Typography id="modal-modal-title" variant="h6" component="h2" mt={5}>
