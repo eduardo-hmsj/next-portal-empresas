@@ -69,7 +69,7 @@ export default function SignInCard() {
         const response = await Login(form)
         if (!!response && response.Codigo === "OK") {
 
-          route.push('/portal/dashboard')
+          route.push('/portal/dashboard/meus-resultados')
           setSuccess(response.Mensagem)
         } else {
           setError(response.Mensagem || "Houve um erro ao realizar seu login. Em instantes, tente novamente.")
@@ -153,7 +153,7 @@ export default function SignInCard() {
         
         if (response.Codigo === "OK") {
 
-          route.push('/portal/dashboard')
+          route.push('/portal/dashboard/meus-resultados')
           setSuccess(response.Mensagem)
         } else {
           setError(response.Mensagem || "Houve um erro ao realizar seu login. Em instantes, tente novamente.")

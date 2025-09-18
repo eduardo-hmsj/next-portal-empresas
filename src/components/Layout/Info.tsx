@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import Typography from '@mui/material/Typography';
-import { Accordion, AccordionDetails, AccordionSummary, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Collapse, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -14,8 +14,13 @@ import HelpIcon from '@mui/icons-material/Help';
 import PersonIcon from '@mui/icons-material/Person';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
-import { getRelatorio } from '@/app/portal/dashboard/actions';
+import { getRelatorio } from '@/app/portal/dashboard/meus-resultados/actions';
 import { exportToCsv } from '@/utils/functions';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import Person2Icon from '@mui/icons-material/Person2';
+import GroupIcon from '@mui/icons-material/Group';
+
 
 export interface InfoProps {
   title: string,
@@ -25,6 +30,7 @@ export interface InfoProps {
 export default function Info(props: InfoProps) {
   const { logout, empresa } = React.useContext(UserContext)
   const [loading, setLoading] = React.useState(false)
+  const [openDashboard, setOpenDashboard] = React.useState(false);
   const router = useRouter()
   const pathname = usePathname()
 
@@ -53,7 +59,7 @@ export default function Info(props: InfoProps) {
           <Typography display={'flex'} alignItems={'center'}><MenuIcon sx={{ mr: 2 }} />
             <span>
               <small><strong>Menu</strong></small><br />
-              {pathname === "/portal/dashboard" && "Dashboard"}
+              {pathname.includes("/portal/dashboard") && "Dashboard"}
               {pathname === "/portal/calculadora" && "Calculadora"}
               {pathname === "/portal/pacientes" && "Pacientes"}
               {pathname === "/portal/empresas" && "Empresas"}
@@ -99,13 +105,35 @@ export default function Info(props: InfoProps) {
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <ListItemButton selected={pathname === "/portal/dashboard"} onClick={() => router.push("/portal/dashboard")}>
+                  <ListItemButton onClick={() => setOpenDashboard(!openDashboard)} selected={!openDashboard && pathname.includes("/portal/dashboard")}>
                     <ListItemIcon>
                       <LeaderboardIcon />
                     </ListItemIcon>
                     <ListItemText primary="Dashboard" />
+                    {openDashboard ? <ExpandLess /> : <ExpandMore />}
                   </ListItemButton>
                 </ListItem>
+
+                <Collapse in={openDashboard} timeout="auto" unmountOnExit>
+                  <List sx={{px:2}}>
+                    <ListItem disablePadding>
+                      <ListItemButton selected={pathname === "/portal/dashboard/meus-resultados"} onClick={() => router.push("/portal/dashboard/meus-resultados")}>
+                        <ListItemIcon>
+                          <Person2Icon />
+                        </ListItemIcon>
+                        <ListItemText primary="Meus Resultados" />
+                      </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding>
+                      <ListItemButton selected={pathname === "/portal/dashboard/resultados-gerais"} onClick={() => router.push("/portal/dashboard/resultados-gerais")}>
+                        <ListItemIcon>
+                          <GroupIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Resultados gerais" />
+                      </ListItemButton>
+                    </ListItem>
+                  </List>
+                </Collapse>
               </>}
               <ListItem disablePadding>
                 <ListItemButton selected={pathname === "/portal/ajuda"} onClick={() => router.push("/portal/ajuda")}>

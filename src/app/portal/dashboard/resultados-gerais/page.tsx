@@ -43,7 +43,7 @@ export default function Dashboard() {
             dataFimCalculo: moment(form.dataFim, "DD/MM/YYYY").format("YYYY-MM-DD"),
             dataInicioCalculo: moment(form.dataInicio, "DD/MM/YYYY").format("YYYY-MM-DD"),
         })
-        const response = await getGraficoApi({ ...form, idEmpresa: empresa?.idEmpresa || "", idUsuario: empresa?.tpUsuario !== "MASTER" ? user?.idUsuario || "" : "" })
+        const response = await getGraficoApi({ ...form, idEmpresa: empresa?.idEmpresa || "", idUsuario: "" })
         setData(response)
         setLoading(false)
     }, [form, empresa, user]);
@@ -123,7 +123,7 @@ export default function Dashboard() {
         >
             {!loading ? <>
                 <Box sx={{ width: "100%" }}>
-                    <Typography variant='h4' sx={{ mb: 3 }}>Gráfico de Risco</Typography>
+                    <Typography variant='h4' sx={{ mb: 3 }}>Gráfico de Risco por Equipe</Typography>
                     <Grid container spacing={2} size={12} mb={5} component={"form"} onSubmit={evt => {
                         evt.preventDefault()
                         getGrafico()
