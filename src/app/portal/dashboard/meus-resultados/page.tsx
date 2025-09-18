@@ -43,7 +43,7 @@ export default function Dashboard() {
             dataFimCalculo: moment(form.dataFim, "DD/MM/YYYY").format("YYYY-MM-DD"),
             dataInicioCalculo: moment(form.dataInicio, "DD/MM/YYYY").format("YYYY-MM-DD"),
         })
-        const response = await getGraficoApi({ ...form, idEmpresa: empresa?.idEmpresa || "", idUsuario: empresa?.tpUsuario !== "MASTER" ? user?.idUsuario || "" : "" })
+        const response = await getGraficoApi({ ...form, idEmpresa: empresa?.idEmpresa || "", idUsuario: user?.idUsuario || "" })
         setData(response)
         setLoading(false)
     }, [form, empresa, user]);
