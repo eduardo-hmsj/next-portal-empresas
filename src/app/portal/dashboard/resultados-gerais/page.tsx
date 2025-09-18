@@ -17,7 +17,7 @@ import { exportToCsv } from '@/utils/functions';
 
 export default function Dashboard() {
     const [loading, setLoading] = useState(false)
-    const { empresa, user } = useContext(UserContext)
+    const { empresa } = useContext(UserContext)
     const [data, setData] = useState<getGraficoReturn[]>([])
     const TOTAL = useMemo(() => data?.map((item) => item.value).reduce((a, b) => Number(a) + Number(b), 0), [data]);
     const [form, setForm] = useState({
@@ -46,7 +46,7 @@ export default function Dashboard() {
         const response = await getGraficoApi({ ...form, idEmpresa: empresa?.idEmpresa || "", idUsuario: "" })
         setData(response)
         setLoading(false)
-    }, [form, empresa, user]);
+    }, [form, empresa]);
 
     useEffect(() => {
         if (empresa) getGrafico()
